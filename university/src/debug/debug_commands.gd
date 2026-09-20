@@ -147,13 +147,14 @@ func _toolName(armed: BuildController.Tool, info: BuildingInfo) -> String:
 
 
 func _state() -> void:
-	var controller: BuildController = _campusView().controller
+	var view: CampusView = _campusView()
+	var controller: BuildController = view.controller
 	LimboConsole.print_line("Tool: %s | angle %.1f deg | selected %d | hovered %d" % [
 		_toolName(controller.activeTool, controller.placeInfo),
 		rad_to_deg(controller.angle()),
 		_indexOf(controller.selected),
 		_indexOf(controller.hovered)])
-	var camera: GameCamera = _campusView().camera
+	var camera: GameCamera = view.camera
 	LimboConsole.print_line("Camera: target (%.1f, %.1f) | %.1f m | yaw %.1f deg" % [
 		camera.target().x, camera.target().z, camera.distance(), camera.yaw()])
 
