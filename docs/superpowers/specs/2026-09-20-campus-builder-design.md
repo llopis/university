@@ -114,7 +114,8 @@ to the controller.
 One `PlaneMesh` of `Campus.Size`, with `ground.gdshader`: a grass colour plus
 thin lines every `grid_spacing` (10 m) computed from world position and
 anti-aliased with `fwidth`, fading with distance so they never shimmer.
-Colours and spacing are shader parameters set in the scene. Visual only.
+Colours and spacing are shader uniforms with defaults in `ground.gdshader`;
+nothing overrides them. Visual only.
 
 ### `GameCamera`
 
@@ -160,8 +161,8 @@ The only place input becomes commands. `enum Tool { None, Place, Destroy }`.
 
 ### UI (scene-authored)
 
-- `StatusBar` — the existing `status_bar` reworked: placeholder `Time` and
-  `Money` labels. Static text for now.
+- `StatusBar` — the existing `status_bar` reworked: a `Time` label following
+  `GameState.gameTime` and a static `Money` placeholder.
 - `BuildMenu` — bottom-left `Build` toggle button; open, it shows a panel with
   one button per `Global.buildingDB.all` (created in code, since the count is
   data) and a `Destroy` button. Signals `BuildingChosen(info)`,

@@ -5,12 +5,13 @@ Godot 4.7 (GDScript). The Godot project is `university/`; the repo root is
 is 3D: **1 world unit = 1 metre, Y up**. The sim reasons on the ground plane,
 so state positions are `Vector2` with `x` = world X and `y` =
 world Z, and a rectangle's `angle` (radians) is the direction of its own long
-axis, `(cos a, sin a)` — counter-clockwise seen from above. A node's y rotation
-turns the other way, so `BuildingView.showRect` is the one place a state angle
-becomes a node rotation, `rotation.y = -angle`; nothing else converts. **There
-is no grid**: a building goes down at any position and any angle, and the 10 m
-lines on the ground are `ground.gdshader` drawing them from world position —
-the sim never sees them. The game is a university management sim — campus view,
+axis, `(cos a, sin a)`: a growing angle turns from +X toward +Z. A node's y
+rotation turns the other way, from +X toward -Z, so `BuildingView.showRect` is
+the one place a state angle becomes a node rotation, `rotation.y = -angle`;
+nothing else converts. **There is no grid**: a building goes down at any
+position and any angle, and the 10 m lines on the ground are `ground.gdshader`
+drawing them from world position — the sim never sees them. The game is a
+university management sim — campus view,
 buildings placed at any orientation, every student simulated. The prototype
 scope is listed in `Prototype.md` below. Repo: https://github.com/llopis/university
 
@@ -125,7 +126,10 @@ Registered debug commands:
 - `buildings` — one line per building: index, type id, position, angle in degrees.
 - `tool <id|destroy|none>` — arm a tool: a building type id to place it, `destroy`, or `none`.
 - `select <n>` — select building <n> (index from `buildings`); -1 clears the selection.
-- `mousedown <x> <y>`, `mouseup <x> <y>`, `mousemove <x> <y>` — synthetic left-button events at a design-space point (1920x1080), pushed through the root viewport so they route to the GUI exactly like a real click; `mousemove` carries the left button while it is down.
+- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, and the camera's target, distance and yaw. Read-only.
+- `mousedown <x> <y> [button]`, `mouseup <x> <y> [button]` — synthetic button events at a design-space point (1920x1080), pushed through the root viewport so they route to the GUI exactly like a real click. `button` is `left` (default), `right` or `middle`.
+- `mousemove <x> <y>` — synthetic motion to a design-space point, carrying whichever button a `mousedown` left held and the travel since the last synthetic event, so drags accumulate against `GameCamera.DragThreshold`.
+- `action <name> <down|up>` — press or release an input action (`RotateLeft`, `RotateRight`, `ExitGame`, ...) as an `InputEventAction`, so polled reads and `_unhandled_input` handlers both see it.
 
 In-game: WASD/arrows pan the camera (speed scales with the zoom distance, so it
 covers the same fraction of the screen at any zoom), Q and E turn it while held,
@@ -150,22 +154,31 @@ Command-line flags (`university/src/utils/command_line.gd`, passed after `--`): 
 `eval` runs against the SceneTree via `Expression`, which does NOT resolve
 global class names or autoload names — `Global.foo` fails with "Invalid named
 index". Reach everything through `get_root()`:
-`get_root().get_node("Global")`, `get_root().find_child("LevelView", true, false)`.
+`get_root().get_node("Global")`, `get_root().find_child("CampusView", true, false)`.
 Statics are callable on the instance, which is how you reach them. No lambdas either.
 
-Keyboard cannot be injected, and `warp_mouse` does nothing while the window is
-hidden — so anything that follows the OS cursor usually draws off-screen and
-cannot be screenshotted. The `mousedown`/`mousemove`/`mouseup` commands are the
-way round it: they push left-button events through the root viewport's GUI
-routing, so they hit-test controls and fall through to `_unhandled_input`
-exactly as a real click does, and `BuildController` takes the cursor position
-from the event rather than polling `Input`, which is what makes the ghost and
-picking work with the window hidden. Their coordinates are design space,
-1920x1080 (`project.godot`'s viewport size, `canvas_items` stretch), whatever
-the real window is; read a control's `global_position` and `size` over `eval`
-to aim at one. For everything else prefer a command that drives state directly
-(`build`, `destroy`, `select`, `tool`, `camera`) and verify it by asserting
-state over `eval`, not by looking.
+The real keyboard cannot be reached, and `warp_mouse` does nothing while the
+window is hidden — so anything that follows the OS cursor usually draws
+off-screen and cannot be screenshotted. The synthetic-input commands are the
+way round it. `mousedown`/`mousemove`/`mouseup` push events through the root
+viewport's GUI routing, so they hit-test controls and fall through to
+`_unhandled_input` exactly as a real click does, and `BuildController` takes
+the cursor position from the event rather than polling `Input`, which is what
+makes the ghost and picking work with the window hidden. They take any of the
+three buttons, and `mousemove` carries the held button and the travel since the
+last synthetic event, so a right- or middle-drag adds up against
+`GameCamera.DragThreshold` the way a real one does. Their coordinates are
+design space, 1920x1080 (`project.godot`'s viewport size, `canvas_items`
+stretch), whatever the real window is; read a control's `global_position` and
+`size` over `eval` to aim at one. `action <name> <down|up>` covers the keyboard:
+it feeds an `InputEventAction` through `Input.parse_input_event`, so both the
+polled reads (`Input.get_axis`, for held keys like `,`/`.` and Q/E) and the
+`_unhandled_input` handlers (Esc) see it. A held action stays down until the
+matching `action <name> up`, which is how a per-frame effect is given time to
+accumulate. `state` reads the result back without changing anything. For
+everything else prefer a command that drives state directly (`build`,
+`destroy`, `select`, `tool`, `camera`) and verify it by asserting state over
+`eval`, not by looking.
 
 To prove a revert/undo really restored something, screenshot before and after
 and pixel-diff the two images: identical means bit-identical, which no state
