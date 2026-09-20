@@ -8,6 +8,8 @@ const Short: float = 2.0
 const BoxHeight: float = 10.0
 const QuarterTurn: float = PI / 2.0
 const EighthTurn: float = PI / 4.0
+# Metres out along the bar's long axis: inside it, well clear of the short one.
+const Reach: float = 3.0
 
 
 func _bar(center: Vector2, angle: float) -> OrientedRect:
@@ -50,6 +52,15 @@ func test_contains_follows_the_rotation() -> void:
 	var upright: OrientedRect = _bar(Vector2.ZERO, QuarterTurn)
 	assert_bool(upright.contains(Vector2(0.0, 4.0))).is_true()
 	assert_bool(upright.contains(Vector2(4.0, 0.0))).is_false()
+
+
+func test_contains_pins_the_sign_of_the_angle() -> void:
+	# An eighth turn is not symmetric under a -> -a, so this is the one shape
+	# that catches a flipped sign: the bar's long axis must point at +X+Z.
+	var diagonal: OrientedRect = _bar(Vector2.ZERO, EighthTurn)
+	var along: Vector2 = Vector2(1.0, 1.0).normalized() * Reach
+	assert_bool(diagonal.contains(along)).is_true()
+	assert_bool(diagonal.contains(Vector2(along.x, -along.y))).is_false()
 
 
 func test_corners_are_at_half_extents_from_the_center() -> void:
