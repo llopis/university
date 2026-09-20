@@ -7,7 +7,7 @@ player and wandering enemies in a 1920x1080 world), kept as a scaffold for the
 autoload, remote console, status bar and test runner. The game itself is a
 university management sim — campus view, no grid, buildings placed at any
 orientation, every student simulated. The prototype scope is listed in
-`Prototype.md` below.
+`Prototype.md` below. Repo: https://github.com/llopis/university
 
 Design material (Obsidian, `/Users/noel/Obsidian/Noel/Game development/University/`):
 - `Prototype.md` — the scope of this prototype. This is the near-term to-do list.
