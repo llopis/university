@@ -3,6 +3,29 @@ class_name DebugCommands
 
 const ScreenshotPath: String = "/tmp/university/screenshot.png"
 
+const ToolPlace: String = "place"
+const ToolDestroy: String = "destroy"
+const ToolNone: String = "none"
+const NoSelection: int = -1
+
+# Button names the mouse commands take.
+const ButtonLeft: String = "left"
+const ButtonRight: String = "right"
+const ButtonMiddle: String = "middle"
+
+# What the second argument of 'action' takes.
+const ActionDown: String = "down"
+const ActionUp: String = "up"
+# A synthetic action is always fully pressed.
+const FullStrength: float = 1.0
+
+# The button a synthetic press left held, MOUSE_BUTTON_NONE when none is: it
+# rides along on the moves that follow, the way a real drag does.
+var _heldButton: MouseButton = MOUSE_BUTTON_NONE
+# Where the last synthetic event put the cursor, so the next move can carry the
+# travel since it — GameCamera adds up `relative` to tell a drag from a click.
+var _mouse: Vector2 = Vector2.ZERO
+
 
 func _init() -> void:
 	LimboConsole.register_command(_screenshot, "screenshot", "Save a screenshot to %s." % ScreenshotPath)
@@ -12,11 +35,13 @@ func _init() -> void:
 	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees.")
 	LimboConsole.register_command(_tool, "tool", "Arm a tool: a building type id to place it, 'destroy', or 'none'.")
 	LimboConsole.register_command(_select, "select", "Select building <n> (index from 'buildings'); -1 clears the selection.")
-	LimboConsole.register_command(_mouseDown, "mousedown", "Press the left mouse button at design-space point <x> <y> (synthetic event through the viewport).")
-	LimboConsole.register_command(_mouseUp, "mouseup", "Release the left mouse button at design-space point <x> <y>.")
-	LimboConsole.register_command(_mouseMove, "mousemove", "Move the mouse to design-space point <x> <y> (with the left button held if pressed).")
+	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, and the camera.")
+	LimboConsole.register_command(_mouseDown, "mousedown", "Press a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
+	LimboConsole.register_command(_mouseUp, "mouseup", "Release a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
+	LimboConsole.register_command(_mouseMove, "mousemove", "Move the mouse to design-space point <x> <y>, carrying whichever button is held and the travel since the last synthetic event.")
+	LimboConsole.register_command(_action, "action", "Press or release input action <name>: <state> is 'down' or 'up'.")
 	# Lets the remote console reach the scene tree, e.g.
-	# eval get_root().find_child("GameView", true, false).
+	# eval get_root().find_child("CampusView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())
 
 
@@ -81,13 +106,6 @@ func _buildings() -> void:
 		LimboConsole.print_line("No buildings")
 
 
-const ToolDestroy: String = "destroy"
-const ToolNone: String = "none"
-const NoSelection: int = -1
-
-var _mouseHeld: bool = false
-
-
 func _tool(toolName: String) -> void:
 	var controller: BuildController = _campusView().controller
 	if (toolName == ToolDestroy):
@@ -114,34 +132,108 @@ func _select(index: int) -> void:
 		LimboConsole.print_line("Selected %d (%s)" % [index, building.info.name])
 
 
+func _indexOf(building: Building) -> int:
+	return _campus().buildings.find(building) if (building != null) else NoSelection
+
+
+func _toolName(armed: BuildController.Tool, info: BuildingInfo) -> String:
+	match armed:
+		BuildController.Tool.Place:
+			return "%s %s" % [ToolPlace, info.id]
+		BuildController.Tool.Destroy:
+			return ToolDestroy
+		_:
+			return ToolNone
+
+
+func _state() -> void:
+	var controller: BuildController = _campusView().controller
+	LimboConsole.print_line("Tool: %s | angle %.1f deg | selected %d | hovered %d" % [
+		_toolName(controller.activeTool, controller.placeInfo),
+		rad_to_deg(controller.angle()),
+		_indexOf(controller.selected),
+		_indexOf(controller.hovered)])
+	var camera: GameCamera = _campusView().camera
+	LimboConsole.print_line("Camera: target (%.1f, %.1f) | %.1f m | yaw %.1f deg" % [
+		camera.target().x, camera.target().z, camera.distance(), camera.yaw()])
+
+
+# The button a name stands for, or MOUSE_BUTTON_NONE when the name is not one.
+static func _mouseButton(buttonName: String) -> MouseButton:
+	match buttonName:
+		ButtonLeft:
+			return MOUSE_BUTTON_LEFT
+		ButtonRight:
+			return MOUSE_BUTTON_RIGHT
+		ButtonMiddle:
+			return MOUSE_BUTTON_MIDDLE
+		_:
+			return MOUSE_BUTTON_NONE
+
+
+# The button_mask bit for whichever button is held, 0 when none is.
+func _heldMask() -> int:
+	match _heldButton:
+		MOUSE_BUTTON_LEFT:
+			return MOUSE_BUTTON_MASK_LEFT
+		MOUSE_BUTTON_RIGHT:
+			return MOUSE_BUTTON_MASK_RIGHT
+		MOUSE_BUTTON_MIDDLE:
+			return MOUSE_BUTTON_MASK_MIDDLE
+		_:
+			return 0
+
+
 func _pushMouse(event: InputEventMouse, x: float, y: float) -> void:
 	event.position = Vector2(x, y)
 	event.global_position = event.position
+	_mouse = event.position
 	(Engine.get_main_loop() as SceneTree).get_root().push_input(event, true)
 
 
-func _mouseDown(x: float, y: float) -> void:
+func _mouseButtonEvent(x: float, y: float, buttonName: String, pressed: bool) -> void:
+	var button: MouseButton = DebugCommands._mouseButton(buttonName)
+	if (button == MOUSE_BUTTON_NONE):
+		LimboConsole.print_line("Unknown button '%s'" % buttonName)
+		return
 	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.button_index = MOUSE_BUTTON_LEFT
-	event.pressed = true
-	event.button_mask = MOUSE_BUTTON_MASK_LEFT
-	_mouseHeld = true
+	event.button_index = button
+	event.pressed = pressed
+	_heldButton = button if (pressed) else MOUSE_BUTTON_NONE
+	event.button_mask = _heldMask()
 	_pushMouse(event, x, y)
-	LimboConsole.print_line("Mouse down at (%.0f, %.0f)" % [x, y])
+	LimboConsole.print_line("Mouse %s %s at (%.0f, %.0f)" % [
+		buttonName, ActionDown if (pressed) else ActionUp, x, y])
 
 
-func _mouseUp(x: float, y: float) -> void:
-	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.button_index = MOUSE_BUTTON_LEFT
-	event.pressed = false
-	_mouseHeld = false
-	_pushMouse(event, x, y)
-	LimboConsole.print_line("Mouse up at (%.0f, %.0f)" % [x, y])
+func _mouseDown(x: float, y: float, buttonName: String = ButtonLeft) -> void:
+	_mouseButtonEvent(x, y, buttonName, true)
+
+
+func _mouseUp(x: float, y: float, buttonName: String = ButtonLeft) -> void:
+	_mouseButtonEvent(x, y, buttonName, false)
 
 
 func _mouseMove(x: float, y: float) -> void:
 	var event: InputEventMouseMotion = InputEventMouseMotion.new()
-	if (_mouseHeld):
-		event.button_mask = MOUSE_BUTTON_MASK_LEFT
+	event.button_mask = _heldMask()
+	event.relative = Vector2(x, y) - _mouse
 	_pushMouse(event, x, y)
-	LimboConsole.print_line("Mouse at (%.0f, %.0f)" % [x, y])
+	LimboConsole.print_line("Mouse at (%.0f, %.0f), moved (%.0f, %.0f)" % [x, y, event.relative.x, event.relative.y])
+
+
+## Presses or releases an input action, so both the polled reads (Input.get_axis)
+## and the _unhandled_input handlers see it, which the keyboard cannot do here.
+func _action(actionName: String, state: String) -> void:
+	if (not InputMap.has_action(actionName)):
+		LimboConsole.print_line("Unknown action '%s'" % actionName)
+		return
+	if (state != ActionDown and state != ActionUp):
+		LimboConsole.print_line("Expected '%s' or '%s', got '%s'" % [ActionDown, ActionUp, state])
+		return
+	var event: InputEventAction = InputEventAction.new()
+	event.action = actionName
+	event.pressed = (state == ActionDown)
+	event.strength = FullStrength if (event.pressed) else 0.0
+	Input.parse_input_event(event)
+	LimboConsole.print_line("Action %s %s" % [actionName, state])

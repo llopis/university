@@ -2,6 +2,44 @@
 
 [ext_resource type="Script" path="res://src/ui/build_menu.gd" id="1_menu"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_armed"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(0.95, 0.64, 0.13, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.93, 0.76, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_armed_hover"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 0.75, 0.28, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.93, 0.76, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="Theme" id="Theme_menu"]
+Button/colors/font_hover_pressed_color = Color(0.11, 0.09, 0.05, 1)
+Button/colors/font_pressed_color = Color(0.11, 0.09, 0.05, 1)
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_armed_hover")
+Button/styles/pressed = SubResource("StyleBoxFlat_armed")
+
 [node name="BuildMenu" type="VBoxContainer"]
 anchors_preset = 2
 anchor_top = 1.0
@@ -11,6 +49,7 @@ offset_top = -56.0
 offset_right = 216.0
 offset_bottom = -16.0
 grow_vertical = 0
+theme = SubResource("Theme_menu")
 theme_override_constants/separation = 8
 alignment = 2
 script = ExtResource("1_menu")
@@ -36,6 +75,7 @@ theme_override_constants/separation = 6
 unique_name_in_owner = true
 custom_minimum_size = Vector2(184, 40)
 layout_mode = 2
+focus_mode = 0
 toggle_mode = true
 text = "Destroy"
 
@@ -43,5 +83,6 @@ text = "Destroy"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+focus_mode = 0
 toggle_mode = true
 text = "Build"
