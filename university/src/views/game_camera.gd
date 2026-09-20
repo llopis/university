@@ -141,9 +141,13 @@ func _unhandled_input(event: InputEvent) -> void:
 ## press that DID drag swallows its own release so no click fires from it.
 func _updateDrag(mb: InputEventMouseButton) -> void:
 	if (mb.pressed):
-		_dragButton = mb.button_index
-		_dragTravel = 0.0
-		_dragging = false
+		# A second drag button pressed mid-drag is ignored: taking it over would
+		# leave the first button's release unswallowed, and the controller would
+		# read the end of a pan as a click.
+		if (_dragButton == MOUSE_BUTTON_NONE):
+			_dragButton = mb.button_index
+			_dragTravel = 0.0
+			_dragging = false
 		return
 	if (mb.button_index != _dragButton):
 		return

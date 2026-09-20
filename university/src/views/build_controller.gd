@@ -77,7 +77,10 @@ func _setTool(newTool: Tool, info: BuildingInfo) -> void:
 	ToolChanged.emit()
 
 
+## Choosing a building puts any armed tool away: the two are never on at once.
 func select(building: Building) -> void:
+	if (building != null and activeTool != Tool.None):
+		cancel()
 	if (building == selected):
 		return
 	selected = building
@@ -118,13 +121,24 @@ func _process(dt: float) -> void:
 		_setHovered(_pick(_mouse) if (_hasMouse) else null)
 
 
+## The ground point under the cursor as a state position, or null when there is
+## no cursor yet or the ray misses the ground plane.
+func _groundUnderCursor() -> Variant:
+	if (not _hasMouse):
+		return null
+	var point: Variant = _camera.groundPoint(_mouse)
+	if (point == null):
+		return null
+	var ground: Vector3 = point
+	return Vector2(ground.x, ground.z)
+
+
 func _updateGhost() -> void:
-	var point: Variant = _camera.groundPoint(_mouse) if (_hasMouse) else null
+	var point: Variant = _groundUnderCursor()
 	_ghost.visible = (point != null)
 	if (point == null):
 		return
-	var ground: Vector3 = point
-	var at: Vector2 = Vector2(ground.x, ground.z)
+	var at: Vector2 = point
 	_ghost.showRect(Building.rectFor(placeInfo, at, _angle))
 	_ghost.setValid(_campus.canPlace(placeInfo, at, _angle))
 
@@ -162,10 +176,10 @@ func _unhandled_input(event: InputEvent) -> void:
 func _leftClick() -> void:
 	match activeTool:
 		Tool.Place:
-			var point: Variant = _camera.groundPoint(_mouse)
+			var point: Variant = _groundUnderCursor()
 			if (point != null):
-				var ground: Vector3 = point
-				placeAt(Vector2(ground.x, ground.z))
+				var at: Vector2 = point
+				placeAt(at)
 		Tool.Destroy:
 			var target: Building = _pick(_mouse)
 			if (target != null):

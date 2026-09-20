@@ -51,9 +51,10 @@ func _onHoverChanged(building: Building) -> void:
 
 
 ## Takes the highlight off the view that had it and puts it on the building's.
-## The old view may already be freed: its building was just destroyed.
 func _moveHighlight(from: BuildingView, building: Building, kind: BuildingView.Highlight) -> BuildingView:
-	if (is_instance_valid(from) and not from.is_queued_for_deletion()):
+	# Checked because the old view may already be gone: its building was
+	# destroyed, and a later selection change finds the view freed.
+	if (is_instance_valid(from)):
 		from.setHighlight(BuildingView.Highlight.None)
 	var to: BuildingView = viewFor(building) if (building != null) else null
 	if (to != null):

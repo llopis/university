@@ -12,15 +12,11 @@ const DestroyColor: Color = Color(0.9, 0.32, 0.27)
 const GhostValidColor: Color = Color(0.45, 0.9, 0.5, 0.55)
 const GhostInvalidColor: Color = Color(0.95, 0.3, 0.25, 0.55)
 
-# Null for the ghost.
-var building: Building
-
 var _material: StandardMaterial3D = StandardMaterial3D.new()
 
 
 static func create(forBuilding: Building) -> BuildingView:
 	var view: BuildingView = BuildingView.new()
-	view.building = forBuilding
 	view._setup()
 	view.showRect(forBuilding.rect())
 	view.setHighlight(Highlight.None)

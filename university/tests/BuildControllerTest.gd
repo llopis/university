@@ -37,6 +37,24 @@ func test_arming_a_tool_clears_the_selection() -> void:
 	assert_object(controller.selected).is_null()
 
 
+func test_selecting_a_building_puts_an_armed_tool_away() -> void:
+	# An armed tool means no selection; the two must never be on at once.
+	var campus: Campus = Campus.new()
+	var controller: BuildController = _controller(campus)
+	var building: Building = campus.place(_info(), Vector2.ZERO, 0.0)
+	controller.armPlace(_info())
+	controller.select(building)
+	assert_int(controller.activeTool).is_equal(BuildController.Tool.None)
+	assert_object(controller.selected).is_same(building)
+
+
+func test_clearing_the_selection_leaves_an_armed_tool_alone() -> void:
+	var controller: BuildController = _controller(Campus.new())
+	controller.armPlace(_info())
+	controller.select(null)
+	assert_int(controller.activeTool).is_equal(BuildController.Tool.Place)
+
+
 func test_placing_keeps_the_tool_armed_and_uses_the_angle() -> void:
 	var campus: Campus = Campus.new()
 	var controller: BuildController = _controller(campus)

@@ -44,6 +44,20 @@ func test_all_keeps_record_order() -> void:
 	assert_str(buildingDB.all[1].id).is_equal("second")
 
 
+func test_a_record_without_a_usable_diameter_is_left_out() -> void:
+	# A zero-size footprint would place a building nothing can pick or overlap,
+	# so the record is reported and dropped rather than half-loaded.
+	var records: Array[Dictionary] = _records()
+	records.append({"id": "sizeless", "name": "Sizeless", "category": "Cat", "diameter": ""})
+	var loaded: Array[BuildingInfoDB] = []
+	await assert_error(func() -> void: loaded.append(BuildingInfoDB.new(records))) \
+		.is_push_error(BuildingInfoDB.NoDiameterError % "sizeless")
+	var buildingDB: BuildingInfoDB = loaded[0]
+	assert_object(buildingDB.info("sizeless")).is_null()
+	assert_int(buildingDB.all.size()).is_equal(2)
+	assert_str(buildingDB.all[0].id).is_equal("first")
+
+
 func test_load_from_file_parses_rows_and_blanks() -> void:
 	var buildingDB: BuildingInfoDB = BuildingInfoDB.loadFrom(FixturePath)
 	assert_int(buildingDB.all.size()).is_equal(2)

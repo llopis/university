@@ -6,8 +6,9 @@ const BuildingsPath: String = "res://data/buildings.txt"
 var buildingDB: BuildingInfoDB
 
 
-# Game data
-var gameState: GameState = GameState.new()
+# Game data. Built in _ready, after buildingDB: the campus may read the DB
+# while it builds itself.
+var gameState: GameState
 
 const RemoteConsoleScript: GDScript = preload("res://src/debug/remote_console.gd")
 
@@ -18,6 +19,7 @@ const SfxBus: StringName = &"SFX"
 
 func _ready() -> void:
 	buildingDB = BuildingInfoDB.loadFrom(BuildingsPath)
+	gameState = GameState.new()
 	var console: Node = RemoteConsoleScript.new()
 	console.name = "RemoteConsole"
 	add_child(console)
