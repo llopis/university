@@ -7,6 +7,8 @@ extends Node3D
 @onready var statusBar: StatusBar = %StatusBar
 @onready var buildingsRoot: Node3D = %Buildings
 @onready var controller: BuildController = %BuildController
+@onready var buildMenu: BuildMenu = %BuildMenu
+@onready var infoPanel: InfoPanel = %InfoPanel
 
 var gameState: GameState
 
@@ -24,6 +26,12 @@ func _ready() -> void:
 	controller.setup(gameState.campus, camera)
 	controller.SelectionChanged.connect(_onSelectionChanged)
 	controller.HoverChanged.connect(_onHoverChanged)
+	buildMenu.populate(Global.buildingDB.all)
+	buildMenu.BuildingChosen.connect(controller.armPlace)
+	buildMenu.DestroyChosen.connect(controller.armDestroy)
+	buildMenu.Closed.connect(controller.cancel)
+	controller.ToolChanged.connect(func() -> void: buildMenu.showTool(controller.activeTool, controller.placeInfo))
+	controller.SelectionChanged.connect(infoPanel.showBuilding)
 
 
 func _process(dt: float) -> void:
