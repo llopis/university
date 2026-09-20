@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/views/campus_view.gd" id="1_view"]
+[ext_resource type="Script" path="res://src/views/ground_view.gd" id="2_ground"]
+[ext_resource type="Shader" path="res://src/views/ground.gdshader" id="3_shader"]
+[ext_resource type="Script" path="res://src/views/game_camera.gd" id="4_camera"]
+[ext_resource type="PackedScene" path="res://src/ui/status_bar.tscn" id="5_status"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+shader = ExtResource("3_shader")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+material = SubResource("ShaderMaterial_ground")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 1
+background_color = Color(0.62, 0.78, 0.9, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.75, 0.78, 0.8, 1)
+
+[node name="CampusView" type="Node3D"]
+script = ExtResource("1_view")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+mesh = SubResource("PlaneMesh_ground")
+script = ExtResource("2_ground")
+
+[node name="Buildings" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Camera" type="Camera3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_camera")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.93967193, -0.26200005, 0.21984288, 0, 0.6427813, 0.76603246, -0.3420126, -0.7198392, 0.6040134, 0, 10, 0)
+shadow_enabled = true
+directional_shadow_max_distance = 800.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_main")
+
+[node name="UI root" type="CanvasLayer" parent="."]
+
+[node name="StatusBar" parent="UI root" instance=ExtResource("5_status")]
+unique_name_in_owner = true
