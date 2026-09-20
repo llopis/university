@@ -1,0 +1,8 @@
+.DS_Store
+.godot/
+university/reports/
+.superpowers/
+.worktrees/
+
+# Python bytecode from the bin/ tooling
+__pycache__/
