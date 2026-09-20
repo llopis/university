@@ -1,0 +1,52 @@
+extends GdUnitTestSuite
+## Parsing and lookup of building definitions. Fixtures are arbitrary records;
+## nothing here asserts what the real data file holds.
+
+const FixturePath: String = "res://tests/fixtures/buildings_fixture.txt"
+const Epsilon: float = 0.0001
+
+
+func _records() -> Array[Dictionary]:
+	var records: Array[Dictionary] = [
+		{"id": "first", "name": "First", "category": "Cat", "cost": "", "buildTime": "", "diameter": 12},
+		{"id": "second", "name": "Second", "category": "Cat", "cost": 150, "buildTime": 2.5, "diameter": 7.5},
+	]
+	return records
+
+
+func test_blank_numeric_cells_coerce_to_zero() -> void:
+	var info: BuildingInfo = BuildingInfo.new(_records()[0])
+	assert_int(info.cost).is_equal(0)
+	assert_float(info.buildTime).is_equal_approx(0.0, Epsilon)
+
+
+func test_int_cell_is_read_as_float_diameter() -> void:
+	var info: BuildingInfo = BuildingInfo.new(_records()[0])
+	assert_float(info.diameter).is_equal_approx(12.0, Epsilon)
+
+
+func test_missing_optional_columns_default() -> void:
+	var info: BuildingInfo = BuildingInfo.new({"id": "bare", "name": "Bare"})
+	assert_str(info.category).is_equal("")
+	assert_float(info.diameter).is_equal_approx(0.0, Epsilon)
+
+
+func test_lookup_by_id() -> void:
+	var buildingDB: BuildingInfoDB = BuildingInfoDB.new(_records())
+	assert_str(buildingDB.info("second").name).is_equal("Second")
+	assert_object(buildingDB.info("nope")).is_null()
+
+
+func test_all_keeps_record_order() -> void:
+	var buildingDB: BuildingInfoDB = BuildingInfoDB.new(_records())
+	assert_int(buildingDB.all.size()).is_equal(2)
+	assert_str(buildingDB.all[0].id).is_equal("first")
+	assert_str(buildingDB.all[1].id).is_equal("second")
+
+
+func test_load_from_file_parses_rows_and_blanks() -> void:
+	var buildingDB: BuildingInfoDB = BuildingInfoDB.loadFrom(FixturePath)
+	assert_int(buildingDB.all.size()).is_equal(2)
+	assert_int(buildingDB.info("alpha").cost).is_equal(0)
+	assert_int(buildingDB.info("beta").cost).is_equal(150)
+	assert_float(buildingDB.info("beta").diameter).is_equal_approx(7.5, Epsilon)

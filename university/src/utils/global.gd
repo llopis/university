@@ -2,6 +2,8 @@ extends Node
 
 
 # Static data
+const BuildingsPath: String = "res://data/buildings.txt"
+var buildingDB: BuildingInfoDB
 
 
 # Game data
@@ -15,6 +17,7 @@ const SfxBus: StringName = &"SFX"
 
 
 func _ready() -> void:
+	buildingDB = BuildingInfoDB.loadFrom(BuildingsPath)
 	var console: Node = RemoteConsoleScript.new()
 	console.name = "RemoteConsole"
 	add_child(console)

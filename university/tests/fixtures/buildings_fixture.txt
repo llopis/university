@@ -1,0 +1,3 @@
+id,name,category,cost,buildTime,diameter
+alpha,Alpha Hall,Test,,,12
+beta,Beta Hall,Test,150,2.5,7.5
