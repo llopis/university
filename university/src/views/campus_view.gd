@@ -6,10 +6,14 @@ extends Node3D
 @onready var camera: GameCamera = %Camera
 @onready var statusBar: StatusBar = %StatusBar
 @onready var buildingsRoot: Node3D = %Buildings
+@onready var controller: BuildController = %BuildController
 
 var gameState: GameState
 
 var _views: Dictionary[Building, BuildingView]
+# The building whose view currently shows each highlight, so it can be put back.
+var _selectedView: BuildingView
+var _hoveredView: BuildingView
 
 
 func _ready() -> void:
@@ -17,19 +21,36 @@ func _ready() -> void:
 	statusBar.gameState = gameState
 	gameState.campus.BuildingAdded.connect(_onBuildingAdded)
 	gameState.campus.BuildingRemoved.connect(_onBuildingRemoved)
+	controller.setup(gameState.campus, camera)
+	controller.SelectionChanged.connect(_onSelectionChanged)
+	controller.HoverChanged.connect(_onHoverChanged)
 
 
 func _process(dt: float) -> void:
 	gameState.update(dt)
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if (event.is_action_pressed("ExitGame")):
-		get_tree().quit()
-
-
 func viewFor(building: Building) -> BuildingView:
 	return _views.get(building) as BuildingView
+
+
+func _onSelectionChanged(building: Building) -> void:
+	_selectedView = _moveHighlight(_selectedView, building, BuildingView.Highlight.Selected)
+
+
+func _onHoverChanged(building: Building) -> void:
+	_hoveredView = _moveHighlight(_hoveredView, building, BuildingView.Highlight.Destroy)
+
+
+## Takes the highlight off the view that had it and puts it on the building's.
+## The old view may already be freed: its building was just destroyed.
+func _moveHighlight(from: BuildingView, building: Building, kind: BuildingView.Highlight) -> BuildingView:
+	if (is_instance_valid(from) and not from.is_queued_for_deletion()):
+		from.setHighlight(BuildingView.Highlight.None)
+	var to: BuildingView = viewFor(building) if (building != null) else null
+	if (to != null):
+		to.setHighlight(kind)
+	return to
 
 
 func _onBuildingAdded(building: Building) -> void:

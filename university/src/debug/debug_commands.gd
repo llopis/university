@@ -10,6 +10,11 @@ func _init() -> void:
 	LimboConsole.register_command(_build, "build", "Place building type <id> at ground point <x> <z> (metres), turned <deg> degrees.")
 	LimboConsole.register_command(_destroy, "destroy", "Destroy building <n> (index from 'buildings').")
 	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees.")
+	LimboConsole.register_command(_tool, "tool", "Arm a tool: a building type id to place it, 'destroy', or 'none'.")
+	LimboConsole.register_command(_select, "select", "Select building <n> (index from 'buildings'); -1 clears the selection.")
+	LimboConsole.register_command(_mouseDown, "mousedown", "Press the left mouse button at design-space point <x> <y> (synthetic event through the viewport).")
+	LimboConsole.register_command(_mouseUp, "mouseup", "Release the left mouse button at design-space point <x> <y>.")
+	LimboConsole.register_command(_mouseMove, "mousemove", "Move the mouse to design-space point <x> <y> (with the left button held if pressed).")
 	# Lets the remote console reach the scene tree, e.g.
 	# eval get_root().find_child("GameView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())
@@ -74,3 +79,69 @@ func _buildings() -> void:
 		LimboConsole.print_line("%d %s (%.1f, %.1f) %.1f deg" % [i, building.info.id, building.pos.x, building.pos.y, rad_to_deg(building.angle)])
 	if (buildings.is_empty()):
 		LimboConsole.print_line("No buildings")
+
+
+const ToolDestroy: String = "destroy"
+const ToolNone: String = "none"
+const NoSelection: int = -1
+
+var _mouseHeld: bool = false
+
+
+func _tool(toolName: String) -> void:
+	var controller: BuildController = _campusView().controller
+	if (toolName == ToolDestroy):
+		controller.armDestroy()
+	elif (toolName == ToolNone):
+		controller.cancel()
+	else:
+		var info: BuildingInfo = Global.buildingDB.info(toolName)
+		if (info == null):
+			LimboConsole.print_line("Unknown tool '%s'" % toolName)
+			return
+		controller.armPlace(info)
+	LimboConsole.print_line("Tool: %s" % toolName)
+
+
+func _select(index: int) -> void:
+	var controller: BuildController = _campusView().controller
+	if (index == NoSelection):
+		controller.select(null)
+		return
+	var building: Building = _buildingAt(index)
+	if (building != null):
+		controller.select(building)
+		LimboConsole.print_line("Selected %d (%s)" % [index, building.info.name])
+
+
+func _pushMouse(event: InputEventMouse, x: float, y: float) -> void:
+	event.position = Vector2(x, y)
+	event.global_position = event.position
+	(Engine.get_main_loop() as SceneTree).get_root().push_input(event, true)
+
+
+func _mouseDown(x: float, y: float) -> void:
+	var event: InputEventMouseButton = InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = true
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT
+	_mouseHeld = true
+	_pushMouse(event, x, y)
+	LimboConsole.print_line("Mouse down at (%.0f, %.0f)" % [x, y])
+
+
+func _mouseUp(x: float, y: float) -> void:
+	var event: InputEventMouseButton = InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.pressed = false
+	_mouseHeld = false
+	_pushMouse(event, x, y)
+	LimboConsole.print_line("Mouse up at (%.0f, %.0f)" % [x, y])
+
+
+func _mouseMove(x: float, y: float) -> void:
+	var event: InputEventMouseMotion = InputEventMouseMotion.new()
+	if (_mouseHeld):
+		event.button_mask = MOUSE_BUTTON_MASK_LEFT
+	_pushMouse(event, x, y)
+	LimboConsole.print_line("Mouse at (%.0f, %.0f)" % [x, y])
