@@ -32,9 +32,11 @@ free. The state/view separation in `CLAUDE.md` is the governing constraint.
 ## Units and conventions
 
 1 world unit = 1 metre, Y up. State positions are `Vector2` with `x` = world X
-and `y` = world Z. Angles are radians in state, counter-clockwise seen from
-above being a positive turn about +Y; degrees appear only in UI-facing
-constants and console commands, converted in one place each.
+and `y` = world Z. A rect's `angle` (radians) is the direction of its own long
+axis in that plane, `(cos a, sin a)`. A node's y rotation turns the other way,
+so the view converts in exactly one place, `BuildingView.showRect`:
+`rotation.y = -angle`. Degrees appear only in UI-facing constants and console
+commands, converted in one place each.
 
 ## State (`university/src/data/`, `university/src/state/`)
 
@@ -102,7 +104,7 @@ Keeps the fixed-step accumulator; `level` becomes `campus: Campus`.
 
 `Node3D` root: `Sun` (`DirectionalLight3D`), `WorldEnvironment`, `%Ground`,
 `%Camera`, `%Buildings` (parent of the `BuildingView`s), `%BuildController`,
-and a `CanvasLayer` with `%TopBar`, `%BuildMenu`, `%InfoPanel`. Lighting and
+and a `CanvasLayer` with `%StatusBar`, `%BuildMenu`, `%InfoPanel`. Lighting and
 layout are authored in the scene. The script calls `gameState.update(dt)`,
 creates/frees `BuildingView`s on the campus signals, and wires the UI signals
 to the controller.
@@ -117,9 +119,11 @@ Colours and spacing are shader parameters set in the scene. Visual only.
 ### `GameCamera`
 
 Ported from Heist3D's `game_camera.gd`: orbits a ground target at constant
-pitch and FOV; zoom is distance; `_applyTransform` is the single place the
-transform is written and emits `ViewMoved`; `groundPoint(screen)` and a new
-`ray(screen)` return plain values. Changes from Heist: the Alt-to-turn capture
+pitch and FOV; zoom is distance; `setTarget(point)`, `setYaw`, `setZoom` are
+the way the target, yaw and distance are moved, and `_applyTransform` is the
+single place the transform is written and emits `ViewMoved`;
+`groundPoint(screen)` returns a plain value, and callers that need a ray build
+it from `project_ray_origin` / `project_ray_normal`. Changes from Heist: the Alt-to-turn capture
 becomes middle-drag (`TurnDegreesPerPixel`), right-drag pans (past
 `DragThreshold`), the focus glide and `resetView(geometry)` are dropped, the
 target is clamped to `Campus.bounds()`, and the distance range is rescaled for
@@ -139,7 +143,10 @@ the same box with a translucent material and `setValid(bool)`.
 The only place input becomes commands. `enum Tool { None, Place, Destroy }`.
 
 - `armPlace(info)`, `armDestroy()`, `cancel()`; signals `ToolChanged`,
-  `SelectionChanged(building)`.
+  `SelectionChanged(building)`, `HoverChanged(building)`. The controller only
+  announces which building is selected and which one the Destroy tool is over;
+  `CampusView` listens to both and moves the `BuildingView` highlights, so the
+  controller never touches a view.
 - **Place:** the ghost follows `camera.groundPoint(mouse)`; `,` / `.` held turn
   `_angle` at `RotateSpeed` (90 °/s); validity from `campus.canPlace` every
   frame; LMB calls `campus.place` and stays armed with the same angle.
@@ -153,12 +160,13 @@ The only place input becomes commands. `enum Tool { None, Place, Destroy }`.
 
 ### UI (scene-authored)
 
-- `TopBar` — the existing `status_bar` reworked: placeholder `Time` and
+- `StatusBar` — the existing `status_bar` reworked: placeholder `Time` and
   `Money` labels. Static text for now.
 - `BuildMenu` — bottom-left `Build` toggle button; open, it shows a panel with
   one button per `Global.buildingDB.all` (created in code, since the count is
   data) and a `Destroy` button. Signals `BuildingChosen(info)`,
-  `DestroyChosen`. The armed entry shows pressed; it follows `ToolChanged`.
+  `DestroyChosen`, and `Closed` when the list is shut, which cancels the tool.
+  The armed entry shows pressed; it follows `ToolChanged`.
 - `InfoPanel` — bottom-right; shows the selected building's name, hidden when
   nothing is selected.
 

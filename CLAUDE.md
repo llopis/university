@@ -1,13 +1,18 @@
 # University
 
 Godot 4.7 (GDScript). The Godot project is `university/`; the repo root is
-`/Users/noel/Development/University/game`. This is the starting prototype: what
-is in `university/src/` today is the 2D starter template (a `Node2D` level with a
-player and wandering enemies in a 1920x1080 world), kept as a scaffold for the
-autoload, remote console, status bar and test runner. The game itself is a
-university management sim — campus view, no grid, buildings placed at any
-orientation, every student simulated. The prototype scope is listed in
-`Prototype.md` below. Repo: https://github.com/llopis/university
+`/Users/noel/Development/University/game`. This is the starting prototype and it
+is 3D: **1 world unit = 1 metre, Y up**. The sim reasons on the ground plane,
+so state positions are `Vector2` with `x` = world X and `y` =
+world Z, and a rectangle's `angle` (radians) is the direction of its own long
+axis, `(cos a, sin a)` — counter-clockwise seen from above. A node's y rotation
+turns the other way, so `BuildingView.showRect` is the one place a state angle
+becomes a node rotation, `rotation.y = -angle`; nothing else converts. **There
+is no grid**: a building goes down at any position and any angle, and the 10 m
+lines on the ground are `ground.gdshader` drawing them from world position —
+the sim never sees them. The game is a university management sim — campus view,
+buildings placed at any orientation, every student simulated. The prototype
+scope is listed in `Prototype.md` below. Repo: https://github.com/llopis/university
 
 Design material (Obsidian, `/Users/noel/Obsidian/Noel/Game development/University/`):
 - `Prototype.md` — the scope of this prototype. This is the near-term to-do list.
@@ -55,11 +60,11 @@ Every single time, no exceptions:
 ## Architecture
 
 Strict state/view separation:
-- **State** (`university/src/state/`): pure logic classes (`GameState`, `Level`, and what the sim grows) — no engine/node dependencies, plain `class_name` classes, not Nodes. This is what makes the sim deterministic and testable without the engine. A state class may read an autoload-owned data DB (the Info/DB pattern below) while building itself; nothing else.
-- **Views** (`university/src/views/`, `university/src/ui/`): Godot nodes that read from state and draw it. A view owns no simulation truth — position, timers and counts live in state and the view copies them each frame.
-- State must NEVER know about views. Communication from state toward views must use signals only (`Level.EnemyAdded` is the shape to follow).
-- **Orders, not input.** State never reads input. Views translate clicks and keys into orders on a state object, applied on the next step. This is what keeps the sim deterministic and a future timeline/replay a replay of orders. (`PlayerView` writing `player.vel` directly is starter-template code, not the pattern to copy as the sim grows.)
-- Time: the view calls `GameState.update(dt)` once per frame with real dt. `GameState` runs a FIXED-STEP accumulator over `Level.tick` (`GameState.TickStepDuration`, 0.01 s); anything the sim reads must be advanced there. `Level.update(dt)` is the per-frame, non-deterministic-safe part and may not touch anything `tick` reads.
+- **State** (`university/src/state/`, `university/src/data/`): pure logic classes — no engine/node dependencies, plain `class_name` classes, not Nodes. This is what makes the sim deterministic and testable without the engine. A state class may read an autoload-owned data DB (the Info/DB pattern below) while building itself; nothing else. `Campus` is the buildable world: a `Campus.Size`-metre square of ground centred on the origin (`Campus.bounds()`), the `buildings` array, and every placement rule — `canPlace` (inside the bounds, overlapping nothing), `place`, `destroy`, `pick`. `Building` is one building standing on it (`info`, `pos`, `angle`); `Building.rectFor(info, pos, angle)` is the one footprint derivation, used by a placed building's `rect()`, by `canPlace` and by the ghost alike, so the three can never disagree about what fits. Its constants `DepthRatio` (the footprint's short side as a fraction of the sheet's `diameter`, its long side) and `Height` are placeholders until real models arrive; `Height` is state rather than view because picking tests the box, not the footprint. `OrientedRect` — centre, `size` along its own two axes, `angle` — is the one place rectangle maths lives: `corners`, `contains`, `overlaps` (separating-axis over both rects' axes; rects that only touch along an edge do not overlap, `OrientedRect.Epsilon`), `within(bounds)`, and `rayHit`, a slab test run in the rect's own frame where the box is axis-aligned. `Campus.pick` is `rayHit` against every building's box, nearest wins: a ray against the box rather than the ground point under the cursor, because at the camera's pitch a click on a 10 m roof lands metres behind the footprint and the footprint test would pick nothing, or the building behind. No physics is involved in any of it. `BuildingInfo`/`BuildingInfoDB` (`src/data/`) are the building types (see **Data**), and `GameState` holds the campus and the fixed-step clock.
+- **Views** (`university/src/views/`, `university/src/ui/`): Godot nodes that read from state and draw it. A view owns no simulation truth — position, timers and counts live in state and the view copies them each frame. `CampusView` (`campus_view.tscn`, the main scene) is the `Node3D` root: sun, environment, ground, camera, `%Buildings`, `%BuildController` and the UI `CanvasLayer` are authored there; the script calls `GameState.update(dt)` once a frame, creates and frees one `BuildingView` per `Campus.BuildingAdded`/`BuildingRemoved`, wires the menu's signals to the controller, and moves the selected and hovered highlights as the controller's `SelectionChanged`/`HoverChanged` report them. `GameCamera` orbits a ground target at constant pitch and FOV; zoom is the distance to the target, `setTarget` clamps it to `Campus.bounds()` so every pan is limited in one place, and `_applyTransform` is the single place the transform is written, which is why `ViewMoved` is emitted from there. `GroundView` only sizes one `PlaneMesh` to `Campus.Size`; the grass and the 10 m lines are `ground.gdshader`'s, computed from world position, anti-aliased with `fwidth` and faded with distance so they never shimmer — visual only. `BuildingView` is a `BoxMesh` shaped from `building.rect().size` extruded to `Building.Height`, placed by `showRect` (the one state-angle-to-node-rotation conversion); `setHighlight` (`None`, `Selected`, `Destroy`) swaps the material colour, and `createGhost` builds the same box translucent, with `setValid` for the green/red. `BuildController` is the only place input becomes commands, and in `campus_view.tscn` it sits **above** `Camera` in the scene tree on purpose: unhandled input is offered to nodes in reverse tree order, so the camera sees a right-button release first and swallows it when it ended a pan — what still reaches the controller is a real right *click*, which cancels the tool. UI is scene-authored: `StatusBar` across the top (game time and placeholder money), `BuildMenu` bottom-left, `InfoPanel` bottom-right.
+- State must NEVER know about views. Communication from state toward views must use signals only (`Campus.BuildingAdded` is the shape to follow).
+- **Commands, not input.** State never reads input. Views call command methods on state (`Campus.place`, `Campus.destroy`); state validates, mutates and answers with a signal (`BuildingAdded`, `BuildingRemoved`). `BuildController` is the one node that turns a click or a key into one of those calls. The command methods are also the one seam where a command log would go if replay or undo is ever wanted — there is no order queue, because nothing here has to replay a timeline.
+- Time: the view calls `GameState.update(dt)` once per frame with real dt. `GameState` runs a FIXED-STEP accumulator over `Campus.tick` (`GameState.TickStepDuration`, 0.01 s); anything the sim reads must be advanced there. `Campus.update(dt)` is the per-frame, non-deterministic-safe part and may not touch anything `tick` reads. Both are empty until there is something to simulate.
 - **Data.** Content tables follow the Info/DB pattern: an `Info` class with a typed constructor, a `DB` class holding them keyed by id, loaded from CSV via `CsvLoader` (`university/src/utils/csv_loader.gd`) and owned by the `Global` autoload. Declare a table directly in code only until its sheet exists.
 - `Global` (autoload, `university/src/utils/global.gd`) owns the single `GameState` and spins up the remote console. Views fetch state through `Global.gameState`. Build anything that reads another autoload in `_ready`, not as a field initialiser — the autoload name is unbound while its own members initialise.
 - Don't use abstractions if they're not needed. No interface classes unless strictly necessary.
@@ -94,13 +99,19 @@ Test **system behavior** instead: parsing/type-coercion, keyed lookup, movement,
 
 ## Data
 
-There is **no spreadsheet pipeline wired up yet**. `bin/GetDataFromGoogleSheets.py`
-is a leftover copied from an earlier project — its sheet key and output paths
-point at another game — and `university/src/utils/csv_loader.gd` is the CSV
-reader that pairs with it. When the pipeline is set up (the prototype scope
-calls for it), the rule from the previous projects applies: **the Sheet is the
-absolute source of truth**, exported CSVs are generated artefacts and are never
-hand-edited.
+**The Sheet is the absolute source of truth.** `python3 bin/GetDataFromGoogleSheets.py`
+exports the "University" spreadsheet's `Buildings` tab (gid 948960558) to
+`university/data/buildings.txt`, which is committed and **never hand-edited** —
+an edit there is lost the next time anyone runs the export. A new tab is a new
+`(gid, path)` pair in that script's `EXPORTS`. The export is written as `.txt`,
+not `.csv`, because Godot auto-imports `*.csv` as a Translation resource, which
+relocates the file and breaks the `FileAccess` read. `CsvLoader`
+(`university/src/utils/csv_loader.gd`) parses it into `Array[Dictionary]`,
+coercing each cell to bool/int/float where it looks like one, and
+`Global.buildingDB` is built from `Global.BuildingsPath` in `Global._ready`,
+before anything asks for a building type. A sheet that is not shared "anyone
+with the link can view" answers the export endpoint with an HTML login page;
+the script detects that and aborts rather than writing garbage over the data.
 
 ## LimboConsole
 
@@ -108,6 +119,29 @@ LimboConsole is available as an autoload (toggle with the backtick key in-game).
 
 Registered debug commands:
 - `screenshot` — save a screenshot to /tmp/university/screenshot.png.
+- `camera <x> <z> <distance> <yawDeg>` — look at ground point <x> <z> from <distance> metres at <yawDeg> degrees.
+- `build <id> <x> <z> <deg>` — place building type <id> at ground point <x> <z> (metres), turned <deg> degrees.
+- `destroy <n>` — destroy building <n> (index from `buildings`).
+- `buildings` — one line per building: index, type id, position, angle in degrees.
+- `tool <id|destroy|none>` — arm a tool: a building type id to place it, `destroy`, or `none`.
+- `select <n>` — select building <n> (index from `buildings`); -1 clears the selection.
+- `mousedown <x> <y>`, `mouseup <x> <y>`, `mousemove <x> <y>` — synthetic left-button events at a design-space point (1920x1080), pushed through the root viewport so they route to the GUI exactly like a real click; `mousemove` carries the left button while it is down.
+
+In-game: WASD/arrows pan the camera (speed scales with the zoom distance, so it
+covers the same fraction of the screen at any zoom), Q and E turn it while held,
+`[` and `]` zoom while held and the wheel or a trackpad two-finger scroll zooms
+a step at a time; right-drag pans grab-the-world style (past
+`GameCamera.DragThreshold`) and middle-drag turns. The `Build` button in the
+bottom-left corner opens the list: one entry per building type in sheet order,
+then `Destroy`. Choosing a type arms it — a translucent ghost follows the
+cursor, green where `Campus.canPlace` accepts it and red where it does not,
+`,` and `.` turn it while held (`BuildController.RotateSpeedDegrees`), and LMB
+builds it. The tool stays armed at the same angle, so a row of dorms is one
+click each. A right click or Esc puts the tool away, and so does closing the
+list. With no tool armed, LMB selects the building under the cursor — or clears
+the selection when it hits nothing — and the bottom-right info panel shows the
+selected building's name. `Destroy` reddens whichever building is under the
+cursor and LMB removes it. Esc with nothing armed and nothing selected quits.
 
 Command-line flags (`university/src/utils/command_line.gd`, passed after `--`): `--nomusic`, `--nosound` mute the `Music` / `SFX` audio buses if they exist.
 
@@ -121,11 +155,17 @@ Statics are callable on the instance, which is how you reach them. No lambdas ei
 
 Keyboard cannot be injected, and `warp_mouse` does nothing while the window is
 hidden — so anything that follows the OS cursor usually draws off-screen and
-cannot be screenshotted. Add console commands that drive state directly
-(selection, orders, camera) rather than trying to fake input, and verify those
-by asserting state over `eval`, not by looking. Synthetic mouse events pushed
-through the root viewport's GUI routing are the one exception worth building
-when UI hit-testing has to be tested.
+cannot be screenshotted. The `mousedown`/`mousemove`/`mouseup` commands are the
+way round it: they push left-button events through the root viewport's GUI
+routing, so they hit-test controls and fall through to `_unhandled_input`
+exactly as a real click does, and `BuildController` takes the cursor position
+from the event rather than polling `Input`, which is what makes the ghost and
+picking work with the window hidden. Their coordinates are design space,
+1920x1080 (`project.godot`'s viewport size, `canvas_items` stretch), whatever
+the real window is; read a control's `global_position` and `size` over `eval`
+to aim at one. For everything else prefer a command that drives state directly
+(`build`, `destroy`, `select`, `tool`, `camera`) and verify it by asserting
+state over `eval`, not by looking.
 
 To prove a revert/undo really restored something, screenshot before and after
 and pixel-diff the two images: identical means bit-identical, which no state
