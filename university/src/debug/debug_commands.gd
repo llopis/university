@@ -7,6 +7,9 @@ const ScreenshotPath: String = "/tmp/university/screenshot.png"
 func _init() -> void:
 	LimboConsole.register_command(_screenshot, "screenshot", "Save a screenshot to %s." % ScreenshotPath)
 	LimboConsole.register_command(_camera, "camera", "Look at ground point <x> <z> from <distance> metres at <yawDeg> degrees.")
+	LimboConsole.register_command(_build, "build", "Place building type <id> at ground point <x> <z> (metres), turned <deg> degrees.")
+	LimboConsole.register_command(_destroy, "destroy", "Destroy building <n> (index from 'buildings').")
+	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees.")
 	# Lets the remote console reach the scene tree, e.g.
 	# eval get_root().find_child("GameView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())
@@ -34,3 +37,40 @@ func _screenshot() -> void:
 	DirAccess.make_dir_recursive_absolute(ScreenshotPath.get_base_dir())
 	image.save_png(ScreenshotPath)
 	LimboConsole.print_line("Screenshot saved to %s" % ScreenshotPath)
+
+
+func _campus() -> Campus:
+	return Global.gameState.campus
+
+
+func _buildingAt(index: int) -> Building:
+	var buildings: Array[Building] = _campus().buildings
+	if (index < 0 or index >= buildings.size()):
+		LimboConsole.print_line("No building %d" % index)
+		return null
+	return buildings[index]
+
+
+func _build(id: String, x: float, z: float, degrees: float) -> void:
+	var info: BuildingInfo = Global.buildingDB.info(id)
+	if (info == null):
+		LimboConsole.print_line("Unknown building type '%s'" % id)
+		return
+	var building: Building = _campus().place(info, Vector2(x, z), deg_to_rad(degrees))
+	LimboConsole.print_line("Placed %s" % id if (building != null) else "Refused: not free or out of bounds")
+
+
+func _destroy(index: int) -> void:
+	var building: Building = _buildingAt(index)
+	if (building != null):
+		_campus().destroy(building)
+		LimboConsole.print_line("Destroyed %d" % index)
+
+
+func _buildings() -> void:
+	var buildings: Array[Building] = _campus().buildings
+	for i: int in range(buildings.size()):
+		var building: Building = buildings[i]
+		LimboConsole.print_line("%d %s (%.1f, %.1f) %.1f deg" % [i, building.info.id, building.pos.x, building.pos.y, rad_to_deg(building.angle)])
+	if (buildings.is_empty()):
+		LimboConsole.print_line("No buildings")
