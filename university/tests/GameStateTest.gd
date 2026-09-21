@@ -60,6 +60,19 @@ func test_a_long_frame_is_capped() -> void:
 	assert_float(state.gameTime()).is_less_equal(GameState.MaxFrameDt + GameState.TickStepDuration)
 
 
+func test_the_frame_cap_is_applied_before_the_speed_multiplier() -> void:
+	var state: GameState = GameState.new()
+	state.setSpeedIndex(GameState.SpeedSteps.size() - 1)
+	state.update(GameState.MaxFrameDt * 50.0)
+	# The cap bounds the real time a frame may feed the clock, so the hitch
+	# costs at most the cap times the multiplier — not the multiplier times a
+	# whole hitch, which capping afterwards would allow.
+	var multiplier: float = float(state.speedMultiplier())
+	assert_float(state.gameTime()).is_less_equal(
+		GameState.MaxFrameDt * multiplier + GameState.TickStepDuration)
+	assert_float(state.gameTime()).is_greater(GameState.MaxFrameDt)
+
+
 func test_months_roll_over_into_the_campus_and_open_buildings() -> void:
 	var state: GameState = GameState.new()
 	var building: Building = state.campus.place(_info(), Vector2.ZERO, 0.0)
@@ -98,6 +111,16 @@ func test_changing_speed_leaves_pause_alone() -> void:
 	state.setPaused(true)
 	state.setSpeedIndex(GameState.SpeedSteps.size() - 1)
 	state.changeSpeed(-1)
+	assert_bool(state.paused).is_true()
+
+
+func test_advancing_months_works_while_paused() -> void:
+	var state: GameState = GameState.new()
+	state.setPaused(true)
+	var building: Building = state.campus.place(_info(), Vector2.ZERO, 0.0)
+	state.advanceMonths(building.opensAtMonth)
+	assert_int(state.month()).is_equal(building.opensAtMonth)
+	assert_bool(building.underConstruction).is_false()
 	assert_bool(state.paused).is_true()
 
 
