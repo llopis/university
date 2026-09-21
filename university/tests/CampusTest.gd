@@ -95,11 +95,11 @@ func test_pick_prefers_the_nearer_of_two_buildings_along_the_ray() -> void:
 	assert_object(campus.pick(Vector3(200.0, eyeHeight, 0.0), Vector3.LEFT)).is_same(far)
 
 
-const CostInK: int = 100
+const CostInM: int = 1
 
 
 func _priced() -> BuildingInfo:
-	return BuildingInfo.new({"id": "lab", "name": "Lab", "diameter": Diameter, "cost": CostInK})
+	return BuildingInfo.new({"id": "lab", "name": "Lab", "diameter": Diameter, "costM": CostInM})
 
 
 func test_placing_spends_the_cost() -> void:
@@ -184,6 +184,23 @@ func test_a_listener_may_destroy_the_building_it_is_told_has_opened() -> void:
 	assert_array(opened).contains_exactly([doomed, survivor])
 	assert_array(campus.buildings).contains_exactly([survivor])
 	assert_bool(survivor.underConstruction).is_false()
+
+
+func test_a_building_destroyed_before_its_turn_is_not_announced() -> void:
+	var campus: Campus = Campus.new()
+	var first: Building = campus.place(_priced(), Vector2.ZERO, 0.0)
+	var second: Building = campus.place(_priced(), Vector2(Diameter * 2.0, 0.0), 0.0)
+	var opened: Array[Building] = []
+	var onOpened: Callable = func(b: Building) -> void:
+		opened.append(b)
+		if (b == first):
+			campus.destroy(second)
+	campus.BuildingOpened.connect(onOpened)
+	campus.startMonth(first.opensAtMonth)
+	# The listener holds the campus it was given, so let it go before asserting.
+	campus.BuildingOpened.disconnect(onOpened)
+	assert_array(opened).contains_exactly([first])
+	assert_array(campus.buildings).contains_exactly([first])
 
 
 func test_destroying_an_open_building_refunds_nothing() -> void:

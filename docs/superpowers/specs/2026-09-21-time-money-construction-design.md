@@ -19,7 +19,9 @@ construction until the next semester begins.
   game starts in September of Year 1. Years are academic: Year 2 begins the
   next September. Shown as `Sep, Year 1`.
 - **Semesters** start in September (Fall) and February (Spring).
-- **Money:** start with $10,000,000. The sheet's `cost` column is in $K.
+- **Money:** start with $50,000,000. The sheet's `costM` column is in $M and
+  may be fractional. (First built with $10,000,000 and a `cost` column in $K;
+  changed 2026-09-21.)
   Placing a building deducts its cost; money never goes negative — a building
   that cannot be paid for is refused.
 - **Construction:** a placed building is under construction until the beginning
@@ -44,8 +46,8 @@ which has no boundary risk a float `time / 45` would carry.
 
 ### `GameState`
 
-`paused`, `SpeedSteps`, `speedIndex`, `speedMultiplier()`, `changeSpeed(delta)`,
-`setSpeedIndex(index)` — all of which leave pause alone — plus `setPaused(value)`,
+`paused`, `SpeedSteps`, `speedIndex`, `speedMultiplier()`; `changeSpeed(delta)`
+and `setSpeedIndex(index)`, which leave pause alone; `setPaused(value)`,
 the one writer of `paused`, `togglePause()` on top of it, and `runAt(index)`,
 which unpauses and sets the speed: what a transport speed button means.
 `tickCount`; `gameTime()` is
@@ -68,8 +70,8 @@ cost of a building still under construction.
 ### `Building`, `BuildingInfo`
 
 `Building.underConstruction` (true until opened) and `opensAtMonth`.
-`BuildingInfo.cost` is whole dollars: the sheet's $K times `DollarsPerK`, in
-that one place. `buildTime` stays unread — semesters replace it.
+`BuildingInfo.cost` is whole dollars: the sheet's `costM` times `DollarsPerM`,
+rounded, in that one place. `buildTime` stays unread — semesters replace it.
 
 ## Views
 

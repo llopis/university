@@ -12,7 +12,7 @@ signal BuildingOpened(building: Building)
 # Side of the square campus, in metres, centred on the origin.
 const Size: float = 1000.0
 # Whole dollars.
-const StartingMoney: int = 10000000
+const StartingMoney: int = 50000000
 
 var buildings: Array[Building]
 var money: int = StartingMoney
@@ -84,6 +84,9 @@ func startMonth(newMonth: int) -> void:
 		if (building.underConstruction and building.opensAtMonth <= month):
 			due.append(building)
 	for building: Building in due:
+		# A listener may have destroyed it while an earlier one was announced.
+		if (not buildings.has(building)):
+			continue
 		building.underConstruction = false
 		BuildingOpened.emit(building)
 

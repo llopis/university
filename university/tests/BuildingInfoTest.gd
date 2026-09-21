@@ -8,8 +8,8 @@ const Epsilon: float = 0.0001
 
 func _records() -> Array[Dictionary]:
 	var records: Array[Dictionary] = [
-		{"id": "first", "name": "First", "category": "Cat", "cost": "", "buildTime": "", "diameter": 12},
-		{"id": "second", "name": "Second", "category": "Cat", "cost": 150, "buildTime": 2.5, "diameter": 7.5},
+		{"id": "first", "name": "First", "category": "Cat", "costM": "", "buildTime": "", "diameter": 12},
+		{"id": "second", "name": "Second", "category": "Cat", "costM": 1.5, "buildTime": 2.5, "diameter": 7.5},
 	]
 	return records
 
@@ -62,15 +62,20 @@ func test_load_from_file_parses_rows_and_blanks() -> void:
 	var buildingDB: BuildingInfoDB = BuildingInfoDB.loadFrom(FixturePath)
 	assert_int(buildingDB.all.size()).is_equal(2)
 	assert_int(buildingDB.info("alpha").cost).is_equal(0)
-	assert_int(buildingDB.info("beta").cost).is_equal(150 * BuildingInfo.DollarsPerK)
+	assert_int(buildingDB.info("beta").cost).is_equal(roundi(1.5 * BuildingInfo.DollarsPerM))
 	assert_float(buildingDB.info("beta").diameter).is_equal_approx(7.5, Epsilon)
 
 
-func test_cost_is_read_in_thousands_and_held_in_dollars() -> void:
+func test_cost_is_read_in_millions_and_held_in_dollars() -> void:
 	var info: BuildingInfo = BuildingInfo.new(_records()[1])
-	assert_int(info.cost).is_equal(150 * BuildingInfo.DollarsPerK)
+	assert_int(info.cost).is_equal(roundi(1.5 * BuildingInfo.DollarsPerM))
+
+
+func test_a_whole_number_of_millions_reads_the_same_way() -> void:
+	var info: BuildingInfo = BuildingInfo.new({"id": "big", "name": "Big", "diameter": 5, "costM": 2})
+	assert_int(info.cost).is_equal(2 * BuildingInfo.DollarsPerM)
 
 
 func test_a_negative_cost_reads_as_free() -> void:
-	var info: BuildingInfo = BuildingInfo.new({"id": "odd", "name": "Odd", "diameter": 5, "cost": -20})
+	var info: BuildingInfo = BuildingInfo.new({"id": "odd", "name": "Odd", "diameter": 5, "costM": -20})
 	assert_int(info.cost).is_equal(0)

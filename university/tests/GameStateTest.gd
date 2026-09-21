@@ -131,3 +131,8 @@ func test_building_works_while_paused() -> void:
 	assert_object(building).is_not_null()
 	state.campus.destroy(building)
 	assert_array(state.campus.buildings).is_empty()
+
+
+func test_a_month_is_a_whole_number_of_ticks() -> void:
+	var ticks: float = GameCalendar.SecondsPerMonth / GameState.TickStepDuration
+	assert_int(GameState.TicksPerMonth).is_equal(roundi(ticks))

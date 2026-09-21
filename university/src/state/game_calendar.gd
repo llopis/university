@@ -1,7 +1,8 @@
 class_name GameCalendar
-## The one place sim time becomes dates. A month index counts months since the
-## game began (0 is September of the first year); everything here is derived
-## from it, so nothing else needs to know how long a month or a year is.
+## The one place a month index becomes dates and semesters. A month index
+## counts months since the game began (0 is September of the first year);
+## everything here is derived from it, so nothing else needs to know how long
+## a month or a year is.
 
 # Sim seconds in one month at 1x speed.
 const SecondsPerMonth: float = 45.0
