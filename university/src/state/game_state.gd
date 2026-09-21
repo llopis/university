@@ -8,6 +8,8 @@ class_name GameState
 # TODO: Things of the overall campaign, unlocks, etc.
 
 const TickStepDuration: float = 0.01
+# Ticks in one month: the one place a month's length becomes ticks.
+const TicksPerMonth: int = int(GameCalendar.SecondsPerMonth / TickStepDuration)
 ## Running speeds the transport controls step through. Pausing is a separate
 ## control, so every entry here is a speed the sim actually runs at.
 const SpeedSteps: Array[int] = [1, 3, 8]
@@ -32,13 +34,9 @@ func gameTime() -> float:
 	return float(tickCount) * TickStepDuration
 
 
-static func ticksPerMonth() -> int:
-	return roundi(GameCalendar.SecondsPerMonth / TickStepDuration)
-
-
 ## Months since the game began (see GameCalendar).
 func month() -> int:
-	return floori(float(tickCount) / float(GameState.ticksPerMonth()))
+	return floori(float(tickCount) / float(TicksPerMonth))
 
 
 func speedMultiplier() -> int:
@@ -89,6 +87,6 @@ func update(dt: float) -> void:
 ## Steps the sim to the start of the month that many months ahead, paused or
 ## not. For the console and tests.
 func advanceMonths(months: int) -> void:
-	var target: int = (month() + months) * GameState.ticksPerMonth()
+	var target: int = (month() + months) * TicksPerMonth
 	while (tickCount < target):
 		step()
