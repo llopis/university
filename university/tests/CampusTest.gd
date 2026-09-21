@@ -168,6 +168,24 @@ func test_destroying_a_building_under_construction_refunds_it_in_full() -> void:
 	assert_int(campus.money).is_equal(before)
 
 
+func test_a_listener_may_destroy_the_building_it_is_told_has_opened() -> void:
+	var campus: Campus = Campus.new()
+	var doomed: Building = campus.place(_priced(), Vector2.ZERO, 0.0)
+	var survivor: Building = campus.place(_priced(), Vector2(Diameter * 2.0, 0.0), 0.0)
+	var opened: Array[Building] = []
+	var onOpened: Callable = func(b: Building) -> void:
+		opened.append(b)
+		if (b == doomed):
+			campus.destroy(b)
+	campus.BuildingOpened.connect(onOpened)
+	campus.startMonth(doomed.opensAtMonth)
+	# The listener holds the campus it was given, so let it go before asserting.
+	campus.BuildingOpened.disconnect(onOpened)
+	assert_array(opened).contains_exactly([doomed, survivor])
+	assert_array(campus.buildings).contains_exactly([survivor])
+	assert_bool(survivor.underConstruction).is_false()
+
+
 func test_destroying_an_open_building_refunds_nothing() -> void:
 	var campus: Campus = Campus.new()
 	var building: Building = campus.place(_priced(), Vector2.ZERO, 0.0)

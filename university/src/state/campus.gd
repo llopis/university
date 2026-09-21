@@ -74,13 +74,18 @@ func destroy(building: Building) -> void:
 	BuildingRemoved.emit(building)
 
 
-## A new month began: every building due by now opens.
+## A new month began: every building due by now opens. The due ones are
+## collected before any is announced, so a listener that destroys the building
+## it hears about cannot cut the pass short.
 func startMonth(newMonth: int) -> void:
 	month = newMonth
+	var due: Array[Building] = []
 	for building: Building in buildings:
 		if (building.underConstruction and building.opensAtMonth <= month):
-			building.underConstruction = false
-			BuildingOpened.emit(building)
+			due.append(building)
+	for building: Building in due:
+		building.underConstruction = false
+		BuildingOpened.emit(building)
 
 
 ## The first building a ray (unit `dir`) reaches, or null.
