@@ -1,4 +1,5 @@
 id,name,category,cost,buildTime,diameter
-admissions,Admissions,Administration,,,20
-dorm,Dorm,Residential,,,30
-engineering_1,Engineering,Academic,,,40
+admissions,Admissions,Administration,100,,20
+dorm,Dorm,Residential,200,,30
+engineering_1,Engineering,Academic,1000,,40
+dining_1,Dining Commons,Dining,700,,60

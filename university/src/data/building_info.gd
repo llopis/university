@@ -3,6 +3,10 @@ class_name BuildingInfo
 ## (values arrive as Variant via CsvLoader). The Sheet is the source of truth —
 ## see CLAUDE.md's Data section.
 
+# The Sheet authors cost in thousands of dollars; it is held in whole dollars,
+# converted here and nowhere else.
+const DollarsPerK: int = 1000
+
 var id: String
 var name: String
 var category: String
@@ -18,7 +22,7 @@ func _init(data: Dictionary) -> void:
 	id = str(data["id"])
 	name = str(data["name"])
 	category = str(data.get("category", ""))
-	cost = _toInt(data.get("cost", 0))
+	cost = maxi(_toInt(data.get("cost", 0)), 0) * DollarsPerK
 	buildTime = _toFloat(data.get("buildTime", 0.0))
 	diameter = _toFloat(data.get("diameter", 0.0))
 

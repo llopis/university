@@ -11,6 +11,10 @@ const Height: float = 10.0
 var info: BuildingInfo
 var pos: Vector2
 var angle: float
+# True from placement until the campus opens it at the start of a semester.
+var underConstruction: bool = true
+# The month index at which it opens. Stamped by the campus on placement.
+var opensAtMonth: int = 0
 
 
 func _init(buildingInfo: BuildingInfo, at: Vector2, facing: float) -> void:
