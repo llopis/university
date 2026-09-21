@@ -23,6 +23,7 @@ func _ready() -> void:
 	statusBar.gameState = gameState
 	gameState.campus.BuildingAdded.connect(_onBuildingAdded)
 	gameState.campus.BuildingRemoved.connect(_onBuildingRemoved)
+	gameState.campus.BuildingOpened.connect(_onBuildingOpened)
 	controller.setup(gameState.campus, camera)
 	controller.SelectionChanged.connect(_onSelectionChanged)
 	controller.HoverChanged.connect(_onHoverChanged)
@@ -83,3 +84,9 @@ func _onBuildingRemoved(building: Building) -> void:
 	var view: BuildingView = viewFor(building)
 	_views.erase(building)
 	view.queue_free()
+
+
+func _onBuildingOpened(building: Building) -> void:
+	viewFor(building).setUnderConstruction(false)
+	if (building == controller.selected):
+		infoPanel.showBuilding(building)

@@ -41,3 +41,23 @@ func test_the_box_stands_on_the_ground_over_the_footprint_centre() -> void:
 	var view: BuildingView = _view(building)
 	assert_vector(view.position).is_equal_approx(
 		Vector3(Position.x, Building.Height / 2.0, Position.y), Vector3(Epsilon, Epsilon, Epsilon))
+
+
+func _albedo(view: BuildingView) -> Color:
+	return (view.material_override as StandardMaterial3D).albedo_color
+
+
+func test_a_building_under_construction_draws_translucent_until_it_opens() -> void:
+	var building: Building = Building.new(_info(), Vector2.ZERO, 0.0)
+	var view: BuildingView = auto_free(BuildingView.create(building)) as BuildingView
+	assert_float(_albedo(view).a).is_less(1.0)
+	view.setUnderConstruction(false)
+	assert_float(_albedo(view).a).is_equal(1.0)
+
+
+func test_a_highlight_keeps_the_construction_look() -> void:
+	var building: Building = Building.new(_info(), Vector2.ZERO, 0.0)
+	var view: BuildingView = auto_free(BuildingView.create(building)) as BuildingView
+	view.setHighlight(BuildingView.Highlight.Selected)
+	assert_float(_albedo(view).a).is_less(1.0)
+	assert_float(_albedo(view).r).is_equal(BuildingView.SelectedColor.r)

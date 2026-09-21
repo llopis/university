@@ -11,15 +11,18 @@ const SelectedColor: Color = Color(1.0, 0.86, 0.4)
 const DestroyColor: Color = Color(0.9, 0.32, 0.27)
 const GhostValidColor: Color = Color(0.45, 0.9, 0.5, 0.55)
 const GhostInvalidColor: Color = Color(0.95, 0.3, 0.25, 0.55)
+const ConstructionAlpha: float = 0.45
 
 var _material: StandardMaterial3D = StandardMaterial3D.new()
+var _highlight: Highlight = Highlight.None
+var _underConstruction: bool = false
 
 
 static func create(forBuilding: Building) -> BuildingView:
 	var view: BuildingView = BuildingView.new()
 	view._setup()
 	view.showRect(forBuilding.rect())
-	view.setHighlight(Highlight.None)
+	view.setUnderConstruction(forBuilding.underConstruction)
 	return view
 
 
@@ -48,13 +51,29 @@ func showRect(rect: OrientedRect) -> void:
 
 
 func setHighlight(kind: Highlight) -> void:
-	match kind:
+	_highlight = kind
+	_refresh()
+
+
+## Under construction draws see-through and casts no shadow; open is solid.
+func setUnderConstruction(value: bool) -> void:
+	_underConstruction = value
+	_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if (value) else BaseMaterial3D.TRANSPARENCY_DISABLED
+	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if (value) else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	_refresh()
+
+
+# The one place a building's colour is decided: the highlight picks the hue,
+# construction the opacity.
+func _refresh() -> void:
+	var color: Color = BaseColor
+	match _highlight:
 		Highlight.Selected:
-			_material.albedo_color = SelectedColor
+			color = SelectedColor
 		Highlight.Destroy:
-			_material.albedo_color = DestroyColor
-		_:
-			_material.albedo_color = BaseColor
+			color = DestroyColor
+	color.a = ConstructionAlpha if (_underConstruction) else 1.0
+	_material.albedo_color = color
 
 
 func setValid(valid: bool) -> void:

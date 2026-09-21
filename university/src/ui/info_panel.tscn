@@ -4,14 +4,14 @@
 
 [node name="InfoPanel" type="PanelContainer"]
 visible = false
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(320, 0)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -296.0
-offset_top = -76.0
+offset_left = -336.0
+offset_top = -104.0
 offset_right = -16.0
 offset_bottom = -16.0
 grow_horizontal = 0
@@ -25,8 +25,18 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 10
 
-[node name="NameLabel" type="Label" parent="Margin"]
+[node name="Rows" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="NameLabel" type="Label" parent="Margin/Rows"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Building"
+
+[node name="StatusLabel" type="Label" parent="Margin/Rows"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Open"
