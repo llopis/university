@@ -6,4 +6,4 @@ extends Control
 var gameState: GameState
 
 func _process(_dt: float) -> void:
-	timeAmount.text = "%.2f s" % [gameState.gameTime]
+	timeAmount.text = GameCalendar.label(gameState.month())

@@ -3,6 +3,9 @@ class_name DebugCommands
 
 const ScreenshotPath: String = "/tmp/university/screenshot.png"
 
+# money's sentinel: no amount given, just print the balance.
+const KeepMoney: int = -1
+
 const ToolPlace: String = "place"
 const ToolDestroy: String = "destroy"
 const ToolNone: String = "none"
@@ -32,14 +35,18 @@ func _init() -> void:
 	LimboConsole.register_command(_camera, "camera", "Look at ground point <x> <z> from <distance> metres at <yawDeg> degrees.")
 	LimboConsole.register_command(_build, "build", "Place building type <id> at ground point <x> <z> (metres), turned <deg> degrees.")
 	LimboConsole.register_command(_destroy, "destroy", "Destroy building <n> (index from 'buildings').")
-	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees.")
+	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees, construction status.")
 	LimboConsole.register_command(_tool, "tool", "Arm a tool: a building type id to place it, 'destroy', or 'none'.")
 	LimboConsole.register_command(_select, "select", "Select building <n> (index from 'buildings'); -1 clears the selection.")
-	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, and the camera.")
+	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, the camera, the time and the money.")
 	LimboConsole.register_command(_mouseDown, "mousedown", "Press a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
 	LimboConsole.register_command(_mouseUp, "mouseup", "Release a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
 	LimboConsole.register_command(_mouseMove, "mousemove", "Move the mouse to design-space point <x> <y>, carrying whichever button is held and the travel since the last synthetic event.")
 	LimboConsole.register_command(_action, "action", "Press or release input action <name>: <state> is 'down' or 'up'.")
+	LimboConsole.register_command(_pause, "pause", "Toggle pause.")
+	LimboConsole.register_command(_speed, "speed", "Run at speed <n>: 1, 2 or 3 (the three transport speeds). Does not unpause.")
+	LimboConsole.register_command(_money, "money", "Print the balance, or set it to <amount> dollars.")
+	LimboConsole.register_command(_advance, "advance", "Step the sim to the start of the month <months> ahead, paused or not.")
 	# Lets the remote console reach the scene tree, e.g.
 	# eval get_root().find_child("CampusView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())
@@ -69,8 +76,12 @@ func _screenshot() -> void:
 	LimboConsole.print_line("Screenshot saved to %s" % ScreenshotPath)
 
 
+func _gameState() -> GameState:
+	return Global.gameState
+
+
 func _campus() -> Campus:
-	return Global.gameState.campus
+	return _gameState().campus
 
 
 func _buildingAt(index: int) -> Building:
@@ -97,11 +108,17 @@ func _destroy(index: int) -> void:
 		LimboConsole.print_line("Destroyed %d" % index)
 
 
+func _statusOf(building: Building) -> String:
+	if (building.underConstruction):
+		return "under construction, opens %s" % GameCalendar.label(building.opensAtMonth)
+	return "open"
+
+
 func _buildings() -> void:
 	var buildings: Array[Building] = _campus().buildings
 	for i: int in range(buildings.size()):
 		var building: Building = buildings[i]
-		LimboConsole.print_line("%d %s (%.1f, %.1f) %.1f deg" % [i, building.info.id, building.pos.x, building.pos.y, rad_to_deg(building.angle)])
+		LimboConsole.print_line("%d %s (%.1f, %.1f) %.1f deg, %s" % [i, building.info.id, building.pos.x, building.pos.y, rad_to_deg(building.angle), _statusOf(building)])
 	if (buildings.is_empty()):
 		LimboConsole.print_line("No buildings")
 
@@ -157,6 +174,32 @@ func _state() -> void:
 	var camera: GameCamera = view.camera
 	LimboConsole.print_line("Camera: target (%.1f, %.1f) | %.1f m | yaw %.1f deg" % [
 		camera.target().x, camera.target().z, camera.distance(), camera.yaw()])
+	LimboConsole.print_line("Time: %s, %s, speed %dx. Money: $%d" % [
+		GameCalendar.label(_gameState().month()),
+		"paused" if (_gameState().paused) else "running",
+		_gameState().speedMultiplier(),
+		_campus().money])
+
+
+func _pause() -> void:
+	_gameState().togglePause()
+	LimboConsole.print_line("Paused" if (_gameState().paused) else "Running")
+
+
+func _speed(step: int) -> void:
+	_gameState().setSpeedIndex(step - 1)
+	LimboConsole.print_line("Speed %dx" % _gameState().speedMultiplier())
+
+
+func _money(amount: int = KeepMoney) -> void:
+	if (amount != KeepMoney):
+		_campus().setMoney(amount)
+	LimboConsole.print_line("Money: $%d" % _campus().money)
+
+
+func _advance(months: int) -> void:
+	_gameState().advanceMonths(months)
+	LimboConsole.print_line("Now %s" % GameCalendar.label(_gameState().month()))
 
 
 # The button a name stands for, or MOUSE_BUTTON_NONE when the name is not one.

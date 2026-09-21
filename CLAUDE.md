@@ -123,13 +123,17 @@ Registered debug commands:
 - `camera <x> <z> <distance> <yawDeg>` — look at ground point <x> <z> from <distance> metres at <yawDeg> degrees.
 - `build <id> <x> <z> <deg>` — place building type <id> at ground point <x> <z> (metres), turned <deg> degrees.
 - `destroy <n>` — destroy building <n> (index from `buildings`).
-- `buildings` — one line per building: index, type id, position, angle in degrees.
+- `buildings` — one line per building: index, type id, position, angle in degrees, construction status.
 - `tool <id|destroy|none>` — arm a tool: a building type id to place it, `destroy`, or `none`.
 - `select <n>` — select building <n> (index from `buildings`); -1 clears the selection.
-- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, and the camera's target, distance and yaw. Read-only.
+- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, the camera's target, distance and yaw, and the time (date, paused/running, speed) and money. Read-only.
 - `mousedown <x> <y> [button]`, `mouseup <x> <y> [button]` — synthetic button events at a design-space point (1920x1080), pushed through the root viewport so they route to the GUI exactly like a real click. `button` is `left` (default), `right` or `middle`.
 - `mousemove <x> <y>` — synthetic motion to a design-space point, carrying whichever button a `mousedown` left held and the travel since the last synthetic event, so drags accumulate against `GameCamera.DragThreshold`.
 - `action <name> <down|up>` — press or release an input action (`RotateLeft`, `RotateRight`, `ExitGame`, ...) as an `InputEventAction`, so polled reads and `_unhandled_input` handlers both see it.
+- `pause` — toggle pause.
+- `speed <1-3>` — run at speed 1, 2 or 3 (the three transport speeds). Does not unpause.
+- `money [amount]` — print the balance, or set it to `<amount>` dollars.
+- `advance <months>` — step the sim to the start of the month `<months>` ahead, paused or not.
 
 In-game: WASD/arrows pan the camera (speed scales with the zoom distance, so it
 covers the same fraction of the screen at any zoom), Q and E turn it while held,
