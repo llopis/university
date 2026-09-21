@@ -49,7 +49,7 @@ func _albedo(view: BuildingView) -> Color:
 
 func test_a_building_under_construction_draws_translucent_until_it_opens() -> void:
 	var building: Building = Building.new(_info(), Vector2.ZERO, 0.0)
-	var view: BuildingView = auto_free(BuildingView.create(building)) as BuildingView
+	var view: BuildingView = _view(building)
 	assert_float(_albedo(view).a).is_less(1.0)
 	view.setUnderConstruction(false)
 	assert_float(_albedo(view).a).is_equal(1.0)
@@ -57,7 +57,7 @@ func test_a_building_under_construction_draws_translucent_until_it_opens() -> vo
 
 func test_a_highlight_keeps_the_construction_look() -> void:
 	var building: Building = Building.new(_info(), Vector2.ZERO, 0.0)
-	var view: BuildingView = auto_free(BuildingView.create(building)) as BuildingView
+	var view: BuildingView = _view(building)
 	view.setHighlight(BuildingView.Highlight.Selected)
 	assert_float(_albedo(view).a).is_less(1.0)
 	assert_float(_albedo(view).r).is_equal(BuildingView.SelectedColor.r)

@@ -29,8 +29,7 @@ static func create(forBuilding: Building) -> BuildingView:
 static func createGhost() -> BuildingView:
 	var view: BuildingView = BuildingView.new()
 	view._setup()
-	view._material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	view.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	view._setSeeThrough(true)
 	view.setValid(true)
 	return view
 
@@ -58,9 +57,16 @@ func setHighlight(kind: Highlight) -> void:
 ## Under construction draws see-through and casts no shadow; open is solid.
 func setUnderConstruction(value: bool) -> void:
 	_underConstruction = value
+	_setSeeThrough(value)
+	_refresh()
+
+
+# The one place a box is made see-through: alpha on and no shadow, so a box
+# you can look through does not lay down a solid one. The ghost and a building
+# under construction are see-through the same way.
+func _setSeeThrough(value: bool) -> void:
 	_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if (value) else BaseMaterial3D.TRANSPARENCY_DISABLED
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if (value) else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
-	_refresh()
 
 
 # The one place a building's colour is decided: the highlight picks the hue,
