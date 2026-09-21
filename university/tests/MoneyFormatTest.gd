@@ -19,3 +19,9 @@ func test_small_amounts_show_dollars() -> void:
 func test_the_boundary_belongs_to_the_larger_unit() -> void:
 	assert_str(MoneyFormat.short(MoneyFormat.Million)).is_equal("$1.0M")
 	assert_str(MoneyFormat.short(MoneyFormat.Thousand)).is_equal("$1K")
+
+
+func test_an_abbreviated_balance_is_never_more_than_the_balance() -> void:
+	assert_str(MoneyFormat.short(1960000)).is_equal("$1.9M")
+	assert_str(MoneyFormat.short(999999)).is_equal("$999K")
+	assert_str(MoneyFormat.short(1999)).is_equal("$1K")

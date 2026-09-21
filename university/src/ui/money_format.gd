@@ -3,11 +3,17 @@ class_name MoneyFormat
 
 const Million: int = 1000000
 const Thousand: int = 1000
+# Millions read to one decimal, so a tenth of a million is the smallest step
+# shown. Everything is floored in whole dollars: an abbreviated balance must
+# never read higher than the balance, or a price it cannot cover looks affordable.
+const Tenths: int = 10
+const MillionTenth: int = Million / Tenths
 
 
 static func short(dollars: int) -> String:
 	if (dollars >= Million):
-		return "$%.1fM" % (float(dollars) / float(Million))
+		var tenthsOfMillion: int = dollars / MillionTenth
+		return "$%d.%dM" % [tenthsOfMillion / Tenths, tenthsOfMillion % Tenths]
 	if (dollars >= Thousand):
-		return "$%dK" % roundi(float(dollars) / float(Thousand))
+		return "$%dK" % (dollars / Thousand)
 	return "$%d" % dollars
