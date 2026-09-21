@@ -34,9 +34,8 @@ func _process(_dt: float) -> void:
 
 
 func _onPausePressed() -> void:
-	gameState.paused = true
+	gameState.setPaused(true)
 
 
 func _onSpeedPressed(index: int) -> void:
-	gameState.paused = false
-	gameState.setSpeedIndex(index)
+	gameState.runAt(index)

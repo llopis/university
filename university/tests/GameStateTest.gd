@@ -71,6 +71,36 @@ func test_months_roll_over_into_the_campus_and_open_buildings() -> void:
 	assert_bool(building.underConstruction).is_false()
 
 
+func test_run_at_unpauses_and_picks_the_speed() -> void:
+	var state: GameState = GameState.new()
+	state.setPaused(true)
+	var top: int = GameState.SpeedSteps.size() - 1
+	state.runAt(top)
+	assert_bool(state.paused).is_false()
+	assert_int(state.speedIndex).is_equal(top)
+	state.setPaused(true)
+	state.runAt(top * 2)
+	assert_bool(state.paused).is_false()
+	assert_int(state.speedIndex).is_equal(top)
+
+
+func test_setting_paused_twice_leaves_it_paused() -> void:
+	var state: GameState = GameState.new()
+	state.setPaused(true)
+	state.setPaused(true)
+	assert_bool(state.paused).is_true()
+	state.update(Frame)
+	assert_int(state.tickCount).is_equal(0)
+
+
+func test_changing_speed_leaves_pause_alone() -> void:
+	var state: GameState = GameState.new()
+	state.setPaused(true)
+	state.setSpeedIndex(GameState.SpeedSteps.size() - 1)
+	state.changeSpeed(-1)
+	assert_bool(state.paused).is_true()
+
+
 func test_building_works_while_paused() -> void:
 	var state: GameState = GameState.new()
 	state.togglePause()

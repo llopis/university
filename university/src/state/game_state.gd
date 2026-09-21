@@ -53,8 +53,20 @@ func setSpeedIndex(index: int) -> void:
 	speedIndex = clampi(index, 0, SpeedSteps.size() - 1)
 
 
+## The one writer of `paused`.
+func setPaused(value: bool) -> void:
+	paused = value
+
+
 func togglePause() -> void:
-	paused = not paused
+	setPaused(not paused)
+
+
+## What a transport speed button means: run, at that speed. The keys and the
+## console move the speed with setSpeedIndex/changeSpeed and leave pause alone.
+func runAt(index: int) -> void:
+	setPaused(false)
+	setSpeedIndex(index)
 
 
 ## One tick of the sim. The one place the month rolls over into the campus.
