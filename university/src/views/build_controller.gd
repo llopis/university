@@ -140,7 +140,7 @@ func _updateGhost() -> void:
 		return
 	var at: Vector2 = point
 	_ghost.showRect(Building.rectFor(placeInfo, at, _angle))
-	_ghost.setValid(_campus.canPlace(placeInfo, at, _angle))
+	_ghost.setValid(_campus.canBuild(placeInfo, at, _angle))
 
 
 func _pick(screen: Vector2) -> Building:

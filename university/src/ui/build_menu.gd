@@ -26,7 +26,7 @@ func _ready() -> void:
 func populate(infos: Array[BuildingInfo]) -> void:
 	for info: BuildingInfo in infos:
 		var button: Button = Button.new()
-		button.text = info.name
+		button.text = "%s   %s" % [info.name, MoneyFormat.short(info.cost)]
 		button.toggle_mode = true
 		# Keyboard focus would make the arrow keys walk the entries as well as
 		# pan the camera, and Space re-press whichever entry has the ring.
@@ -44,6 +44,12 @@ func showTool(armed: BuildController.Tool, info: BuildingInfo) -> void:
 	destroyButton.set_pressed_no_signal(armed == BuildController.Tool.Destroy)
 	for entry: BuildingInfo in _buttons:
 		_buttons[entry].set_pressed_no_signal(armed == BuildController.Tool.Place and entry == info)
+
+
+## Greys out what cannot be paid for. The rule is the campus's, not the menu's.
+func showAffordable(campus: Campus) -> void:
+	for entry: BuildingInfo in _buttons:
+		_buttons[entry].disabled = not campus.canAfford(entry)
 
 
 func _onBuildToggled(open: bool) -> void:

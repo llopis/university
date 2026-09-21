@@ -27,6 +27,8 @@ func _ready() -> void:
 	controller.SelectionChanged.connect(_onSelectionChanged)
 	controller.HoverChanged.connect(_onHoverChanged)
 	buildMenu.populate(Global.buildingDB.all)
+	buildMenu.showAffordable(gameState.campus)
+	gameState.campus.MoneyChanged.connect(func(_money: int) -> void: buildMenu.showAffordable(gameState.campus))
 	buildMenu.BuildingChosen.connect(controller.armPlace)
 	buildMenu.DestroyChosen.connect(controller.armDestroy)
 	buildMenu.Closed.connect(controller.cancel)
@@ -36,6 +38,15 @@ func _ready() -> void:
 
 func _process(dt: float) -> void:
 	gameState.update(dt)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if (event.is_action_pressed("TogglePause")):
+		gameState.togglePause()
+	elif (event.is_action_pressed("SpeedUp")):
+		gameState.changeSpeed(1)
+	elif (event.is_action_pressed("SpeedDown")):
+		gameState.changeSpeed(-1)
 
 
 func viewFor(building: Building) -> BuildingView:
