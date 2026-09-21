@@ -33,17 +33,22 @@ construction until the next semester begins.
 
 ### `GameCalendar` (new, `src/state/`)
 
-Static, pure. The one place sim time becomes dates. `SecondsPerMonth` 45,
-`MonthsPerYear` 12, `StartMonth` September, `SemesterStartMonths` September and
-February, `FirstYear` 1. A *month index* counts months since the game began
-(0 = September, Year 1). `monthIndexAt(time)`, `calendarMonth(index)`,
-`year(index)`, `label(index)`, `isSemesterStart(index)`,
-`nextSemesterStart(index)` (strictly after).
+Static, pure. The one place a month index becomes dates and semesters.
+`SecondsPerMonth` 45, `MonthsPerYear` 12, `StartMonth` September,
+`SemesterStartMonths` September and February, `FirstYear` 1. A *month index*
+counts months since the game began (0 = September, Year 1). `calendarMonth(index)`,
+`year(index)`, `monthName(index)`, `label(index)`, `isSemesterStart(index)`,
+`nextSemesterStart(index)` (strictly after). Turning sim time into a month
+index is not here: `GameState.month()` derives it from the integer tick count,
+which has no boundary risk a float `time / 45` would carry.
 
 ### `GameState`
 
 `paused`, `SpeedSteps`, `speedIndex`, `speedMultiplier()`, `changeSpeed(delta)`,
-`setSpeedIndex(index)`, `togglePause()`. `tickCount`; `gameTime()` is
+`setSpeedIndex(index)` — all of which leave pause alone — plus `setPaused(value)`,
+the one writer of `paused`, `togglePause()` on top of it, and `runAt(index)`,
+which unpauses and sets the speed: what a transport speed button means.
+`tickCount`; `gameTime()` is
 `tickCount * TickStepDuration`, never accumulated. `step()` runs one tick and,
 when the month index changes, tells the campus (`Campus.startMonth`).
 `update(dt)` runs no ticks while paused and `speedMultiplier()` times as many
