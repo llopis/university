@@ -75,10 +75,10 @@ func test_the_frame_cap_is_applied_before_the_speed_multiplier() -> void:
 
 func test_months_roll_over_into_the_campus_and_open_buildings() -> void:
 	var state: GameState = GameState.new()
-	var building: Building = state.campus.place(_info(), Vector2.ZERO, 0.0)
+	var building: Building = state.university.campus.place(_info(), Vector2.ZERO, 0.0)
 	state.advanceMonths(building.opensAtMonth - 1)
 	assert_int(state.month()).is_equal(building.opensAtMonth - 1)
-	assert_int(state.campus.month).is_equal(state.month())
+	assert_int(state.university.campus.month).is_equal(state.month())
 	assert_bool(building.underConstruction).is_true()
 	state.advanceMonths(1)
 	assert_bool(building.underConstruction).is_false()
@@ -117,7 +117,7 @@ func test_changing_speed_leaves_pause_alone() -> void:
 func test_advancing_months_works_while_paused() -> void:
 	var state: GameState = GameState.new()
 	state.setPaused(true)
-	var building: Building = state.campus.place(_info(), Vector2.ZERO, 0.0)
+	var building: Building = state.university.campus.place(_info(), Vector2.ZERO, 0.0)
 	state.advanceMonths(building.opensAtMonth)
 	assert_int(state.month()).is_equal(building.opensAtMonth)
 	assert_bool(building.underConstruction).is_false()
@@ -127,10 +127,10 @@ func test_advancing_months_works_while_paused() -> void:
 func test_building_works_while_paused() -> void:
 	var state: GameState = GameState.new()
 	state.togglePause()
-	var building: Building = state.campus.place(_info(), Vector2.ZERO, 0.0)
+	var building: Building = state.university.campus.place(_info(), Vector2.ZERO, 0.0)
 	assert_object(building).is_not_null()
-	state.campus.destroy(building)
-	assert_array(state.campus.buildings).is_empty()
+	state.university.campus.destroy(building)
+	assert_array(state.university.campus.buildings).is_empty()
 
 
 func test_a_month_is_a_whole_number_of_ticks() -> void:

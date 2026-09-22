@@ -21,15 +21,15 @@ var _hoveredView: BuildingView
 func _ready() -> void:
 	gameState = Global.gameState
 	statusBar.gameState = gameState
-	gameState.campus.BuildingAdded.connect(_onBuildingAdded)
-	gameState.campus.BuildingRemoved.connect(_onBuildingRemoved)
-	gameState.campus.BuildingOpened.connect(_onBuildingOpened)
-	controller.setup(gameState.campus, camera)
+	gameState.university.campus.BuildingAdded.connect(_onBuildingAdded)
+	gameState.university.campus.BuildingRemoved.connect(_onBuildingRemoved)
+	gameState.university.campus.BuildingOpened.connect(_onBuildingOpened)
+	controller.setup(gameState.university.campus, camera)
 	controller.SelectionChanged.connect(_onSelectionChanged)
 	controller.HoverChanged.connect(_onHoverChanged)
 	buildMenu.populate(Global.buildingDB.all)
-	buildMenu.showAffordable(gameState.campus)
-	gameState.campus.MoneyChanged.connect(func(_money: int) -> void: buildMenu.showAffordable(gameState.campus))
+	buildMenu.showAffordable(gameState.university.campus)
+	gameState.university.campus.MoneyChanged.connect(func(_money: int) -> void: buildMenu.showAffordable(gameState.university.campus))
 	buildMenu.BuildingChosen.connect(controller.armPlace)
 	buildMenu.DestroyChosen.connect(controller.armDestroy)
 	buildMenu.Closed.connect(controller.cancel)

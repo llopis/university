@@ -81,7 +81,7 @@ func _gameState() -> GameState:
 
 
 func _campus() -> Campus:
-	return _gameState().campus
+	return _gameState().university.campus
 
 
 func _buildingAt(index: int) -> Building:

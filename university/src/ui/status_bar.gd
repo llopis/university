@@ -26,7 +26,7 @@ func _ready() -> void:
 
 func _process(_dt: float) -> void:
 	dateLabel.text = GameCalendar.label(gameState.month())
-	moneyAmount.text = MoneyFormat.short(gameState.campus.money)
+	moneyAmount.text = MoneyFormat.short(gameState.university.campus.money)
 	# Exactly one transport button reads as pressed.
 	pauseButton.set_pressed_no_signal(gameState.paused)
 	for i: int in range(_speedButtons.size()):

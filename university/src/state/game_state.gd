@@ -1,5 +1,5 @@
 class_name GameState
-## The session: the campus and the clock that drives it. Time moves in fixed
+## The session: the university and the clock that drives it. Time moves in fixed
 ## ticks; speed runs more of them per frame and pause runs none. Commands on
 ## the campus (building, destroying) are direct calls, so they work whether or
 ## not the clock is running.
@@ -17,7 +17,7 @@ const SpeedSteps: Array[int] = [1, 3, 8]
 # a burst of thousands of ticks.
 const MaxFrameDt: float = 0.1
 
-var campus: Campus
+var university: University
 var paused: bool = false
 var speedIndex: int = 0
 # Ticks run since the game began. Game time is derived from it, never accumulated.
@@ -27,7 +27,7 @@ var remainingDt: float
 
 
 func _init() -> void:
-	campus = Campus.new()
+	university = University.new()
 
 
 func gameTime() -> float:
@@ -67,12 +67,12 @@ func runAt(index: int) -> void:
 	setSpeedIndex(index)
 
 
-## One tick of the sim. The one place the month rolls over into the campus.
+## One tick of the sim. The one place the month rolls over into the university.
 func step() -> void:
-	campus.tick(TickStepDuration)
+	university.campus.tick(TickStepDuration)
 	tickCount += 1
-	if (month() != campus.month):
-		campus.startMonth(month())
+	if (month() != university.campus.month):
+		university.startMonth(month())
 
 
 func update(dt: float) -> void:
@@ -81,7 +81,7 @@ func update(dt: float) -> void:
 		while (remainingDt >= TickStepDuration):
 			step()
 			remainingDt -= TickStepDuration
-	campus.update(dt)
+	university.campus.update(dt)
 
 
 ## Steps the sim to the start of the month that many months ahead, paused or
