@@ -172,7 +172,7 @@ Registered debug commands:
 - `buildings` — one line per building: index, type id, position, angle in degrees, construction status.
 - `tool <id|destroy|none>` — arm a tool: a building type id to place it, `destroy`, or `none`.
 - `select <n>` — select building <n> (index from `buildings`); -1 clears the selection.
-- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, the camera's target, distance and yaw, the time (date, paused/running, speed), the cash, the debt, the month's interest and upkeep, and the university's name. Read-only.
+- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, the camera's target, distance and yaw, the time (date, paused/running, speed), the cash, the debt, the month's interest and upkeep, the enrolled count and reputation, and the university's name. Read-only.
 - `mousedown <x> <y> [button]`, `mouseup <x> <y> [button]` — synthetic button events at a design-space point (1920x1080), pushed through the root viewport so they route to the GUI exactly like a real click. `button` is `left` (default), `right` or `middle`.
 - `mousemove <x> <y>` — synthetic motion to a design-space point, carrying whichever button a `mousedown` left held and the travel since the last synthetic event, so drags accumulate against `GameCamera.DragThreshold`.
 - `action <name> <down|up>` — press or release an input action (`RotateLeft`, `RotateRight`, `ExitGame`, ...) as an `InputEventAction`, so polled reads and `_unhandled_input` handlers both see it.
@@ -186,6 +186,12 @@ Registered debug commands:
 - `save [path]` — save the game to `<path>`, or to the quicksave (`user://quicksave.json`) when none is given. `save res://data/start_state.json` writes the start state from a running game; hand-edit it afterwards (open buildings, tick 0, campus month 0, cash and debt) — a start state re-saved from a running game carries that game's balances.
 - `load [path]` — load the game saved at `<path>`, or the quicksave. Reloads the scene, so the camera and any armed tool or selection start fresh. A save missing a key is refused, with nothing changed.
 - `newgame` — start over from the start state.
+- `students` — print the cohorts, enrolment against seats, housing against beds, meal plans and the dining load, and today's satisfaction broken down.
+- `prices [tuition room meal]` — print this year's and next year's prices, or set next year's (they apply from the next fall).
+- `minimum [grade]` — print the minimum entry grade, or set it (0 is off).
+- `reputation [value]` — print the reputation and where it is heading, or set it.
+- `report` — print the last semester start's report.
+- `simulate <years>` — copy the game through `toDict`/`fromDict`, play the copy `<years>` ahead with no input, and print one row per semester start (applicants, open seats, admitted and entry grade, graduated, enrolled, housed and off campus, dining load, satisfaction, reputation, fees, cash, debt). The live game is untouched; this is the tuning tool.
 
 In-game: WASD/arrows pan the camera (speed scales with the zoom distance, so it
 covers the same fraction of the screen at any zoom), Q and E turn it while held,

@@ -9,6 +9,14 @@ const KeepMoney: int = -1
 # debt's sentinel: no amount given, just print the debt.
 const KeepDebt: int = -1
 
+# prices', minimum's and reputation's sentinels: no value given, just print.
+const KeepPrice: int = -1
+const KeepGrade: float = -1.0
+const KeepReputation: float = -1.0
+# One row of a semester report, for 'report' and 'simulate'.
+const ReportRow: String = "%s | apps %d, open %d, admitted %d at %.2f, graduated %d | enrolled %d, housed %d, off %d | dining %.0f%% | sat %.1f, rep %.1f | fees $%d | cash $%d, debt $%d"
+const Percent: float = 100.0
+
 # save's and load's sentinel: no path given, use the quicksave.
 const NoPath: String = ""
 
@@ -55,6 +63,12 @@ func _init() -> void:
 	LimboConsole.register_command(_debt, "debt", "Print the debt and what may still be borrowed, or set the debt to <amount> dollars.")
 	LimboConsole.register_command(_borrow, "borrow", "Borrow <amount> dollars on the credit line, up to its limit.")
 	LimboConsole.register_command(_repay, "repay", "Repay <amount> dollars, at most the debt and the cash.")
+	LimboConsole.register_command(_students, "students", "Print the cohorts, where students live and eat, and satisfaction.")
+	LimboConsole.register_command(_prices, "prices", "Print this year's and next year's prices, or set next year's: [tuition room meal] dollars.")
+	LimboConsole.register_command(_minimum, "minimum", "Print the minimum entry grade, or set it to [grade] (0 is off).")
+	LimboConsole.register_command(_reputation, "reputation", "Print the reputation and where it heads, or set it to [value].")
+	LimboConsole.register_command(_report, "report", "Print the last semester start's report.")
+	LimboConsole.register_command(_simulate, "simulate", "Play a copy of the game <years> ahead with no input and print every semester start; the live game is untouched.")
 	LimboConsole.register_command(_advance, "advance", "Step the sim to the start of the month <months> ahead, paused or not.")
 	LimboConsole.register_command(_save, "save", "Save the game to [path] (the quicksave when none is given).")
 	LimboConsole.register_command(_load, "load", "Load the game saved at [path] (the quicksave when none is given).")
@@ -197,6 +211,8 @@ func _state() -> void:
 		_finances().cash])
 	LimboConsole.print_line("Debt: $%d | interest $%d/month | upkeep $%d/month" % [
 		_finances().debt, _finances().interest(), _campus().upkeep()])
+	LimboConsole.print_line("Students: %d enrolled | reputation %.1f" % [
+		_gameState().university.students.enrolled(), _gameState().university.reputation])
 	LimboConsole.print_line("University: %s" % _gameState().university.name)
 
 
@@ -230,6 +246,72 @@ func _borrow(amount: int) -> void:
 func _repay(amount: int) -> void:
 	var paid: int = _finances().repay(amount)
 	LimboConsole.print_line("Repaid $%d. Cash $%d, debt $%d" % [paid, _finances().cash, _finances().debt])
+
+
+func _university() -> University:
+	return _gameState().university
+
+
+func _students() -> void:
+	var university: University = _university()
+	for cohort: Cohort in university.students.cohorts:
+		LimboConsole.print_line("Cohort: %d students, entry grade %.2f, %d semesters done" % [cohort.size, cohort.entryGrade, cohort.semestersCompleted])
+	var enrolledCount: int = university.students.enrolled()
+	LimboConsole.print_line("Enrolled %d of %d seats | housed %d of %d beds, %d off campus | meal plans %d, dining %.0f%%" % [
+		enrolledCount, university.campus.seats(), university.housed(), university.campus.beds(),
+		enrolledCount - university.housed(), university.mealPlans(),
+		UniversityRules.diningLoad(university.housed(), university.campus.meals()) * Percent])
+	var now: Satisfaction = university.satisfactionNow()
+	LimboConsole.print_line("Satisfaction %.1f = %.1f - housing %.1f - crowding %.1f - unfed %.1f" % [
+		now.total(), now.base, now.housing, now.crowding, now.unfed])
+
+
+func _prices(tuition: int = KeepPrice, room: int = KeepPrice, meal: int = KeepPrice) -> void:
+	var policy: Policy = _university().policy
+	if (tuition != KeepPrice):
+		policy.setNextTuition(tuition)
+	if (room != KeepPrice):
+		policy.setNextRoom(room)
+	if (meal != KeepPrice):
+		policy.setNextMealPlan(meal)
+	LimboConsole.print_line("This year: tuition $%d, room $%d, meal plan $%d (total $%d)" % [
+		policy.current.tuition, policy.current.room, policy.current.mealPlan, policy.current.total()])
+	LimboConsole.print_line("Next year: tuition $%d, room $%d, meal plan $%d (total $%d)" % [
+		policy.next.tuition, policy.next.room, policy.next.mealPlan, policy.next.total()])
+
+
+func _minimum(grade: float = KeepGrade) -> void:
+	if (grade != KeepGrade):
+		_university().policy.setMinimumGrade(grade)
+	LimboConsole.print_line("Minimum entry grade: %.2f" % _university().policy.minimumGrade)
+
+
+func _reputation(value: float = KeepReputation) -> void:
+	if (value != KeepReputation):
+		_university().reputation = clampf(value, 0.0, UniversityRules.MaxScore)
+	LimboConsole.print_line("Reputation %.1f, heading for %.1f" % [_university().reputation, _university().reputationTarget()])
+
+
+func _reportLine(report: SemesterReport) -> String:
+	return ReportRow % [
+		GameCalendar.label(report.month), report.applicants, report.openSeats, report.admitted,
+		report.entryGrade, report.graduated, report.enrolled, report.housed, report.offCampus(),
+		report.diningLoad * Percent, report.satisfaction, report.reputation, report.totalFees(),
+		report.cash, report.debt]
+
+
+func _report() -> void:
+	var reports: Array[SemesterReport] = _university().reports
+	LimboConsole.print_line(_reportLine(reports[reports.size() - 1]) if (not reports.is_empty()) else "No semester has started yet")
+
+
+## Plays a copy of the game forward with no input, so the live game is untouched.
+func _simulate(years: int) -> void:
+	var copy: GameState = GameState.fromDict(_gameState().toDict(), Global.buildingDB)
+	var first: int = copy.university.reports.size()
+	copy.advanceMonths(years * GameCalendar.MonthsPerYear)
+	for i: int in range(first, copy.university.reports.size()):
+		LimboConsole.print_line(_reportLine(copy.university.reports[i]))
 
 
 func _advance(months: int) -> void:
