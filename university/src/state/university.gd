@@ -26,10 +26,10 @@ func toDict() -> Dictionary:
 static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> University:
 	if (not Variants.hasKeys(data, SavedKeys, "University")):
 		return null
-	var campus: Campus = Campus.fromDict(data["campus"] as Dictionary, buildingDB)
-	if (campus == null):
+	var loadedCampus: Campus = Campus.fromDict(data["campus"] as Dictionary, buildingDB)
+	if (loadedCampus == null):
 		return null
 	var university: University = University.new()
 	university.name = str(data["name"])
-	university.campus = campus
+	university.campus = loadedCampus
 	return university

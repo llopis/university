@@ -107,10 +107,10 @@ func toDict() -> Dictionary:
 static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> GameState:
 	if (not Variants.hasKeys(data, SavedKeys, "GameState")):
 		return null
-	var university: University = University.fromDict(data["university"] as Dictionary, buildingDB)
-	if (university == null):
+	var loadedUniversity: University = University.fromDict(data["university"] as Dictionary, buildingDB)
+	if (loadedUniversity == null):
 		return null
 	var state: GameState = GameState.new()
 	state.tickCount = Variants.toInt(data["tickCount"])
-	state.university = university
+	state.university = loadedUniversity
 	return state
