@@ -6,6 +6,9 @@ const ScreenshotPath: String = "/tmp/university/screenshot.png"
 # money's sentinel: no amount given, just print the balance.
 const KeepMoney: int = -1
 
+# save's and load's sentinel: no path given, use the quicksave.
+const NoPath: String = ""
+
 const ToolPlace: String = "place"
 const ToolDestroy: String = "destroy"
 const ToolNone: String = "none"
@@ -38,7 +41,7 @@ func _init() -> void:
 	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees, construction status.")
 	LimboConsole.register_command(_tool, "tool", "Arm a tool: a building type id to place it, 'destroy', or 'none'.")
 	LimboConsole.register_command(_select, "select", "Select building <n> (index from 'buildings'); -1 clears the selection.")
-	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, the camera, the time and the money.")
+	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, the camera, the time, the money and the university's name.")
 	LimboConsole.register_command(_mouseDown, "mousedown", "Press a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
 	LimboConsole.register_command(_mouseUp, "mouseup", "Release a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
 	LimboConsole.register_command(_mouseMove, "mousemove", "Move the mouse to design-space point <x> <y>, carrying whichever button is held and the travel since the last synthetic event.")
@@ -47,6 +50,9 @@ func _init() -> void:
 	LimboConsole.register_command(_speed, "speed", "Run at speed <n>: 1, 2 or 3 (the three transport speeds). Does not unpause.")
 	LimboConsole.register_command(_money, "money", "Print the balance, or set it to <amount> dollars.")
 	LimboConsole.register_command(_advance, "advance", "Step the sim to the start of the month <months> ahead, paused or not.")
+	LimboConsole.register_command(_save, "save", "Save the game to [path] (the quicksave when none is given).")
+	LimboConsole.register_command(_load, "load", "Load the game saved at [path] (the quicksave when none is given).")
+	LimboConsole.register_command(_newGame, "newgame", "Start over from the start state.")
 	# Lets the remote console reach the scene tree, e.g.
 	# eval get_root().find_child("CampusView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())
@@ -179,6 +185,7 @@ func _state() -> void:
 		"paused" if (_gameState().paused) else "running",
 		_gameState().speedMultiplier(),
 		_campus().money])
+	LimboConsole.print_line("University: %s" % _gameState().university.name)
 
 
 func _pause() -> void:
@@ -200,6 +207,25 @@ func _money(amount: int = KeepMoney) -> void:
 func _advance(months: int) -> void:
 	_gameState().advanceMonths(months)
 	LimboConsole.print_line("Now %s" % GameCalendar.label(_gameState().month()))
+
+
+func _savePath(path: String) -> String:
+	return Global.QuickSavePath if (path == NoPath) else path
+
+
+func _save(path: String = NoPath) -> void:
+	var target: String = _savePath(path)
+	LimboConsole.print_line(("Saved to %s" if (Global.saveGame(target)) else "Could not save to %s") % target)
+
+
+func _load(path: String = NoPath) -> void:
+	var target: String = _savePath(path)
+	LimboConsole.print_line(("Loaded %s" if (Global.loadGame(target)) else "No save at %s") % target)
+
+
+func _newGame() -> void:
+	Global.newGame()
+	LimboConsole.print_line("New game from %s" % Global.StartStatePath)
 
 
 # The button a name stands for, or MOUSE_BUTTON_NONE when the name is not one.

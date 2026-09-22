@@ -51,6 +51,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		gameState.changeSpeed(1)
 	elif (event.is_action_pressed("SpeedDown")):
 		gameState.changeSpeed(-1)
+	elif (event.is_action_pressed("QuickSave")):
+		Global.saveGame(Global.QuickSavePath)
+	elif (event.is_action_pressed("QuickLoad")):
+		Global.loadGame(Global.QuickSavePath)
 
 
 func viewFor(building: Building) -> BuildingView:
