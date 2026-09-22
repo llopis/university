@@ -8,8 +8,6 @@ class_name Policy
 const DefaultTuition: int = 9606
 const DefaultRoom: int = 4542
 const DefaultMealPlan: int = 4136
-# The highest a minimum grade can be set.
-const MaxMinimumGrade: float = 4.0
 # Keys toDict writes; fromDict refuses a dictionary missing any of them.
 const SavedKeys: Array[String] = ["current", "next", "minimumGrade"]
 
@@ -41,7 +39,7 @@ func setNextMealPlan(amount: int) -> void:
 
 
 func setMinimumGrade(grade: float) -> void:
-	minimumGrade = clampf(grade, 0.0, MaxMinimumGrade)
+	minimumGrade = clampf(grade, 0.0, UniversityRules.MaxGrade)
 
 
 ## The fall start: next year's prices become this year's, or the defaults when

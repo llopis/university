@@ -28,7 +28,7 @@ func test_prices_and_the_minimum_stay_in_range() -> void:
 	policy.setMinimumGrade(-Minimum)
 	assert_float(policy.minimumGrade).is_equal(0.0)
 	policy.setMinimumGrade(Minimum * 10.0)
-	assert_float(policy.minimumGrade).is_less_equal(Policy.MaxMinimumGrade)
+	assert_float(policy.minimumGrade).is_less_equal(UniversityRules.MaxGrade)
 
 
 func test_next_years_prices_apply_only_when_the_year_is_locked() -> void:
