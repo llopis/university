@@ -33,3 +33,8 @@ func test_the_saved_month_matches_the_tick_count() -> void:
 	# a spurious month start.
 	var state: GameState = _startState()
 	assert_int(state.university.campus.month).is_equal(state.month())
+
+
+func test_the_start_students_fit_the_seats() -> void:
+	var state: GameState = _startState()
+	assert_int(state.university.students.enrolled()).is_less_equal(state.university.campus.seats())

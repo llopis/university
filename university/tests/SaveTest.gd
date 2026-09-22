@@ -11,12 +11,20 @@ const Name: String = "Test University"
 # Non-default balances, so a save that forgot either would show.
 const StartCash: int = 20000000
 const Borrowed: int = 3000000
+# Non-default loop state, so a save that forgot any of it would show.
+const FirstClass: int = 30
+const SecondClass: int = 25
+const FirstGrade: float = 3.1
+const SecondGrade: float = 2.9
+const NextTuition: int = 9000
+const Minimum: float = 2.5
+const StartReputation: float = 61.5
 
 
 func _db() -> BuildingInfoDB:
 	var records: Array[Dictionary] = [
-		{"id": "hall", "name": "Hall", "diameter": Diameter, "costM": 1, "upkeepK": 7},
-		{"id": "lab", "name": "Lab", "diameter": Diameter, "costM": 2, "upkeepK": 11},
+		{"id": "hall", "name": "Hall", "diameter": Diameter, "costM": 1, "upkeepK": 7, "beds": 20, "meals": 10, "admissionsOffice": true},
+		{"id": "lab", "name": "Lab", "diameter": Diameter, "costM": 2, "upkeepK": 11, "seats": 60},
 	]
 	return BuildingInfoDB.new(records)
 
@@ -27,6 +35,12 @@ func _playedState(buildingDB: BuildingInfoDB) -> GameState:
 	state.university.name = Name
 	state.university.finances.setCash(StartCash)
 	state.university.finances.borrow(Borrowed)
+	state.university.students.admit(FirstClass, FirstGrade)
+	state.university.students.admit(SecondClass, SecondGrade)
+	state.university.policy.setNextTuition(NextTuition)
+	state.university.policy.setMinimumGrade(Minimum)
+	state.university.reputation = StartReputation
+	state.university.lastIntakeGrade = SecondGrade
 	state.university.campus.place(buildingDB.info("hall"), Vector2.ZERO, Angle)
 	state.advanceMonths(GameCalendar.nextSemesterStart(0))
 	state.university.campus.place(buildingDB.info("lab"), Vector2(Spacing, Spacing), -Angle)
@@ -139,3 +153,23 @@ func test_a_loaded_campus_spends_from_the_loaded_finances() -> void:
 	var buildingDB: BuildingInfoDB = _db()
 	var loaded: GameState = _reloaded(_playedState(buildingDB), buildingDB)
 	assert_object(loaded.university.campus.finances).is_same(loaded.university.finances)
+
+
+func test_a_save_missing_a_students_key_is_refused() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var data: Dictionary = _playedState(buildingDB).toDict()
+	((data["university"] as Dictionary)["students"] as Dictionary).erase("cohorts")
+	var loaded: Array[GameState] = []
+	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
+		.is_push_error(Variants.MissingKeysError % ["StudentBody", "cohorts"])
+	assert_object(loaded[0]).is_null()
+
+
+func test_a_save_missing_a_policy_key_is_refused() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var data: Dictionary = _playedState(buildingDB).toDict()
+	((data["university"] as Dictionary)["policy"] as Dictionary).erase("next")
+	var loaded: Array[GameState] = []
+	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
+		.is_push_error(Variants.MissingKeysError % ["Policy", "next"])
+	assert_object(loaded[0]).is_null()

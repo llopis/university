@@ -23,7 +23,7 @@ var lastIntakeGrade: float = UniversityRules.GradeBase
 var reports: Array[SemesterReport]
 
 # Keys toDict writes; fromDict refuses a dictionary missing any of them.
-const SavedKeys: Array[String] = ["name", "finances", "campus"]
+const SavedKeys: Array[String] = ["name", "finances", "campus", "students", "policy", "reputation", "satisfactionSamples", "lastIntakeGrade", "reports"]
 
 
 func _init() -> void:
@@ -130,12 +130,20 @@ func _startYear(report: SemesterReport) -> void:
 
 
 func toDict() -> Dictionary:
-	return {"name": name, "finances": finances.toDict(), "campus": campus.toDict()}
+	var savedReports: Array[Dictionary] = []
+	for report: SemesterReport in reports:
+		savedReports.append(report.toDict())
+	return {
+		"name": name, "finances": finances.toDict(), "campus": campus.toDict(),
+		"students": students.toDict(), "policy": policy.toDict(),
+		"reputation": reputation, "satisfactionSamples": satisfactionSamples,
+		"lastIntakeGrade": lastIntakeGrade, "reports": savedReports,
+	}
 
 
-## Null when data is missing a key, or its finances or campus refused. The
-## finances are loaded first and handed to the campus, so the loaded campus
-## spends from the loaded finances.
+## Null when data is missing a key, or its finances, campus, students, policy
+## or any report refused. The finances are loaded first and handed to the
+## campus, so the loaded campus spends from the loaded finances.
 static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> University:
 	if (not Variants.hasKeys(data, SavedKeys, "University")):
 		return null
@@ -145,8 +153,27 @@ static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> University
 	var loadedCampus: Campus = Campus.fromDict(data["campus"] as Dictionary, buildingDB, loadedFinances)
 	if (loadedCampus == null):
 		return null
+	var loadedStudents: StudentBody = StudentBody.fromDict(data["students"] as Dictionary)
+	if (loadedStudents == null):
+		return null
+	var loadedPolicy: Policy = Policy.fromDict(data["policy"] as Dictionary)
+	if (loadedPolicy == null):
+		return null
+	var loadedReports: Array[SemesterReport] = []
+	for saved: Variant in data["reports"] as Array:
+		var report: SemesterReport = SemesterReport.fromDict(saved as Dictionary)
+		if (report == null):
+			return null
+		loadedReports.append(report)
 	var university: University = University.new()
 	university.name = str(data["name"])
 	university.finances = loadedFinances
 	university.campus = loadedCampus
+	university.students = loadedStudents
+	university.policy = loadedPolicy
+	university.reports = loadedReports
+	university.reputation = clampf(Variants.toFloat(data["reputation"]), 0.0, UniversityRules.MaxScore)
+	university.lastIntakeGrade = Variants.toFloat(data["lastIntakeGrade"])
+	for sample: Variant in data["satisfactionSamples"] as Array:
+		university.satisfactionSamples.append(Variants.toFloat(sample))
 	return university
