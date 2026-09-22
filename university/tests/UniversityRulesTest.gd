@@ -66,7 +66,7 @@ func test_housing_costs_satisfaction_only_past_the_threshold() -> void:
 	var atThreshold: int = roundi(float(Enrolled) * (1.0 - UniversityRules.OverflowThreshold))
 	var plentyOfMeals: int = Enrolled * 2
 	assert_float(UniversityRules.satisfaction(Enrolled, atThreshold, plentyOfMeals).housing).is_equal_approx(0.0, Epsilon)
-	var overflowing: Satisfaction = UniversityRules.satisfaction(Enrolled, atThreshold / 2, plentyOfMeals)
+	var overflowing: Satisfaction = UniversityRules.satisfaction(Enrolled, HalfEnrolled, plentyOfMeals)
 	assert_float(overflowing.housing).is_greater(0.0)
 	assert_float(overflowing.total()).is_less(UniversityRules.SatisfactionBase)
 
