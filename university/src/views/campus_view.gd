@@ -24,6 +24,9 @@ func _ready() -> void:
 	gameState.university.campus.BuildingAdded.connect(_onBuildingAdded)
 	gameState.university.campus.BuildingRemoved.connect(_onBuildingRemoved)
 	gameState.university.campus.BuildingOpened.connect(_onBuildingOpened)
+	# A loaded game arrives with its buildings already standing.
+	for building: Building in gameState.university.campus.buildings:
+		_onBuildingAdded(building)
 	controller.setup(gameState.university.campus, camera)
 	controller.SelectionChanged.connect(_onSelectionChanged)
 	controller.HoverChanged.connect(_onHoverChanged)

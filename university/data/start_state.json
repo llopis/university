@@ -1,0 +1,19 @@
+{
+	"tickCount": 0,
+	"university": {
+		"campus": {
+			"buildings": [
+				{ "angle": 0.2617993877991494, "opensAtMonth": 0, "pos": [0.0, -60.0], "type": "admissions", "underConstruction": false },
+				{ "angle": 0.0, "opensAtMonth": 0, "pos": [60.0, 0.0], "type": "engineering_1", "underConstruction": false },
+				{ "angle": 0.0, "opensAtMonth": 0, "pos": [60.0, 40.0], "type": "engineering_1", "underConstruction": false },
+				{ "angle": 0.0, "opensAtMonth": 0, "pos": [-10.0, 20.0], "type": "dining_1", "underConstruction": false },
+				{ "angle": 0.0, "opensAtMonth": 0, "pos": [-80.0, -30.0], "type": "dorm", "underConstruction": false },
+				{ "angle": 0.0, "opensAtMonth": 0, "pos": [-80.0, 0.0], "type": "dorm", "underConstruction": false },
+				{ "angle": 0.0, "opensAtMonth": 0, "pos": [-80.0, 30.0], "type": "dorm", "underConstruction": false }
+			],
+			"money": 50000000,
+			"month": 0
+		},
+		"name": "Pioneer Valley State"
+	}
+}
