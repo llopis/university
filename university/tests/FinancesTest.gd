@@ -74,7 +74,7 @@ func test_interest_is_the_monthly_rate_on_the_debt() -> void:
 func test_every_change_is_announced() -> void:
 	var finances: Finances = _finances(Cash, 0)
 	var changes: Array[int] = []
-	finances.MoneyChanged.connect(func() -> void: changes.append(finances.cash))
+	finances.MoneyChanged.connect(func() -> void: changes.append(1))
 	finances.spend(Bill)
 	finances.refund(Bill)
 	finances.borrow(Borrowed)

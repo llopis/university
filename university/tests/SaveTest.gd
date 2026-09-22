@@ -102,6 +102,17 @@ func test_a_save_missing_a_campus_key_is_refused() -> void:
 	assert_object(loaded[0]).is_null()
 
 
+func test_a_save_missing_a_finances_key_is_refused() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var data: Dictionary = _playedState(buildingDB).toDict()
+	var financesData: Dictionary = (data["university"] as Dictionary)["finances"] as Dictionary
+	financesData.erase("cash")
+	var loaded: Array[GameState] = []
+	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
+		.is_push_error(Variants.MissingKeysError % ["Finances", "cash"])
+	assert_object(loaded[0]).is_null()
+
+
 func test_a_save_missing_a_building_key_is_refused() -> void:
 	var buildingDB: BuildingInfoDB = _db()
 	var data: Dictionary = _playedState(buildingDB).toDict()

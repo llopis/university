@@ -3,7 +3,7 @@ class_name DebugCommands
 
 const ScreenshotPath: String = "/tmp/university/screenshot.png"
 
-# money's sentinel: no amount given, just print the balance.
+# money's sentinel: no amount given, just print the cash.
 const KeepMoney: int = -1
 
 # debt's sentinel: no amount given, just print the debt.
@@ -51,7 +51,7 @@ func _init() -> void:
 	LimboConsole.register_command(_action, "action", "Press or release input action <name>: <state> is 'down' or 'up'.")
 	LimboConsole.register_command(_pause, "pause", "Toggle pause.")
 	LimboConsole.register_command(_speed, "speed", "Run at speed <n>: 1, 2 or 3 (the three transport speeds). Does not unpause.")
-	LimboConsole.register_command(_money, "money", "Print the balance, or set it to <amount> dollars.")
+	LimboConsole.register_command(_money, "money", "Print the cash, or set it to <amount> dollars.")
 	LimboConsole.register_command(_debt, "debt", "Print the debt and what may still be borrowed, or set the debt to <amount> dollars.")
 	LimboConsole.register_command(_borrow, "borrow", "Borrow <amount> dollars on the credit line, up to its limit.")
 	LimboConsole.register_command(_repay, "repay", "Repay <amount> dollars, at most the debt and the cash.")
@@ -190,7 +190,7 @@ func _state() -> void:
 	var camera: GameCamera = view.camera
 	LimboConsole.print_line("Camera: target (%.1f, %.1f) | %.1f m | yaw %.1f deg" % [
 		camera.target().x, camera.target().z, camera.distance(), camera.yaw()])
-	LimboConsole.print_line("Time: %s, %s, speed %dx. Money: $%d" % [
+	LimboConsole.print_line("Time: %s, %s, speed %dx. Cash: $%d" % [
 		GameCalendar.label(_gameState().month()),
 		"paused" if (_gameState().paused) else "running",
 		_gameState().speedMultiplier(),
@@ -213,7 +213,7 @@ func _speed(step: int) -> void:
 func _money(amount: int = KeepMoney) -> void:
 	if (amount != KeepMoney):
 		_finances().setCash(amount)
-	LimboConsole.print_line("Money: $%d" % _finances().cash)
+	LimboConsole.print_line("Cash: $%d" % _finances().cash)
 
 
 func _debt(amount: int = KeepDebt) -> void:

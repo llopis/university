@@ -29,7 +29,13 @@ func _init(data: Dictionary) -> void:
 	id = str(data["id"])
 	name = str(data["name"])
 	category = str(data.get("category", ""))
-	cost = roundi(maxf(Variants.toFloat(data.get("costM", 0.0)), 0.0) * float(DollarsPerM))
-	upkeep = roundi(maxf(Variants.toFloat(data.get("upkeepK", 0.0)), 0.0) * float(DollarsPerK))
+	cost = _dollars(data.get("costM", 0.0), DollarsPerM)
+	upkeep = _dollars(data.get("upkeepK", 0.0), DollarsPerK)
 	buildTime = Variants.toFloat(data.get("buildTime", 0.0))
 	diameter = Variants.toFloat(data.get("diameter", 0.0))
+
+
+# A Sheet money column, scaled and possibly fractional: non-negative, scaled
+# by dollarsPerUnit, rounded to whole dollars.
+static func _dollars(value: Variant, dollarsPerUnit: int) -> int:
+	return roundi(maxf(Variants.toFloat(value), 0.0) * float(dollarsPerUnit))

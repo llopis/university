@@ -107,5 +107,5 @@ static func fromDict(data: Dictionary) -> Finances:
 	if (not Variants.hasKeys(data, SavedKeys, "Finances")):
 		return null
 	var finances: Finances = Finances.new()
-	finances._write(Variants.toInt(data["cash"]), Variants.toInt(data["debt"]))
+	finances._write(maxi(Variants.toInt(data["cash"]), 0), maxi(Variants.toInt(data["debt"]), 0))
 	return finances
