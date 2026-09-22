@@ -6,6 +6,9 @@ const ScreenshotPath: String = "/tmp/university/screenshot.png"
 # money's sentinel: no amount given, just print the balance.
 const KeepMoney: int = -1
 
+# debt's sentinel: no amount given, just print the debt.
+const KeepDebt: int = -1
+
 # save's and load's sentinel: no path given, use the quicksave.
 const NoPath: String = ""
 
@@ -41,7 +44,7 @@ func _init() -> void:
 	LimboConsole.register_command(_buildings, "buildings", "One line per building: index, type id, position, angle in degrees, construction status.")
 	LimboConsole.register_command(_tool, "tool", "Arm a tool: a building type id to place it, 'destroy', or 'none'.")
 	LimboConsole.register_command(_select, "select", "Select building <n> (index from 'buildings'); -1 clears the selection.")
-	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, the camera, the time, the money and the university's name.")
+	LimboConsole.register_command(_state, "state", "Print the armed tool, the ghost angle, the selected and hovered buildings, the camera, the time, the cash, the debt, the month's bill and the university's name.")
 	LimboConsole.register_command(_mouseDown, "mousedown", "Press a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
 	LimboConsole.register_command(_mouseUp, "mouseup", "Release a mouse button at design-space point <x> <y>; <button> is 'left' (default), 'right' or 'middle'.")
 	LimboConsole.register_command(_mouseMove, "mousemove", "Move the mouse to design-space point <x> <y>, carrying whichever button is held and the travel since the last synthetic event.")
@@ -49,6 +52,9 @@ func _init() -> void:
 	LimboConsole.register_command(_pause, "pause", "Toggle pause.")
 	LimboConsole.register_command(_speed, "speed", "Run at speed <n>: 1, 2 or 3 (the three transport speeds). Does not unpause.")
 	LimboConsole.register_command(_money, "money", "Print the balance, or set it to <amount> dollars.")
+	LimboConsole.register_command(_debt, "debt", "Print the debt and what may still be borrowed, or set the debt to <amount> dollars.")
+	LimboConsole.register_command(_borrow, "borrow", "Borrow <amount> dollars on the credit line, up to its limit.")
+	LimboConsole.register_command(_repay, "repay", "Repay <amount> dollars, at most the debt and the cash.")
 	LimboConsole.register_command(_advance, "advance", "Step the sim to the start of the month <months> ahead, paused or not.")
 	LimboConsole.register_command(_save, "save", "Save the game to [path] (the quicksave when none is given).")
 	LimboConsole.register_command(_load, "load", "Load the game saved at [path] (the quicksave when none is given).")
@@ -189,6 +195,8 @@ func _state() -> void:
 		"paused" if (_gameState().paused) else "running",
 		_gameState().speedMultiplier(),
 		_finances().cash])
+	LimboConsole.print_line("Debt: $%d | interest $%d/month | upkeep $%d/month" % [
+		_finances().debt, _finances().interest(), _campus().upkeep()])
 	LimboConsole.print_line("University: %s" % _gameState().university.name)
 
 
@@ -206,6 +214,22 @@ func _money(amount: int = KeepMoney) -> void:
 	if (amount != KeepMoney):
 		_finances().setCash(amount)
 	LimboConsole.print_line("Money: $%d" % _finances().cash)
+
+
+func _debt(amount: int = KeepDebt) -> void:
+	if (amount != KeepDebt):
+		_finances().setDebt(amount)
+	LimboConsole.print_line("Debt: $%d | credit left $%d" % [_finances().debt, _finances().availableCredit()])
+
+
+func _borrow(amount: int) -> void:
+	var taken: int = _finances().borrow(amount)
+	LimboConsole.print_line("Borrowed $%d. Cash $%d, debt $%d" % [taken, _finances().cash, _finances().debt])
+
+
+func _repay(amount: int) -> void:
+	var paid: int = _finances().repay(amount)
+	LimboConsole.print_line("Repaid $%d. Cash $%d, debt $%d" % [paid, _finances().cash, _finances().debt])
 
 
 func _advance(months: int) -> void:

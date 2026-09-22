@@ -145,13 +145,16 @@ Registered debug commands:
 - `buildings` — one line per building: index, type id, position, angle in degrees, construction status.
 - `tool <id|destroy|none>` — arm a tool: a building type id to place it, `destroy`, or `none`.
 - `select <n>` — select building <n> (index from `buildings`); -1 clears the selection.
-- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, the camera's target, distance and yaw, the time (date, paused/running, speed), the money and the university's name. Read-only.
+- `state` — print the armed tool, the ghost angle in degrees, the selected and hovered building indices, the camera's target, distance and yaw, the time (date, paused/running, speed), the cash, the debt, the month's interest and upkeep, and the university's name. Read-only.
 - `mousedown <x> <y> [button]`, `mouseup <x> <y> [button]` — synthetic button events at a design-space point (1920x1080), pushed through the root viewport so they route to the GUI exactly like a real click. `button` is `left` (default), `right` or `middle`.
 - `mousemove <x> <y>` — synthetic motion to a design-space point, carrying whichever button a `mousedown` left held and the travel since the last synthetic event, so drags accumulate against `GameCamera.DragThreshold`.
 - `action <name> <down|up>` — press or release an input action (`RotateLeft`, `RotateRight`, `ExitGame`, ...) as an `InputEventAction`, so polled reads and `_unhandled_input` handlers both see it.
 - `pause` — toggle pause.
 - `speed <1-3>` — run at speed 1, 2 or 3 (the three transport speeds). Does not unpause.
-- `money [amount]` — print the balance, or set it to `<amount>` dollars.
+- `money [amount]` — print the cash, or set it to `<amount>` dollars.
+- `debt [amount]` — print the debt and what may still be borrowed, or set the debt to `<amount>` dollars.
+- `borrow <amount>` — borrow on the credit line, up to `Finances.CreditLimit`.
+- `repay <amount>` — repay, at most the debt and the cash.
 - `advance <months>` — step the sim to the start of the month `<months>` ahead, paused or not.
 - `save [path]` — save the game to `<path>`, or to the quicksave (`user://quicksave.json`) when none is given. `save res://data/start_state.json` writes the start state from a running game; hand-edit it afterwards (open buildings, tick 0, campus month 0).
 - `load [path]` — load the game saved at `<path>`, or the quicksave. Reloads the scene, so the camera and any armed tool or selection start fresh. A save missing a key is refused, with nothing changed.
@@ -184,7 +187,10 @@ semester begins — September or February, always a later month than the one it
 was placed in — then turns solid by itself. It takes up its ground and can be
 selected the whole time, and `Destroy` gives the full price back while it is
 unfinished and nothing at all once it has opened. Building and destroying work
-while paused. Esc with nothing armed and nothing selected quits. F5 saves the
+while paused. Every open building costs upkeep, charged at the start of each
+month with the interest on any debt; a bill bigger than the cash is borrowed
+automatically, plus a fee, and the credit line itself is console-only until the
+HUD's Money panel arrives. Esc with nothing armed and nothing selected quits. F5 saves the
 game to the quicksave and F9 loads it back; every launch is a new game, from
 the start state.
 
