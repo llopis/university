@@ -32,7 +32,7 @@ func _ready() -> void:
 	controller.HoverChanged.connect(_onHoverChanged)
 	buildMenu.populate(Global.buildingDB.all)
 	buildMenu.showAffordable(gameState.university.campus)
-	gameState.university.campus.MoneyChanged.connect(func(_money: int) -> void: buildMenu.showAffordable(gameState.university.campus))
+	gameState.university.finances.MoneyChanged.connect(func() -> void: buildMenu.showAffordable(gameState.university.campus))
 	buildMenu.BuildingChosen.connect(controller.armPlace)
 	buildMenu.DestroyChosen.connect(controller.armDestroy)
 	buildMenu.Closed.connect(controller.cancel)

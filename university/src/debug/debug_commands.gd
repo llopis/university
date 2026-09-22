@@ -90,6 +90,10 @@ func _campus() -> Campus:
 	return _gameState().university.campus
 
 
+func _finances() -> Finances:
+	return _gameState().university.finances
+
+
 func _buildingAt(index: int) -> Building:
 	var buildings: Array[Building] = _campus().buildings
 	if (index < 0 or index >= buildings.size()):
@@ -184,7 +188,7 @@ func _state() -> void:
 		GameCalendar.label(_gameState().month()),
 		"paused" if (_gameState().paused) else "running",
 		_gameState().speedMultiplier(),
-		_campus().money])
+		_finances().cash])
 	LimboConsole.print_line("University: %s" % _gameState().university.name)
 
 
@@ -200,8 +204,8 @@ func _speed(step: int) -> void:
 
 func _money(amount: int = KeepMoney) -> void:
 	if (amount != KeepMoney):
-		_campus().setMoney(amount)
-	LimboConsole.print_line("Money: $%d" % _campus().money)
+		_finances().setCash(amount)
+	LimboConsole.print_line("Money: $%d" % _finances().cash)
 
 
 func _advance(months: int) -> void:

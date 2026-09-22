@@ -22,7 +22,7 @@ func test_the_start_state_loads_every_building_it_lists() -> void:
 func test_every_start_building_stands_where_it_could_be_placed() -> void:
 	# Set down one by one on an empty campus: each must be inside the bounds and
 	# clear of the ones before it, so a hand edit cannot sneak in an overlap.
-	var check: Campus = Campus.new()
+	var check: Campus = Campus.new(Finances.new())
 	for building: Building in _startState().university.campus.buildings:
 		assert_bool(check.canPlace(building.info, building.pos, building.angle)).is_true()
 		check.buildings.append(building)

@@ -8,6 +8,9 @@ const Spacing: float = 40.0
 const Angle: float = PI / 7.0
 const MonthsAfterLoading: int = 7
 const Name: String = "Test University"
+# Non-default balances, so a save that forgot either would show.
+const StartCash: int = 20000000
+const Borrowed: int = 3000000
 
 
 func _db() -> BuildingInfoDB:
@@ -22,6 +25,8 @@ func _db() -> BuildingInfoDB:
 func _playedState(buildingDB: BuildingInfoDB) -> GameState:
 	var state: GameState = GameState.new()
 	state.university.name = Name
+	state.university.finances.setCash(StartCash)
+	state.university.finances.borrow(Borrowed)
 	state.university.campus.place(buildingDB.info("hall"), Vector2.ZERO, Angle)
 	state.advanceMonths(GameCalendar.nextSemesterStart(0))
 	state.university.campus.place(buildingDB.info("lab"), Vector2(Spacing, Spacing), -Angle)
@@ -61,7 +66,8 @@ func test_loading_restores_the_campus_as_it_was() -> void:
 	assert_str(loaded.university.name).is_equal(Name)
 	assert_int(loaded.tickCount).is_equal(state.tickCount)
 	assert_int(back.month).is_equal(campus.month)
-	assert_int(back.money).is_equal(campus.money)
+	assert_int(loaded.university.finances.cash).is_equal(state.university.finances.cash)
+	assert_int(loaded.university.finances.debt).is_equal(state.university.finances.debt)
 	assert_int(back.buildings.size()).is_equal(campus.buildings.size())
 	for i: int in range(campus.buildings.size()):
 		var was: Building = campus.buildings[i]
@@ -89,10 +95,10 @@ func test_a_save_missing_a_campus_key_is_refused() -> void:
 	var buildingDB: BuildingInfoDB = _db()
 	var data: Dictionary = _playedState(buildingDB).toDict()
 	var campusData: Dictionary = (data["university"] as Dictionary)["campus"] as Dictionary
-	campusData.erase("money")
+	campusData.erase("month")
 	var loaded: Array[GameState] = []
 	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
-		.is_push_error(Variants.MissingKeysError % ["Campus", "money"])
+		.is_push_error(Variants.MissingKeysError % ["Campus", "month"])
 	assert_object(loaded[0]).is_null()
 
 
@@ -116,3 +122,9 @@ func test_pause_and_speed_are_not_saved() -> void:
 	var loaded: GameState = _reloaded(state, buildingDB)
 	assert_bool(loaded.paused).is_false()
 	assert_int(loaded.speedIndex).is_equal(0)
+
+
+func test_a_loaded_campus_spends_from_the_loaded_finances() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var loaded: GameState = _reloaded(_playedState(buildingDB), buildingDB)
+	assert_object(loaded.university.campus.finances).is_same(loaded.university.finances)

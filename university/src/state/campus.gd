@@ -1,27 +1,30 @@
 class_name Campus
-## The buildable world: a square of ground, the buildings on it, and the
-## money spent building them. Views call the command methods (place, destroy)
-## and listen to the signals; nothing here reads input or knows a view exists.
+## The buildable world: a square of ground and the buildings on it. Building
+## spends from, and a refund goes back to, the university's Finances. Views call
+## the command methods (place, destroy) and listen to the signals; nothing here
+## reads input or knows a view exists.
 
 signal BuildingAdded(building: Building)
 signal BuildingRemoved(building: Building)
-signal MoneyChanged(money: int)
 ## A building finished construction: a semester began.
 signal BuildingOpened(building: Building)
 
 # Side of the square campus, in metres, centred on the origin.
 const Size: float = 1000.0
-# Whole dollars.
-const StartingMoney: int = 50000000
 # Reported when a save names a building type the building data no longer has.
 const UnknownTypeError: String = "Campus: saved building type '%s' is not in the building data; leaving it out."
 # Keys toDict writes; fromDict refuses a dictionary missing any of them.
-const SavedKeys: Array[String] = ["month", "money", "buildings"]
+const SavedKeys: Array[String] = ["month", "buildings"]
 
 var buildings: Array[Building]
-var money: int = StartingMoney
+# The university's money, shared: what building spends from.
+var finances: Finances
 # Months since the game began (see GameCalendar). Advanced by startMonth.
 var month: int = 0
+
+
+func _init(fundedBy: Finances) -> void:
+	finances = fundedBy
 
 
 static func bounds() -> Rect2:
@@ -38,18 +41,12 @@ func canPlace(info: BuildingInfo, pos: Vector2, angle: float) -> bool:
 	return true
 
 
-## The one place the balance is written, so every change is announced.
-func setMoney(amount: int) -> void:
-	money = amount
-	MoneyChanged.emit(money)
-
-
 func canAfford(info: BuildingInfo) -> bool:
-	return info.cost <= money
+	return finances.canAfford(info.cost)
 
 
 ## Whether a building of this type can go there right now: the spot is free
-## and it can be paid for. Money never goes negative.
+## and the cash covers it. Cash never goes negative.
 func canBuild(info: BuildingInfo, pos: Vector2, angle: float) -> bool:
 	return canAfford(info) and canPlace(info, pos, angle)
 
@@ -62,7 +59,7 @@ func place(info: BuildingInfo, pos: Vector2, angle: float) -> Building:
 	var building: Building = Building.new(info, pos, angle)
 	building.opensAtMonth = GameCalendar.nextSemesterStart(month)
 	buildings.append(building)
-	setMoney(money - info.cost)
+	finances.spend(info.cost)
 	BuildingAdded.emit(building)
 	return building
 
@@ -74,7 +71,7 @@ func destroy(building: Building) -> void:
 		return
 	buildings.erase(building)
 	if (building.underConstruction):
-		setMoney(money + building.info.cost)
+		finances.refund(building.info.cost)
 	BuildingRemoved.emit(building)
 
 
@@ -119,21 +116,19 @@ func toDict() -> Dictionary:
 	var saved: Array[Dictionary] = []
 	for building: Building in buildings:
 		saved.append(building.toDict())
-	return {"month": month, "money": money, "buildings": saved}
+	return {"month": month, "buildings": saved}
 
 
-## A saved campus, rebuilt without announcing any building: nothing is
-## listening yet, and the view makes what it needs from `buildings` when it
-## starts (`setMoney` still emits `MoneyChanged` here, harmlessly, since
-## nobody is listening yet). A building whose type is gone from the data is
-## reported and left out; a save missing a key, at the campus level or a
-## building's, is refused: null for the whole campus.
-static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> Campus:
+## A saved campus, spending from the finances it is given (the loaded ones), and
+## rebuilt without announcing any building: nothing is listening yet, and the
+## view makes what it needs from `buildings` when it starts. A building whose
+## type is gone from the data is reported and left out; a save missing a key,
+## at the campus level or a building's, is refused: null for the whole campus.
+static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB, fundedBy: Finances) -> Campus:
 	if (not Variants.hasKeys(data, SavedKeys, "Campus")):
 		return null
-	var campus: Campus = Campus.new()
+	var campus: Campus = Campus.new(fundedBy)
 	campus.month = Variants.toInt(data["month"])
-	campus.setMoney(Variants.toInt(data["money"]))
 	for saved: Variant in data["buildings"] as Array:
 		var entry: Dictionary = saved as Dictionary
 		# Checked before reading "type", which Building.fromDict never reads
