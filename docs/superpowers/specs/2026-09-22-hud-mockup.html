@@ -1,0 +1,805 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Universitas HUD</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&family=Cormorant+Garamond:wght@600;700&display=swap">
+<style>
+:root{
+  --page:#0e1116;
+  --chrome:#14181e;
+  --chrome-2:#20262f;
+  --chrome-3:#2a323d;
+  --line:rgba(255,255,255,.09);
+  --line-2:rgba(255,255,255,.16);
+  --text:#ece7db;
+  --muted:#9aa4b0;
+  --dim:#6b7580;
+  --gold:#d9a441;
+  --gold-2:#f0c96a;
+  --maroon:#8a1c2b;
+  --good:#63bd72;
+  --warn:#e2a93a;
+  --bad:#e25a4e;
+  --info:#5aa7e0;
+  --ground:#5f8d47;
+  --ground-2:#53803e;
+  --path:#b9b3a4;
+  --ui:"Barlow","Segoe UI",system-ui,sans-serif;
+  --cond:"Barlow Semi Condensed","Barlow","Segoe UI",system-ui,sans-serif;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--page);color:var(--text);font-family:var(--ui);font-size:14px;overflow:hidden}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- mockup chrome (outside the game frame) ---------- */
+.chrome{height:44px;display:flex;align-items:center;gap:8px;padding-inline:16px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted);overflow-x:auto;white-space:nowrap}
+.chrome b{color:var(--text);font-weight:600;margin-right:6px}
+.chrome .sep{width:1px;height:18px;background:var(--line-2);margin-inline:6px;flex:none}
+.chip{border:1px solid var(--line-2);border-radius:4px;padding:4px 9px;color:var(--text);background:var(--chrome-2)}
+.chip:hover{border-color:var(--gold)}
+.chip.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.viewport{position:relative;height:calc(100% - 44px);overflow:hidden}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center;transform:translate(-50%,-50%) scale(var(--s,1));background:var(--ground);overflow:hidden;font-variant-numeric:tabular-nums;user-select:none;box-shadow:0 0 0 1px #000}
+
+/* prototype toggle: anything tagged .later disappears */
+.stage.proto .later{display:none!important}
+.later-tag{display:inline-block;font:600 9.5px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:#1a1408;background:var(--gold);border-radius:3px;padding:3px 5px;margin-left:6px;vertical-align:middle}
+.stage.proto .later-tag{display:none}
+
+/* ---------- campus ---------- */
+.campus{position:absolute;inset:0;background:
+  linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px) 0 0/60px 60px,
+  linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px) 0 0/60px 60px,
+  radial-gradient(1200px 700px at 50% 40%,#699a4f,var(--ground-2))}
+.path{position:absolute;background:var(--path);border-radius:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.lawn{position:absolute;border-radius:50%;background:radial-gradient(#7fb35f,#6a9c4d);opacity:.8}
+.bld{position:absolute;cursor:pointer;z-index:2}
+.bld .top{position:absolute;inset:0;background:var(--c,#b48c6a);border:1px solid rgba(0,0,0,.35);box-shadow:inset 0 0 0 4px rgba(255,255,255,.12)}
+.bld .front{position:absolute;left:0;right:0;top:100%;height:var(--h,34px);background:color-mix(in srgb,var(--c,#b48c6a) 70%,black);border:1px solid rgba(0,0,0,.4);border-top:0}
+.bld .front::after{content:"";position:absolute;inset:8px 10px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 6px,transparent 6px 16px)}
+.bld .shadow{position:absolute;left:8px;top:calc(100% + var(--h,34px) - 2px);right:-10px;height:22px;background:rgba(0,0,0,.28);filter:blur(6px);transform:skewX(-30deg)}
+.bld .name{position:absolute;left:50%;top:100%;transform:translate(-50%,calc(var(--h,34px) + 12px));font:600 12px var(--cond);letter-spacing:.03em;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.7);white-space:nowrap;pointer-events:none}
+.bld:hover .top,.bld.sel .top{box-shadow:inset 0 0 0 4px rgba(255,255,255,.12),0 0 0 3px var(--gold)}
+.bld.uc .top{background:repeating-linear-gradient(45deg,#c9b98a 0 10px,#a89768 10px 20px);opacity:.9}
+.bld.uc .front{background:#7d6f4b}
+.bld.uc .front::after{display:none}
+.stu{position:absolute;z-index:1;width:6px;height:6px;border-radius:50%;background:#2d2a33;box-shadow:0 1px 1px rgba(0,0,0,.4);animation:walk var(--d,20s) linear infinite;pointer-events:none}
+@keyframes walk{from{transform:translate(var(--x0),var(--y0))}to{transform:translate(var(--x1),var(--y1))}}
+@media (prefers-reduced-motion:reduce){.stu{animation:none}}
+
+/* problem markers on the campus */
+.marker{position:absolute;z-index:3;transform:translate(-50%,-100%);display:flex;align-items:center;gap:6px;background:var(--chrome);border:1px solid var(--line-2);border-left:3px solid var(--warn);border-radius:4px;padding:6px 9px;font:600 12.5px var(--cond);color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.35);cursor:pointer;white-space:nowrap}
+.marker.bad{border-left-color:var(--bad)}
+.marker.info{border-left-color:var(--info)}
+.marker::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:22px;background:var(--line-2);transform:translateX(-50%)}
+.marker:hover{border-color:var(--gold)}
+.marker small{color:var(--muted);font-weight:500}
+
+/* ---------- top toolbar ---------- */
+.topbar{position:absolute;left:0;right:0;top:0;height:58px;background:var(--chrome);border-bottom:1px solid var(--line-2);display:flex;align-items:stretch;box-shadow:0 4px 20px rgba(0,0,0,.35);z-index:20}
+.crest{display:flex;align-items:center;gap:12px;padding:0 18px 0 14px;border-right:1px solid var(--line-2);cursor:pointer}
+.crest:hover,.crest.open{background:var(--chrome-2)}
+.shield{width:36px;height:40px;background:var(--maroon);clip-path:polygon(0 0,100% 0,100% 62%,50% 100%,0 62%);display:grid;place-items:center;font:700 18px var(--serif);color:var(--gold-2);box-shadow:inset 0 0 0 2px var(--gold)}
+.crest .uname{font:700 19px/1 var(--serif);letter-spacing:.01em}
+.crest .usub{font:500 11px var(--cond);color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.slots{display:flex;align-items:stretch}
+.slot{display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid var(--line);cursor:pointer;position:relative}
+.slot:hover,.slot.open{background:var(--chrome-2)}
+.slot.open::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--gold)}
+.slot .ico{width:22px;height:22px;color:var(--gold);flex:none}
+.slot .v{font:600 20px/1 var(--cond);letter-spacing:.01em}
+.slot .l{font:500 10.5px var(--cond);color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
+.slot .sub{font:500 12px var(--cond);color:var(--muted);margin-left:4px}
+.slot .sub.warn{color:var(--warn)}
+.slot .v.neg{color:var(--bad)}.slot .v.pos{color:var(--good)}
+.warnbadge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 2px var(--chrome)}
+.clock{margin-left:auto;display:flex;align-items:center;gap:16px;padding:0 16px;border-left:1px solid var(--line-2)}
+.clock .sem{text-align:right}
+.clock .sem .v{font:700 17px/1 var(--cond);letter-spacing:.04em;text-transform:uppercase}
+.clock .sem .l{font:500 11px var(--cond);color:var(--muted);margin-top:4px}
+.sembar{width:170px;height:8px;background:var(--chrome-3);border-radius:4px;overflow:hidden;margin-top:6px;position:relative}
+.sembar i{display:block;height:100%;width:60%;background:var(--gold)}
+.sembar::after{content:"";position:absolute;left:33.3%;top:0;bottom:0;width:1px;background:rgba(0,0,0,.4)}
+.speed{display:flex;gap:4px}
+.speed button{width:34px;height:34px;border:1px solid var(--line-2);border-radius:4px;background:var(--chrome-2);display:grid;place-items:center;font:700 12px var(--cond);color:var(--muted)}
+.speed button.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.speed button:hover{border-color:var(--gold)}
+
+/* ---------- dropdowns ---------- */
+.dd{position:absolute;top:58px;background:var(--chrome);border:1px solid var(--line-2);border-top:0;border-radius:0 0 6px 6px;box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:19;padding:16px 18px 14px;display:none}
+.dd.open{display:block}
+.dd h3{margin:0 0 12px;font:600 12px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.dd h3 .r{margin-left:auto;font:500 12px var(--cond);letter-spacing:0;text-transform:none;color:var(--dim)}
+.kpis{display:flex;gap:26px;margin-bottom:14px}
+.kpi .v{font:600 26px/1 var(--cond)}
+.kpi .v small{font-size:15px;color:var(--muted);font-weight:500}
+.kpi .l{font:500 11px var(--cond);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:5px}
+.kpi.warn .v{color:var(--warn)}.kpi.bad .v{color:var(--bad)}.kpi.good .v{color:var(--good)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font:600 11px var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line-2)}
+td{padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right}
+tr.link{cursor:pointer}tr.link:hover td{background:var(--chrome-2)}
+.bar{height:8px;background:var(--chrome-3);border-radius:4px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;background:var(--gold)}
+.bar.good i{background:var(--good)}.bar.warn i{background:var(--warn)}.bar.bad i{background:var(--bad)}
+.bar .t{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;opacity:.7}
+.demand{display:inline-flex;gap:2px;align-items:flex-end;height:14px}
+.demand i{width:5px;background:var(--chrome-3);display:block}
+.demand i.on{background:var(--good)}
+.demand.high i.on{background:var(--warn)}
+.section{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13.5px}
+.row .k{color:var(--muted);flex:1}
+.row .v{font-weight:600}
+.row .v.pos{color:var(--good)}.row .v.neg{color:var(--bad)}.row .v.warn{color:var(--warn)}
+.row .bar{width:150px}
+.jump{display:inline-flex;align-items:center;gap:5px;font:600 12px var(--cond);color:var(--gold);letter-spacing:.02em;padding:4px 8px;border:1px solid transparent;border-radius:4px;white-space:nowrap}
+.jump:hover{border-color:var(--gold)}
+.jump::after{content:"→"}
+.foot{display:flex;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.note{font-size:12px;color:var(--muted);line-height:1.4}
+.note.warn{color:var(--warn)}
+.pill{display:inline-block;font:600 11px var(--cond);letter-spacing:.04em;padding:2px 7px;border-radius:3px;background:var(--chrome-3);color:var(--muted)}
+.pill.warn{background:rgba(226,169,58,.18);color:var(--warn)}
+.pill.bad{background:rgba(226,90,78,.18);color:var(--bad)}
+.pill.good{background:rgba(99,189,114,.18);color:var(--good)}
+.pill.info{background:rgba(90,167,224,.18);color:var(--info)}
+
+/* ---------- university menu (from the crest) ---------- */
+.unimenu{position:absolute;left:0;top:58px;width:640px;background:var(--chrome);border:1px solid var(--line-2);border-top:0;border-radius:0 0 6px 0;box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:19;display:none;padding:16px 18px}
+.unimenu.open{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.unimenu h4{margin:0 0 6px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.unimenu .grp{margin-bottom:14px}
+.mi{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 8px;border-radius:4px;font-size:13.5px}
+.mi:hover{background:var(--chrome-2)}
+.mi .k{color:var(--dim);font:500 11px var(--cond);margin-left:auto;letter-spacing:.05em}
+.mi .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
+.mi .dot.warn{background:var(--warn)}.mi .dot.good{background:var(--good)}
+
+/* ---------- alerts ---------- */
+.alerts{position:absolute;right:16px;top:72px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;z-index:15}
+.alert{display:flex;align-items:center;gap:10px;background:var(--chrome);border:1px solid var(--line-2);border-right:3px solid var(--warn);border-radius:4px;padding:8px 12px;font-size:13px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35);max-width:420px}
+.alert.bad{border-right-color:var(--bad)}.alert.info{border-right-color:var(--info)}
+.alert:hover{border-color:var(--gold);border-right-color:var(--gold)}
+.alert .x{color:var(--dim);font-size:16px;line-height:1;padding:0 2px}
+.alert .x:hover{color:var(--text)}
+.alert .when{color:var(--dim);font:500 11px var(--cond)}
+.stage.panel-open .alerts{right:436px}
+
+/* ---------- docked right panel ---------- */
+.side{position:absolute;right:0;top:58px;bottom:0;width:420px;background:var(--chrome);border-left:1px solid var(--line-2);box-shadow:-10px 0 30px rgba(0,0,0,.35);z-index:18;display:none;flex-direction:column}
+.side.open{display:flex}
+.side .hd{padding:16px 18px 12px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-start;gap:12px}
+.side .hd .t{font:700 20px/1.1 var(--cond)}
+.side .hd .s{font:500 12px var(--cond);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:5px}
+.side .hd .x{margin-left:auto;color:var(--muted);font-size:20px;line-height:1;padding:2px 4px}
+.side .hd .x:hover{color:var(--text)}
+.side .hd .edit{color:var(--dim);font-size:12px;margin-left:6px;cursor:pointer}
+.side .body{overflow:auto;padding:14px 18px 20px;flex:1}
+.side .body::-webkit-scrollbar{width:8px}.side .body::-webkit-scrollbar-thumb{background:var(--chrome-3);border-radius:4px}
+.pane{display:none}.pane.open{display:block}
+.blk{margin-bottom:16px}
+.blk h4{margin:0 0 8px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.blk h4 .r{margin-left:auto;font-weight:500;letter-spacing:0;text-transform:none;color:var(--dim)}
+.lever{background:var(--chrome-2);border:1px solid var(--line);border-radius:5px;padding:10px 12px;margin-bottom:8px}
+.lever .lt{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;margin-bottom:6px}
+.lever .lt .r{margin-left:auto;font:500 11px var(--cond);color:var(--dim)}
+.lever .ld{font-size:12px;color:var(--muted);line-height:1.4}
+.inp{display:flex;align-items:center;gap:8px}
+.inp label{font:500 11px var(--cond);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;width:92px}
+.inp .box{flex:1;height:30px;border:1px solid var(--line-2);border-radius:4px;background:var(--chrome);padding:0 10px;display:flex;align-items:center;font-weight:600}
+.inp .box.off{color:var(--dim);font-weight:500}
+.inp .step{width:30px;height:30px;border:1px solid var(--line-2);border-radius:4px;display:grid;place-items:center;color:var(--muted)}
+.inp .step:hover{border-color:var(--gold);color:var(--text)}
+.slider{height:6px;background:var(--chrome-3);border-radius:3px;position:relative;margin:12px 6px 4px}
+.slider i{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--gold);transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--chrome)}
+.slider .lab{position:absolute;top:12px;font:500 10.5px var(--cond);color:var(--dim);transform:translateX(-50%)}
+.pipe{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.pipe .st{background:var(--chrome-2);border:1px solid var(--line);border-radius:5px;padding:8px 10px}
+.pipe .st .v{font:600 20px/1 var(--cond)}
+.pipe .st .v.dim{color:var(--dim)}
+.pipe .st .l{font:500 10.5px var(--cond);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.pipe .st .w{font:500 11px var(--cond);color:var(--dim);margin-top:3px}
+.pipe .st.on{border-color:var(--gold)}
+.mini{display:flex;align-items:flex-end;gap:5px;height:56px;padding:0 2px;border-bottom:1px solid var(--line-2)}
+.mini i{flex:1;background:var(--chrome-3);display:block;position:relative}
+.mini i.on{background:var(--gold)}
+.mini i b{position:absolute;bottom:100%;left:0;right:0;text-align:center;font:500 10px var(--cond);color:var(--muted);margin-bottom:2px}
+.mini-l{display:flex;gap:5px;padding:4px 2px 0;font:500 10.5px var(--cond);color:var(--dim)}
+.mini-l span{flex:1;text-align:center}
+.blist{display:flex;flex-direction:column;gap:4px}
+.blist .b{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--line);border-radius:4px;font-size:13px;cursor:pointer}
+.blist .b:hover{border-color:var(--gold)}
+.blist .b .m{color:var(--muted);margin-left:auto;font-size:12px}
+.sq{width:10px;height:10px;border-radius:2px;background:var(--c,#b48c6a);flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 14px;border:1px solid var(--line-2);border-radius:4px;background:var(--chrome-2);font:600 13px var(--cond);letter-spacing:.03em}
+.btn:hover{border-color:var(--gold)}
+.btn.primary{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.btn.ghost{background:transparent}
+.btnrow{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---------- bottom-left actions + build panel ---------- */
+.actions{position:absolute;left:16px;bottom:16px;display:flex;gap:6px;z-index:16}
+.act{width:64px;height:64px;border:1px solid var(--line-2);border-radius:6px;background:var(--chrome);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font:600 10.5px var(--cond);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);box-shadow:0 6px 16px rgba(0,0,0,.35);position:relative}
+.act svg{width:24px;height:24px;color:var(--text)}
+.act:hover{border-color:var(--gold)}
+.act.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.act.on svg{color:#1a1408}
+.act .key{position:absolute;top:4px;right:6px;font:600 10px var(--cond);color:var(--dim)}
+.act.on .key{color:#5a4a1e}
+.buildp{position:absolute;left:16px;bottom:90px;width:900px;height:430px;background:var(--chrome);border:1px solid var(--line-2);border-radius:6px;box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:17;display:none;grid-template-columns:190px 1fr}
+.buildp.open{display:grid}
+.cats{border-right:1px solid var(--line-2);padding:10px 8px;display:flex;flex-direction:column;gap:2px}
+.cats h4{margin:6px 8px 8px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.cat{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:4px;font-size:13.5px;font-weight:500;text-align:left;width:100%}
+.cat:hover{background:var(--chrome-2)}
+.cat.on{background:var(--chrome-3);box-shadow:inset 3px 0 0 var(--gold)}
+.cat .n{margin-left:auto;color:var(--dim);font:500 11px var(--cond)}
+.cat .sq{width:12px;height:12px}
+.catalog{padding:12px 14px;display:flex;flex-direction:column;min-height:0}
+.subtabs{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.subtab{padding:5px 10px;border-radius:4px;font:600 12.5px var(--cond);color:var(--muted);letter-spacing:.03em}
+.subtab.on{background:var(--chrome-3);color:var(--text)}
+.subtab:hover{color:var(--text)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;overflow:auto;flex:1;align-content:start}
+.card{border:1px solid var(--line);border-radius:5px;padding:10px 12px;cursor:pointer;background:var(--chrome-2)}
+.card:hover,.card.sel{border-color:var(--gold)}
+.card .thumb{height:52px;border-radius:3px;background:var(--c,#b48c6a);margin-bottom:8px;position:relative;overflow:hidden}
+.card .thumb::after{content:"";position:absolute;left:12%;right:12%;top:14px;bottom:0;background:rgba(0,0,0,.3);border-top:2px solid rgba(255,255,255,.35)}
+.card .thumb.wide::after{left:6%;right:6%;top:26px}
+.card .thumb.tall::after{left:30%;right:30%;top:4px}
+.card .tn{font:600 14px var(--cond);display:flex;align-items:center;gap:6px}
+.card .tn .cost{margin-left:auto;color:var(--gold-2)}
+.card .fx{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.45}
+.card .fx b{color:var(--text);font-weight:600}
+.card.dis{opacity:.45;cursor:default}
+.bfoot{display:flex;align-items:center;gap:12px;padding-top:10px;margin-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.bfoot .r{margin-left:auto}
+
+/* ---------- demand widget (bottom center) ---------- */
+.demandw{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:flex-end;gap:14px;background:var(--chrome);border:1px solid var(--line-2);border-radius:6px;padding:10px 14px 8px;cursor:pointer;z-index:16;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.demandw:hover{border-color:var(--gold)}
+.dcol{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dcol .bars{display:flex;align-items:flex-end;gap:2px;height:36px}
+.dcol .bars i{width:7px;background:var(--chrome-3);display:block}
+.dcol .bars i.on{background:var(--good)}
+.dcol.high .bars i.on{background:var(--warn)}
+.dcol .l{font:600 10.5px var(--cond);letter-spacing:.08em;color:var(--muted)}
+.demandw .cap{writing-mode:vertical-rl;transform:rotate(180deg);font:600 10px var(--cond);letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-right:2px;height:52px;text-align:center}
+
+/* overlay switcher */
+.overlays{position:absolute;left:16px;bottom:90px;background:var(--chrome);border:1px solid var(--line-2);border-radius:6px;padding:8px;display:none;flex-direction:column;gap:2px;z-index:17;width:220px}
+.overlays.open{display:flex}
+.ov{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:4px;font-size:13.5px;width:100%;text-align:left}
+.ov:hover{background:var(--chrome-2)}.ov.on{background:var(--chrome-3);box-shadow:inset 3px 0 0 var(--gold)}
+.ov .k{margin-left:auto;color:var(--dim);font:500 11px var(--cond)}
+
+/* hotkeys hint */
+.hint{position:absolute;right:16px;bottom:16px;font:500 11px var(--cond);color:rgba(255,255,255,.75);letter-spacing:.04em;text-shadow:0 1px 2px rgba(0,0,0,.6);display:flex;gap:14px;z-index:5}
+.hint b{color:#fff;font-weight:700}
+.stage.panel-open .hint{right:436px}
+
+/* semester popup */
+.popup{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:30;display:none;place-items:center}
+.popup.open{display:grid}
+.popup .box{width:640px;background:var(--chrome);border:1px solid var(--line-2);border-top:4px solid var(--gold);border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.6);padding:22px 26px}
+.popup .box h2{margin:0;font:700 30px/1 var(--serif);letter-spacing:.01em}
+.popup .box .sub{color:var(--muted);font:500 12px var(--cond);letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
+.popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-top:18px}
+</style>
+
+<style>
+/* ---------- adaptation markup (review aid, not part of the HUD) ---------- */
+.stage.show-chg .chg{outline:2px dashed var(--info);outline-offset:3px}
+.new-tag{display:none;font:600 9.5px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;color:#08131c;background:var(--info);border-radius:3px;padding:3px 5px;margin-left:6px;vertical-align:middle}
+.stage.show-chg .new-tag{display:inline-block}
+.chrome .legend{color:var(--dim);margin-left:auto}
+.side .hd .pill{margin-top:6px}
+.lever .cur{font:500 11px var(--cond);color:var(--dim);margin:0 0 6px 100px}
+.burger{width:58px;display:grid;place-items:center;border-right:1px solid var(--line-2);color:var(--muted)}
+.burger:hover,.burger.open{background:var(--chrome-2);color:var(--text)}
+.burger svg{width:22px;height:22px}
+.gamemenu{position:absolute;left:0;top:58px;width:230px;background:var(--chrome);border:1px solid var(--line-2);border-top:0;border-radius:0 0 6px 0;box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:19;display:none;padding:12px 10px}
+.gamemenu.open{display:block}
+.gamemenu h4{margin:0 0 6px 8px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+#unimenu{left:58px;width:460px}
+#unimenu.open{grid-template-columns:1fr 1fr}
+.bar .t2{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--bad);opacity:.9}
+</style>
+
+<div class="chrome">
+  <b>Adapted mockup</b>
+  <button class="chip on" data-toggle="chg">Mark changes</button>
+  <span class="sep"></span>
+  <span>Open:</span>
+  <button class="chip" data-open="dd-students">Students</button>
+  <button class="chip" data-open="dd-housing">Housing</button>
+  <button class="chip" data-open="dd-money">Money</button>
+  <button class="chip" data-open="dd-rep">Reputation</button>
+  <button class="chip" data-open="gamemenu">Game menu</button>
+  <button class="chip" data-open="unimenu">University menu</button>
+  <button class="chip" data-open="build">Build panel</button>
+  <span class="sep"></span>
+  <button class="chip" data-panel="admissions">Admissions</button>
+  <button class="chip" data-panel="acad">Academic</button>
+  <button class="chip" data-panel="dorm">Dorm</button>
+  <button class="chip" data-panel="dining">Dining</button>
+  <button class="chip" data-panel="uc">Under construction</button>
+  <span class="sep"></span>
+  <button class="chip" data-open="popup">Semester popup</button>
+  <button class="chip" data-open="none">Close all</button>
+  <span class="legend">Blue dashes = changed · hover one for why · numbers illustrative</span>
+</div>
+
+<div class="viewport">
+<div class="stage show-chg" id="stage">
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5a5 5 0 0 1 6 5"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18V8"/><path d="M3 12h18v6"/><path d="M3 16h18"/><rect x="6" y="9" width="5" height="3" rx="1"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.5a2 2 0 0 1 0 4h-2a2 2 0 0 0 0 4H15"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-6 4 3 7-8"/><path d="M15 6h5v5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14h4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
+  <symbol id="i-hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l6 6-2 2-6-6z"/><path d="M12 6L4 14l3 3 8-8"/><path d="M4 20h7"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></symbol>
+</svg>
+
+<!-- ============ CAMPUS (stand-in for the 3D view) ============ -->
+<div class="campus" id="campus">
+  <div class="lawn" style="left:700px;top:520px;width:360px;height:220px"></div>
+  <div class="path" style="left:240px;top:470px;width:1420px;height:14px"></div>
+  <div class="path" style="left:240px;top:640px;width:1200px;height:14px"></div>
+  <div class="path" style="left:560px;top:300px;width:14px;height:520px"></div>
+  <div class="path" style="left:1040px;top:300px;width:14px;height:640px"></div>
+  <div class="path" style="left:1330px;top:470px;width:14px;height:470px"></div>
+  <div class="path" style="left:240px;top:820px;width:1100px;height:14px"></div>
+
+  <div class="bld" data-panel="admissions" style="left:600px;top:200px;width:130px;height:74px;--c:#c9a06a;--h:26px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Admissions</div></div>
+  <div class="bld" data-panel="acad" style="left:1090px;top:330px;width:220px;height:120px;--c:#9f8c7b;--h:46px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Engineering</div></div>
+  <div class="bld" data-panel="acad" style="left:1380px;top:330px;width:200px;height:120px;--c:#9f8c7b;--h:46px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Engineering</div></div>
+  <div class="bld" data-panel="acad" style="left:1090px;top:690px;width:220px;height:120px;--c:#9f8c7b;--h:46px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Engineering</div></div>
+  <div class="bld" data-panel="dining" style="left:610px;top:510px;width:150px;height:100px;--c:#c7b58a;--h:30px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dining Commons</div></div>
+  <div class="bld" data-panel="dorm" style="left:270px;top:340px;width:240px;height:80px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm</div></div>
+  <div class="bld" data-panel="dorm" style="left:270px;top:520px;width:240px;height:80px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm</div></div>
+  <div class="bld" data-panel="dorm" style="left:270px;top:690px;width:240px;height:80px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm</div></div>
+  <div class="bld" data-panel="dorm" style="left:600px;top:690px;width:240px;height:80px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm</div></div>
+  <div class="bld" data-panel="dorm" style="left:820px;top:350px;width:180px;height:90px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm</div></div>
+  <div class="bld" data-panel="dorm" style="left:820px;top:170px;width:180px;height:90px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm</div></div>
+  <div class="bld uc" data-panel="uc" style="left:1400px;top:700px;width:180px;height:90px;--c:#a86b5a;--h:40px"><div class="shadow"></div><div class="front"></div><div class="top"></div><div class="name">Dorm · under construction</div></div>
+
+  <!-- problem markers: each comes from University.problems() or a building under construction -->
+  <button class="marker bad" data-open="dd-housing" style="left:400px;top:330px">360 off campus <small>33% · above 25%</small></button>
+  <button class="marker chg" data-panel="dining" style="left:685px;top:500px" title="New: dining load past its recommended number.">Dining at 111% <small>crowded</small></button>
+  <button class="marker info" data-panel="uc" style="left:1490px;top:690px">Opens Spring, Year 4 <small>+120 beds</small></button>
+</div>
+
+<!-- ============ TOP TOOLBAR ============ -->
+<div class="topbar">
+  <button class="burger chg" data-open="gamemenu" title="New: the game menu (save, load, new game, quit), kept apart from the university menu."><svg><use href="#i-menu"/></svg></button>
+  <button class="crest" data-open="unimenu">
+    <div class="shield">P</div>
+    <div><div class="uname">Pioneer Valley State</div><div class="usub chg" title="Was 'University · Est. 2024'. There is no founding year in this calendar.">University</div></div>
+  </button>
+  <div class="slots">
+    <button class="slot chg" data-open="dd-students" title="One seat pool, no colleges."><svg class="ico"><use href="#i-users"/></svg><div><div class="v">1,080 <span class="sub">/ 1,200 seats</span></div><div class="l">Students</div></div></button>
+    <button class="slot" data-open="dd-housing"><svg class="ico"><use href="#i-bed"/></svg><div><div class="v">720 <span class="sub warn">+360 off campus</span></div><div class="l">Beds</div></div><span class="warnbadge"></span></button>
+    <button class="slot chg" data-open="dd-money" title="Shows the debt under the cash."><svg class="ico"><use href="#i-coin"/></svg><div><div class="v">$6.4M <span class="sub">$10.0M owed</span></div><div class="l">Cash</div></div></button>
+    <button class="slot chg" data-open="dd-money" title="Was 'Net monthly'. There is no monthly income yet, so this is the whole bill: upkeep + interest."><svg class="ico"><use href="#i-flow"/></svg><div><div class="v neg">−$1.9M <span class="sub">/ month</span></div><div class="l">Monthly expenses</div></div></button>
+    <button class="slot" data-open="dd-money"><svg class="ico"><use href="#i-cal"/></svg><div><div class="v pos">+$16.6M <span class="sub">in 11 wk</span></div><div class="l">Spring fees</div></div></button>
+    <button class="slot chg" data-open="dd-rep" title="New (Do Now): replaces the Happiness slot, which is Later."><svg class="ico"><use href="#i-star"/></svg><div><div class="v">58 <span class="sub" style="color:var(--good)">↑ 72</span></div><div class="l">Reputation</div></div></button>
+  </div>
+  <div class="clock">
+    <div class="sem chg" title="4 weeks a month. Fall Sep–Jan (20 wk), Spring Feb–May (16), Summer Jun–Aug (12, label only)."><div class="v">Fall, Year 4</div><div class="l">Week 9 of 20 · Spring in 11 weeks</div><div class="sembar"><i style="width:40%"></i></div></div>
+    <div class="speed chg" title="Our speeds are 1× 3× 8×, not 1× 2× 4×."><button title="Pause"><svg width="14" height="14"><use href="#i-pause"/></svg></button><button class="on">1×</button><button>3×</button><button>8×</button></div>
+  </div>
+</div>
+
+<!-- ============ UNIVERSITY MENU (crest) ============ -->
+<div class="unimenu chg" id="unimenu" title="Only entries that work. Colleges, Administration, Library, Rename and the Later items are cut; the game entries moved to the burger menu.">
+  <div>
+    <div class="grp"><h4>University</h4>
+      <button class="mi" data-panel="admissions"><span class="dot good"></span>Admissions Office<span class="k">F2</span></button>
+      <button class="mi" data-open="dd-money"><span class="dot"></span>Finances<span class="k">F3</span></button>
+      <button class="mi" data-open="dd-rep"><span class="dot"></span>Reputation<span class="new-tag">new</span></button>
+    </div>
+  </div>
+  <div>
+    <div class="grp"><h4>Services</h4>
+      <button class="mi" data-open="dd-housing"><span class="dot warn"></span>Housing<span class="k">6 dorms</span></button>
+      <button class="mi" data-panel="dining"><span class="dot warn"></span>Dining<span class="k">1 hall</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="gamemenu chg" id="gamemenu" title="New: the game menu, separate from the university.">
+  <h4>Game</h4>
+  <button class="mi">Save<span class="k">F5</span></button>
+  <button class="mi">Load<span class="k">F9</span></button>
+  <button class="mi">New game</button>
+  <button class="mi">Quit</button>
+</div>
+
+<!-- ============ DROPDOWNS ============ -->
+<div class="dd" id="dd-students" style="left:236px;width:820px">
+  <h3>Students · Fall, Year 4 <span class="r">Admissions each fall · graduation before the next fall</span></h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">1,080</div><div class="l">Enrolled</div></div>
+    <div class="kpi"><div class="v">120</div><div class="l">Open seats</div></div>
+    <div class="kpi"><div class="v">300</div><div class="l">Admitted this fall</div></div>
+    <div class="kpi"><div class="v">240</div><div class="l">Graduating this summer</div></div>
+    <div class="kpi"><div class="v">3.26</div><div class="l">This fall's entry grade</div></div>
+  </div>
+  <table class="chg" title="Was a table of colleges. With one seat pool, the cohorts are the breakdown.">
+    <tr><th>Class</th><th class="num">Students</th><th class="num">Entry grade</th><th class="num">Semesters left</th></tr>
+    <tr><td><b>Class of Year 4</b> <span class="pill">graduates this summer</span></td><td class="num">240</td><td class="num">3.05</td><td class="num">2</td></tr>
+    <tr><td><b>Class of Year 5</b></td><td class="num">260</td><td class="num">3.12</td><td class="num">4</td></tr>
+    <tr><td><b>Class of Year 6</b></td><td class="num">280</td><td class="num">3.19</td><td class="num">6</td></tr>
+    <tr><td><b>Class of Year 7</b></td><td class="num">300</td><td class="num">3.26</td><td class="num">8</td></tr>
+  </table>
+  <div class="section" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <h3>Housing</h3>
+      <div class="row"><span class="k">On campus</span><span class="v">720 / 720 beds</span></div>
+      <div class="row"><span class="k">Off campus</span><span class="v warn">360 · 33%</span><span class="pill warn">above 25% threshold</span></div>
+      <div class="row"><span class="k">Opening Spring, Year 4</span><span class="v">+120 beds</span><span class="pill info">Dorm</span></div>
+    </div>
+    <div class="chg" title="Live projection from today's reputation and next year's prices. No pipeline (Jan applicants, May commitments).">
+      <h3>Next fall · Year 5 <span class="r">at today's reputation and next year's prices</span></h3>
+      <div class="row"><span class="k">Seats to fill</span><span class="v">≈ 360</span><span class="note">120 open + 240 graduating</span></div>
+      <div class="row"><span class="k">Expected applicants</span><span class="v">≈ 1,250</span></div>
+      <div class="row"><span class="k">Expected intake</span><span class="v">≈ 360</span><span class="note">entry grade ≈ 3.24</span></div>
+    </div>
+  </div>
+  <div class="foot"><button class="jump" data-panel="admissions">Admissions Office</button><button class="jump" data-open="dd-housing">Housing</button><button class="jump" data-open="dd-rep">Reputation</button></div>
+</div>
+
+<div class="dd" id="dd-housing" style="left:420px;width:640px">
+  <h3>Housing · Fall, Year 4</h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">720 <small>/ 720</small></div><div class="l">Beds filled</div></div>
+    <div class="kpi warn"><div class="v">360</div><div class="l">Off campus · 33%</div></div>
+    <div class="kpi"><div class="v">25%</div><div class="l">Discontent threshold</div></div>
+    <div class="kpi"><div class="v">+120</div><div class="l">Beds opening Spring, Year 4</div></div>
+  </div>
+  <div class="note warn chg" style="margin-bottom:10px" title="Rule from Prototype.md: overflow pays tuition only, and buys no meal plan (the mockup said about 1 in 8 does).">Off-campus students pay tuition only: no room fee and no meal plan. Past 25% off campus, satisfaction drops for the whole university.</div>
+  <table class="chg" title="Reach columns (to dining, to classes) and Comfort are cut.">
+    <tr><th>Dorm</th><th class="num">Beds</th><th class="num">Upkeep / mo</th></tr>
+    <tr class="link" data-panel="dorm"><td><b>Dorm</b></td><td class="num">120 / 120</td><td class="num">$150K</td></tr>
+    <tr class="link" data-panel="dorm"><td><b>Dorm</b></td><td class="num">120 / 120</td><td class="num">$150K</td></tr>
+    <tr class="link" data-panel="dorm"><td><b>Dorm</b></td><td class="num">120 / 120</td><td class="num">$150K</td></tr>
+    <tr class="link" data-panel="dorm"><td><b>Dorm</b></td><td class="num">120 / 120</td><td class="num">$150K</td></tr>
+    <tr class="link" data-panel="dorm"><td><b>Dorm</b></td><td class="num">120 / 120</td><td class="num">$150K</td></tr>
+    <tr class="link" data-panel="dorm"><td><b>Dorm</b></td><td class="num">120 / 120</td><td class="num">$150K</td></tr>
+    <tr class="link" data-panel="uc" style="color:var(--muted)"><td>Dorm <span class="pill info">opens Spring, Year 4</span></td><td class="num">— / 120</td><td class="num">—</td></tr>
+  </table>
+  <div class="section chg" title="New: dining load belongs next to housing, since only housed students eat on campus.">
+    <h3>Dining</h3>
+    <div class="row"><span class="k">Housed students eating</span><span class="v">720</span><span class="note">recommended 650 · limit 845</span></div>
+    <div class="row"><span class="k">Load</span><div class="bar warn"><i style="width:85%"></i><span class="t" style="left:77%"></span><span class="t2" style="left:100%"></span></div><span class="v warn">111% · crowded</span></div>
+  </div>
+  <div class="foot"><button class="jump" data-open="build">Build a dorm</button><button class="jump" data-panel="dining">Dining Commons</button><button class="jump" data-panel="admissions">Room &amp; meal plan prices</button></div>
+</div>
+
+<div class="dd" id="dd-money" style="left:640px;width:760px">
+  <h3>Finances <span class="r">Fees arrive as a lump at the start of each semester</span></h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <div class="kpis"><div class="kpi"><div class="v">$6.4M</div><div class="l">Cash</div></div><div class="kpi bad"><div class="v">−$1.9M</div><div class="l">Per month</div></div><div class="kpi"><div class="v">$2.6M</div><div class="l">Cash at semester start</div></div></div>
+      <h3>Every month</h3>
+      <div class="row"><span class="k">Building upkeep</span><span class="v neg">−$1.84M</span></div>
+      <div class="row chg" title="Interest on the credit line, charged with the monthly bill."><span class="k">Interest</span><span class="v neg">−$50K</span></div>
+      <div class="row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:8px"><span class="k"><b>Total</b></span><span class="v neg">−$1.89M</span></div>
+      <div class="note" style="margin-top:6px">If a month's bill is more than the cash, the shortfall is borrowed automatically, plus a 5% fee.</div>
+      <div class="section chg" title="A credit line with interest only, not term loans: borrow and repay in $5M steps.">
+        <h3>Credit line</h3>
+        <div class="row"><span class="k">Owed</span><span class="v">$10.0M</span><span class="note">6% a year · $50K / mo</span></div>
+        <div class="row"><span class="k">Credit left</span><span class="v">$40.0M</span><span class="note">of $50.0M</span></div>
+        <div class="btnrow" style="margin-top:6px"><button class="btn">Borrow $5M</button><button class="btn ghost">Repay $5M</button></div>
+      </div>
+    </div>
+    <div>
+      <h3>Spring, Year 4 fees · in 11 weeks <span class="r">at today's enrollment</span></h3>
+      <div class="row"><span class="k">Tuition · 1,080 students</span><span class="v pos">+$10.37M</span><span class="note">$9,606 each</span></div>
+      <div class="row"><span class="k">Room · 720 beds</span><span class="v pos">+$3.27M</span><span class="note">$4,542 each</span></div>
+      <div class="row"><span class="k">Meal plans · 720</span><span class="v pos">+$2.98M</span><span class="note">$4,136 each</span></div>
+      <div class="row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:8px"><span class="k"><b>Total</b></span><span class="v pos">+$16.62M</span></div>
+      <div class="row"><span class="k">Cash after fees</span><span class="v">≈ $19.2M</span></div>
+      <div class="note" style="margin-top:6px">The dorm opening in spring adds its room and meal fees from that semester on.</div>
+    </div>
+  </div>
+  <div class="foot"><button class="jump" data-panel="admissions">Tuition, room &amp; meal prices</button></div>
+</div>
+
+<div class="dd chg" id="dd-rep" style="left:1020px;width:680px" title="New. Reputation needed somewhere to explain itself; this is a cut-down version of the mockup's Happiness dropdown (which is Later).">
+  <h3>Reputation · 58 <span class="r">moves 30% of the way to its target each fall</span></h3>
+  <div class="kpis">
+    <div class="kpi"><div class="v">58</div><div class="l">Reputation</div></div>
+    <div class="kpi good"><div class="v">72</div><div class="l">Target</div></div>
+    <div class="kpi"><div class="v">≈ 62</div><div class="l">After Fall, Year 5</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <h3>Target: half grades, half satisfaction</h3>
+      <div class="row"><span class="k">This fall's entry grade</span><span class="v">3.26</span><span class="note">counts as 82</span></div>
+      <div class="row"><span class="k">Satisfaction this year</span><span class="v">63</span></div>
+      <div class="row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:8px"><span class="k"><b>Target</b></span><span class="v">72</span></div>
+      <div class="note" style="margin-top:6px">Reputation sets how many apply. Price sets it too: see the Admissions Office.</div>
+    </div>
+    <div>
+      <h3>Satisfaction · 63</h3>
+      <div class="row"><span class="k">Baseline</span><span class="v">75</span></div>
+      <div class="row"><span class="k">Off campus: 8% past the threshold</span><span class="v neg">−8</span></div>
+      <div class="row"><span class="k">Dining crowded (111%)</span><span class="v neg">−4</span></div>
+      <div class="row"><span class="k">Can't eat</span><span class="v">0</span></div>
+    </div>
+  </div>
+  <div class="foot"><button class="jump" data-open="dd-housing">Housing</button><button class="jump" data-panel="dining">Dining Commons</button><button class="jump" data-panel="admissions">Admissions Office</button></div>
+</div>
+
+<!-- ============ ALERTS ============ -->
+<div class="alerts">
+  <button class="alert bad" data-open="dd-housing"><span class="when">wk 1</span>360 students without on-campus housing (33%)<span class="x">×</span></button>
+  <button class="alert chg" data-panel="dining" title="New kind: dining past its recommended load. Also: 'N students can't eat', 'Monthly bill short: borrowed $X automatically (+fee)', 'Credit line used up'."><span class="when">wk 1</span>Dining Commons at 111% of its recommended load: crowded<span class="x">×</span></button>
+  <button class="alert info" data-panel="uc"><span class="when">wk 6</span>Dorm opens at the start of Spring, Year 4<span class="x">×</span></button>
+</div>
+
+<!-- ============ DOCKED RIGHT PANEL ============ -->
+<div class="side" id="side">
+  <!-- Admissions Office -->
+  <div class="pane" id="pane-admissions">
+    <div class="hd"><div class="sq" style="--c:#c9a06a;width:14px;height:14px;margin-top:4px"></div><div><div class="t">Admissions</div><div class="s">University-wide · admission and prices</div></div><button class="x" data-open="none">×</button></div>
+    <div class="body">
+      <div class="blk chg" title="A live projection, not the Jan/May pipeline."><h4>Next intake · Fall, Year 5 <span class="r">at today's reputation and next year's prices</span></h4>
+        <div class="pipe">
+          <div class="st on"><div class="v">≈ 360</div><div class="l">Seats to fill</div><div class="w">120 open + 240 graduating</div></div>
+          <div class="st"><div class="v">≈ 1,250</div><div class="l">Expected applicants</div><div class="w">reputation 58 · $18,284 a semester</div></div>
+          <div class="st"><div class="v">≈ 360</div><div class="l">Expected intake</div><div class="w">entry grade ≈ 3.24</div></div>
+        </div>
+        <div class="note" style="margin-top:8px">Seats fill from the top of the applicant list. How many apply depends on reputation and on the total price. Empty seats are upkeep with no tuition.</div>
+      </div>
+      <div class="blk"><h4>Applicants per fall</h4>
+        <div class="mini"><i style="height:62%"><b>980</b></i><i style="height:67%"><b>1,050</b></i><i class="on" style="height:72%"><b>1,120</b></i></div>
+        <div class="mini-l"><span>Y2</span><span>Y3</span><span>Y4</span></div>
+      </div>
+      <div class="blk chg" title="Prices are set yearly: what you set now applies from next fall. The minimum is a stepper here rather than a slider, like the prices."><h4>Levers <span class="r">apply from Fall, Year 5</span></h4>
+        <div class="lever"><div class="lt">Minimum entry grade</div>
+          <div class="inp"><label>Minimum</label><button class="step">−</button><div class="box off">Off</div><button class="step">+</button></div>
+          <div class="ld" style="margin-top:6px">Off: every seat that has an applicant fills, and the entry grade follows how many apply. Raise it to leave seats empty in a weak year: tuition now against reputation later.</div>
+        </div>
+        <div class="lever"><div class="lt">Tuition per semester</div>
+          <div class="cur">This year $9,606</div>
+          <div class="inp"><label>Next year</label><button class="step">−</button><div class="box">$9,606</div><button class="step">+</button></div>
+        </div>
+        <div class="lever"><div class="lt">Room and meal plan per semester</div>
+          <div class="cur">This year $4,542 · $4,136</div>
+          <div class="inp"><label>Room</label><button class="step">−</button><div class="box">$4,542</div><button class="step">+</button></div>
+          <div class="inp" style="margin-top:6px"><label>Meal plan</label><button class="step">−</button><div class="box">$4,136</div><button class="step">+</button></div>
+          <div class="ld" style="margin-top:6px">Applicants weigh the total: $18,284 a semester. Off-campus students pay tuition only.</div>
+        </div>
+      </div>
+      <div class="btnrow"><button class="jump" data-open="dd-students">Students</button><button class="jump" data-open="dd-money">Finances</button></div>
+    </div>
+  </div>
+
+  <!-- Academic building -->
+  <div class="pane chg" id="pane-acad" title="Was the College panel. With no colleges it is the academic building's panel over the one seat pool; faculty, demand and the per-college minimum are cut.">
+    <div class="hd"><div class="sq" style="--c:#9f8c7b;width:14px;height:14px;margin-top:4px"></div><div><div class="t">Engineering</div><div class="s">Academic · 400 seats</div></div><button class="x" data-open="none">×</button></div>
+    <div class="body">
+      <div class="kpis" style="margin-bottom:10px">
+        <div class="kpi"><div class="v">1,080 <small>/ 1,200</small></div><div class="l">Students / seats</div></div>
+        <div class="kpi"><div class="v">120</div><div class="l">Open seats</div></div>
+        <div class="kpi"><div class="v">3.26</div><div class="l">Entry grade</div></div>
+      </div>
+      <div class="blk"><h4>Seats <span class="r">all academic buildings</span></h4>
+        <div class="bar good" style="height:12px"><i style="width:90%"></i></div>
+        <div class="note" style="margin-top:6px">240 students graduate this summer, so next fall can take about 360 with the buildings you have. Full classes are fine.</div>
+      </div>
+      <div class="blk"><h4>Academic buildings <span class="r">3</span></h4>
+        <div class="blist">
+          <div class="b"><span class="sq" style="--c:#9f8c7b"></span>Engineering<span class="m">400 seats · $210K / mo</span></div>
+          <div class="b"><span class="sq" style="--c:#9f8c7b"></span>Engineering<span class="m">400 seats · $210K / mo</span></div>
+          <div class="b"><span class="sq" style="--c:#9f8c7b"></span>Engineering<span class="m">400 seats · $210K / mo</span></div>
+          <button class="b" data-open="build" style="color:var(--gold);justify-content:center">+ Add an academic building</button>
+        </div>
+      </div>
+      <div class="btnrow"><button class="jump" data-open="dd-students">All students</button><button class="jump" data-panel="admissions">Admissions</button><button class="btn ghost">Demolish</button></div>
+    </div>
+  </div>
+
+  <!-- Dorm -->
+  <div class="pane" id="pane-dorm">
+    <div class="hd"><div class="sq" style="--c:#a86b5a;width:14px;height:14px;margin-top:4px"></div><div><div class="t">Dorm</div><div class="s">Housing · 120 beds</div></div><button class="x" data-open="none">×</button></div>
+    <div class="body">
+      <div class="kpis" style="margin-bottom:10px">
+        <div class="kpi"><div class="v">120 <small>/ 120</small></div><div class="l">Beds filled</div></div>
+        <div class="kpi warn"><div class="v">360</div><div class="l">Off campus · 33%</div></div>
+      </div>
+      <div class="blk chg" title="Reach rows, residents by college and Comfort are cut. Dorms fill evenly, so each one is as full as the university."><h4>Housing</h4>
+        <div class="row"><span class="k">All dorms</span><span class="v">720 / 720 beds</span></div>
+        <div class="row"><span class="k">Opening Spring, Year 4</span><span class="v">+120 beds</span></div>
+        <div class="note" style="margin-top:6px">With more students than beds, the rest live off campus and pay tuition only. Past 25% off campus, satisfaction drops.</div>
+      </div>
+      <div class="blk"><h4>Money</h4>
+        <div class="row"><span class="k">Room fees per semester</span><span class="v pos">+$545K</span><span class="note">120 × $4,542</span></div>
+        <div class="row"><span class="k">Upkeep and staff</span><span class="v neg">−$150K / mo</span></div>
+        <div class="note" style="margin-top:4px">The room price is set for the whole university in the Admissions Office.</div>
+      </div>
+      <div class="btnrow"><button class="jump" data-open="dd-housing">All housing</button><button class="btn ghost">Demolish</button></div>
+    </div>
+  </div>
+
+  <!-- Dorm under construction -->
+  <div class="pane chg" id="pane-uc" title="The same panel, with the construction status (what InfoPanel shows today) and the refund rule.">
+    <div class="hd"><div class="sq" style="--c:#a86b5a;width:14px;height:14px;margin-top:4px"></div><div><div class="t">Dorm</div><div class="s">Housing · 120 beds</div><span class="pill info">Under construction · opens Spring, Year 4</span></div><button class="x" data-open="none">×</button></div>
+    <div class="body">
+      <div class="blk"><h4>When it opens</h4>
+        <div class="row"><span class="k">Beds</span><span class="v">+120</span><span class="note">720 → 840</span></div>
+        <div class="row"><span class="k">Off campus</span><span class="v">360 → 240</span><span class="note">33% → 22%, under the threshold</span></div>
+        <div class="row"><span class="k">Upkeep</span><span class="v neg">−$150K / mo</span><span class="note">from then on</span></div>
+      </div>
+      <div class="note">Demolishing it before it opens refunds the full $2.0M. Once it has opened, nothing comes back.</div>
+      <div class="btnrow" style="margin-top:10px"><button class="jump" data-open="dd-housing">All housing</button><button class="btn ghost">Demolish · refund $2.0M</button></div>
+    </div>
+  </div>
+
+  <!-- Dining -->
+  <div class="pane chg" id="pane-dining" title="Recommended load, crowding and a hard limit replace the fixed '2,400 meals per sitting'. Reach is cut.">
+    <div class="hd"><div class="sq" style="--c:#c7b58a;width:14px;height:14px;margin-top:4px"></div><div><div class="t">Dining Commons</div><div class="s">Dining · recommended for 650</div></div><button class="x" data-open="none">×</button></div>
+    <div class="body">
+      <div class="kpis" style="margin-bottom:10px"><div class="kpi"><div class="v">720</div><div class="l">Meal plans</div></div><div class="kpi warn"><div class="v">111%</div><div class="l">Load</div></div><div class="kpi"><div class="v">0</div><div class="l">Can't eat</div></div></div>
+      <div class="blk"><h4>Load <span class="r">all dining halls · housed students</span></h4>
+        <div class="bar warn" style="height:12px"><i style="width:85%"></i><span class="t" style="left:77%"></span><span class="t2" style="left:100%"></span></div>
+        <div class="note" style="margin-top:6px">Up to 650 diners it is comfortable. Past that it gets crowded and satisfaction drops. Past 845 (130%) the rest can't eat: they buy no meal plan and satisfaction drops harder.</div>
+      </div>
+      <div class="blk"><h4>Money</h4><div class="row"><span class="k">Meal plan fees per semester</span><span class="v pos">+$2.98M</span></div><div class="row"><span class="k">Upkeep and staff</span><span class="v neg">−$220K / mo</span></div></div>
+      <div class="btnrow"><button class="jump" data-open="build">Build a dining hall</button><button class="btn ghost">Demolish</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BOTTOM-LEFT ACTIONS ============ -->
+<div class="actions chg" title="Move and Overlays are cut. Demolish replaces the Destroy entry in today's build menu.">
+  <button class="act" data-open="build"><span class="key">B</span><svg><use href="#i-hammer"/></svg>Build</button>
+  <button class="act" data-act="demolish"><span class="key">X</span><svg><use href="#i-trash"/></svg>Demolish</button>
+</div>
+
+<div class="buildp chg" id="build" title="Categories come from the Sheet's category column; college subtabs are cut. Cards show what the Sheet's new columns say.">
+  <div class="cats">
+    <h4>Build</h4>
+    <button class="cat"><span class="sq" style="--c:#a86b5a"></span>Residential<span class="n">1</span></button>
+    <button class="cat on"><span class="sq" style="--c:#9f8c7b"></span>Academic<span class="n">1</span></button>
+    <button class="cat"><span class="sq" style="--c:#c7b58a"></span>Dining<span class="n">1</span></button>
+    <button class="cat"><span class="sq" style="--c:#c9a06a"></span>Administration<span class="n">1</span></button>
+  </div>
+  <div class="catalog">
+    <div class="cards">
+      <div class="card sel"><div class="thumb" style="--c:#9f8c7b"></div><div class="tn">Engineering<span class="cost">$10.0M</span></div><div class="fx"><b>+400 seats</b> · upkeep $210K / mo · 40 × 24 m</div></div>
+    </div>
+    <div class="bfoot"><span><b style="color:var(--text)">Engineering</b> · $10.0M · cash $6.4M · <span style="color:var(--warn)">borrow first, or wait for spring fees</span></span><span class="r">Placed now → under construction until Spring, Year 4 starts</span></div>
+  </div>
+</div>
+
+
+
+<!-- ============ SEMESTER START POPUP ============ -->
+<div class="popup" id="popup">
+  <div class="box chg" title="In spring the left column is replaced by one line: no admissions or graduation in spring.">
+    <h2>Fall, Year 5 begins</h2>
+    <div class="sub">Admissions resolved · buildings opened · fees collected</div>
+    <div class="grid">
+      <div>
+        <h3 style="margin:0 0 8px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">New students</h3>
+        <div class="row"><span class="k">Applicants</span><span class="v">1,250</span></div>
+        <div class="row"><span class="k">Admitted</span><span class="v">360</span><span class="note">of 360 open seats</span></div>
+        <div class="row"><span class="k">Entry grade</span><span class="v">3.24</span></div>
+        <div class="row"><span class="k">Graduated</span><span class="v">240</span></div>
+      </div>
+      <div>
+        <h3 style="margin:0 0 8px;font:600 11px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Campus</h3>
+        <div class="row"><span class="k">Fees collected</span><span class="v pos">+$18.8M</span></div>
+        <div class="row"><span class="k">On campus</span><span class="v">840 / 840 beds</span></div>
+        <div class="row"><span class="k">Off campus</span><span class="v warn">360 · 30%</span><span class="pill warn">above threshold</span></div>
+        <div class="row"><span class="k">Dining</span><span class="v warn">129%</span><span class="pill warn">crowded</span></div>
+        <div class="row"><span class="k">Reputation</span><span class="v pos">62 <small>(+4)</small></span></div>
+        <div class="row"><span class="k">Satisfaction</span><span class="v">60 <small>(−3)</small></span><span class="new-tag">new</span></div>
+      </div>
+    </div>
+    <div class="btnrow" style="margin-top:20px;justify-content:flex-end"><button class="btn ghost" data-open="dd-housing">Look at housing</button><button class="btn primary" data-open="none">Continue</button></div>
+  </div>
+</div>
+
+
+</div><!-- /stage -->
+</div><!-- /viewport -->
+
+<script>
+(function(){
+  const stage=document.getElementById('stage');
+  const side=document.getElementById('side');
+  const ids=['dd-students','dd-housing','dd-money','dd-rep','unimenu','gamemenu','build','popup'];
+  const byId=id=>document.getElementById(id);
+
+  function fit(){
+    const vp=stage.parentElement.getBoundingClientRect();
+    const s=Math.min(vp.width/1920,vp.height/1080,1);
+    stage.style.setProperty('--s',s);
+  }
+  fit();window.addEventListener('resize',fit);
+
+  function closeAll(keepPanel){
+    ids.forEach(id=>byId(id).classList.remove('open'));
+    document.querySelectorAll('.slot.open,.crest.open,.burger.open,.act.on').forEach(e=>e.classList.remove('open','on'));
+    if(!keepPanel){side.classList.remove('open');stage.classList.remove('panel-open');document.querySelectorAll('.bld.sel').forEach(b=>b.classList.remove('sel'));}
+  }
+  function open(id,trigger){
+    if(id==='none'){closeAll();return;}
+    const el=byId(id);if(!el)return;
+    const was=el.classList.contains('open');
+    closeAll(true);
+    if(was)return;
+    el.classList.add('open');
+    if(trigger){
+      if(trigger.classList.contains('slot')||trigger.classList.contains('crest')||trigger.classList.contains('burger'))trigger.classList.add('open');
+      if(trigger.classList.contains('act'))trigger.classList.add('on');
+    } else {
+      const ctl=document.querySelector('.topbar [data-open="'+id+'"], .actions [data-open="'+id+'"]');
+      if(ctl){ctl.classList.add(ctl.classList.contains('act')?'on':'open');}
+    }
+  }
+  function panel(name,trigger){
+    closeAll(true);
+    document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('open',p.id==='pane-'+name));
+    side.classList.add('open');stage.classList.add('panel-open');
+    const pane=byId('pane-'+name);const body=pane&&pane.querySelector('.body');if(body)body.scrollTop=0;
+    document.querySelectorAll('.bld.sel').forEach(b=>b.classList.remove('sel'));
+    let b=trigger&&trigger.classList.contains('bld')?trigger:document.querySelector('.bld[data-panel="'+name+'"]');
+    if(b)b.classList.add('sel');
+  }
+  function demolish(){
+    closeAll(true);
+    const a=document.querySelector('.act[data-act="demolish"]');a.classList.add('on');
+  }
+
+  document.addEventListener('click',e=>{
+    const t=e.target.closest('[data-open],[data-panel],[data-toggle],[data-act]');
+    if(!t){
+      if(e.target.closest('#campus'))closeAll(true);
+      return;
+    }
+    e.stopPropagation();
+    if(t.dataset.toggle==='chg'){stage.classList.toggle('show-chg');t.classList.toggle('on');return;}
+    if(t.dataset.act==='demolish'){demolish();return;}
+    if(t.dataset.panel)panel(t.dataset.panel,t);
+    else open(t.dataset.open,t);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')closeAll();
+    if(e.key==='b'||e.key==='B')open('build',document.querySelector('.act[data-open="build"]'));
+    if(e.key==='x'||e.key==='X')demolish();
+    if(e.key==='Tab'){e.preventDefault();open('unimenu',document.querySelector('.crest'));}
+  });
+
+  const nodes=[[247,477],[567,477],[1047,477],[1337,477],[1567,477],[567,647],[1047,647],[1337,647],[567,307],[1047,307],[567,827],[1047,827],[1337,827]];
+  const campus=document.getElementById('campus');
+  for(let i=0;i<60;i++){
+    const a=nodes[Math.floor(Math.random()*nodes.length)];let b=nodes[Math.floor(Math.random()*nodes.length)];
+    if(b===a)b=nodes[(nodes.indexOf(a)+1)%nodes.length];
+    const s=document.createElement('i');s.className='stu';
+    const j=()=>(Math.random()*8-4);
+    s.style.setProperty('--x0',(a[0]+j())+'px');s.style.setProperty('--y0',(a[1]+j())+'px');
+    s.style.setProperty('--x1',(b[0]+j())+'px');s.style.setProperty('--y1',(b[1]+j())+'px');
+    s.style.setProperty('--d',(14+Math.random()*22)+'s');
+    s.style.animationDelay=(-Math.random()*30)+'s';
+    s.style.animationDirection=Math.random()<.5?'alternate':'alternate-reverse';
+    campus.appendChild(s);
+  }
+})();
+</script>
+
+</body></html>
