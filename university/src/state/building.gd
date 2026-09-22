@@ -32,3 +32,24 @@ func rect() -> OrientedRect:
 static func rectFor(buildingInfo: BuildingInfo, at: Vector2, facing: float) -> OrientedRect:
 	var size: Vector2 = Vector2(buildingInfo.diameter, buildingInfo.diameter * DepthRatio)
 	return OrientedRect.new(at, size, facing)
+
+
+## The type is saved by id; the campus looks it up when loading.
+func toDict() -> Dictionary:
+	return {
+		"type": info.id,
+		"pos": [pos.x, pos.y],
+		"angle": angle,
+		"underConstruction": underConstruction,
+		"opensAtMonth": opensAtMonth,
+	}
+
+
+## A saved building standing again, as the type it was looked up to be.
+static func fromDict(data: Dictionary, buildingInfo: BuildingInfo) -> Building:
+	var saved: Array = data["pos"] as Array
+	var at: Vector2 = Vector2(Variants.toFloat(saved[0]), Variants.toFloat(saved[1]))
+	var building: Building = Building.new(buildingInfo, at, Variants.toFloat(data["angle"]))
+	building.underConstruction = Variants.toBool(data["underConstruction"])
+	building.opensAtMonth = Variants.toInt(data["opensAtMonth"])
+	return building

@@ -90,3 +90,17 @@ func advanceMonths(months: int) -> void:
 	var target: int = (month() + months) * TicksPerMonth
 	while (tickCount < target):
 		step()
+
+
+## The clock is saved as its tick count. Speed, pause and the partial tick in
+## `remainingDt` belong to the session, so a loaded game starts the way a new
+## one does.
+func toDict() -> Dictionary:
+	return {"tickCount": tickCount, "university": university.toDict()}
+
+
+static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> GameState:
+	var state: GameState = GameState.new()
+	state.tickCount = Variants.toInt(data["tickCount"])
+	state.university = University.fromDict(data["university"] as Dictionary, buildingDB)
+	return state

@@ -13,6 +13,8 @@ signal BuildingOpened(building: Building)
 const Size: float = 1000.0
 # Whole dollars.
 const StartingMoney: int = 50000000
+# Reported when a save names a building type the building data no longer has.
+const UnknownTypeError: String = "Campus: saved building type '%s' is not in the building data; leaving it out."
 
 var buildings: Array[Building]
 var money: int = StartingMoney
@@ -109,3 +111,28 @@ func tick(_dt: float) -> void:
 
 func update(_dt: float) -> void:
 	pass
+
+
+func toDict() -> Dictionary:
+	var saved: Array[Dictionary] = []
+	for building: Building in buildings:
+		saved.append(building.toDict())
+	return {"month": month, "money": money, "buildings": saved}
+
+
+## A saved campus, rebuilt without announcing anything: nothing is listening
+## yet, and the view makes what it needs from `buildings` when it starts. A
+## building whose type is gone from the data is reported and left out.
+static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> Campus:
+	var campus: Campus = Campus.new()
+	campus.month = Variants.toInt(data["month"])
+	campus.setMoney(Variants.toInt(data["money"]))
+	for saved: Variant in data["buildings"] as Array:
+		var entry: Dictionary = saved as Dictionary
+		var typeId: String = str(entry["type"])
+		var buildingInfo: BuildingInfo = buildingDB.info(typeId)
+		if (buildingInfo == null):
+			push_error(UnknownTypeError % typeId)
+			continue
+		campus.buildings.append(Building.fromDict(entry, buildingInfo))
+	return campus
