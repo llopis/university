@@ -288,7 +288,7 @@ func _minimum(grade: float = KeepGrade) -> void:
 
 func _reputation(value: float = KeepReputation) -> void:
 	if (value != KeepReputation):
-		_university().reputation = clampf(value, 0.0, UniversityRules.MaxScore)
+		_university().setReputation(value)
 	LimboConsole.print_line("Reputation %.1f, heading for %.1f" % [_university().reputation, _university().reputationTarget()])
 
 

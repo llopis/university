@@ -61,6 +61,11 @@ func satisfactionNow() -> Satisfaction:
 	return UniversityRules.satisfaction(students.enrolled(), housed(), campus.meals())
 
 
+## The one writer of `reputation`, clamped to 0..UniversityRules.MaxScore.
+func setReputation(value: float) -> void:
+	reputation = clampf(value, 0.0, UniversityRules.MaxScore)
+
+
 ## Where the next fall start will step reputation toward: the latest intake's
 ## grade and this year's mean satisfaction (today's, before any sample).
 func reputationTarget() -> float:
@@ -192,7 +197,7 @@ static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> University
 	university.students = loadedStudents
 	university.policy = loadedPolicy
 	university.reports = loadedReports
-	university.reputation = clampf(Variants.toFloat(data["reputation"]), 0.0, UniversityRules.MaxScore)
+	university.setReputation(Variants.toFloat(data["reputation"]))
 	university.lastIntakeGrade = Variants.toFloat(data["lastIntakeGrade"])
 	for sample: Variant in data["satisfactionSamples"] as Array:
 		university.satisfactionSamples.append(Variants.toFloat(sample))
