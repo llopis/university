@@ -172,3 +172,39 @@ func test_a_plain_month_charges_exactly_the_monthly_expenses() -> void:
 	var bill: int = university.monthlyExpenses()
 	university.startMonth(university.campus.month + 1)
 	assert_int(university.finances.cash).is_equal(before - bill)
+
+
+func _kinds(university: University) -> Array[int]:
+	var kinds: Array[int] = []
+	for problem: Problem in university.problems():
+		kinds.append(problem.kind)
+	return kinds
+
+
+func test_a_healthy_campus_has_no_problems() -> void:
+	assert_array(_kinds(_running())).is_empty()
+
+
+func test_housing_overflow_is_a_problem_only_past_the_threshold() -> void:
+	var university: University = _running()
+	var allowed: int = floori(float(HallBeds) / (1.0 - UniversityRules.OverflowThreshold)) - Students
+	university.students.admit(allowed, Grade)
+	assert_array(_kinds(university)).not_contains([Problem.Kind.HousingOverflow])
+	university.students.admit(HallBeds, Grade)
+	assert_array(_kinds(university)).contains([Problem.Kind.HousingOverflow])
+
+
+func test_dining_is_crowded_and_then_unfed() -> void:
+	var university: University = University.new()
+	var building: Building = university.campus.place(BuildingInfo.new({"id": "hall", "name": "Hall", "diameter": Diameter, "beds": HallBeds * 10, "meals": HallMeals}), Vector2.ZERO, 0.0)
+	university.campus.startMonth(building.opensAtMonth)
+	university.students.admit(HallMeals + 1, Grade)
+	assert_array(_kinds(university)).contains_exactly([Problem.Kind.DiningCrowded])
+	university.students.admit(HallMeals * 2, Grade)
+	assert_array(_kinds(university)).contains_exactly([Problem.Kind.DiningUnfed])
+
+
+func test_a_full_credit_line_is_a_problem() -> void:
+	var university: University = _running()
+	university.finances.borrow(Finances.CreditLimit)
+	assert_array(_kinds(university)).contains([Problem.Kind.CreditMaxed])

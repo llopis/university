@@ -67,6 +67,26 @@ func reputationTarget() -> float:
 	return UniversityRules.reputationTarget(lastIntakeGrade, _yearSatisfaction())
 
 
+## What is wrong on campus right now. The one list alerts and markers draw
+## from, so each threshold is checked in one place.
+func problems() -> Array[Problem]:
+	var found: Array[Problem] = []
+	var enrolledCount: int = students.enrolled()
+	var housedCount: int = housed()
+	var offCampus: int = enrolledCount - housedCount
+	if (enrolledCount > 0 and float(offCampus) / float(enrolledCount) > UniversityRules.OverflowThreshold):
+		found.append(Problem.new(Problem.Kind.HousingOverflow, offCampus, float(offCampus) / float(enrolledCount)))
+	var dining: float = UniversityRules.diningLoad(housedCount, campus.meals())
+	var unfed: int = housedCount - mealPlans()
+	if (unfed > 0):
+		found.append(Problem.new(Problem.Kind.DiningUnfed, unfed, dining))
+	elif (dining > 1.0):
+		found.append(Problem.new(Problem.Kind.DiningCrowded, 0, dining))
+	if (finances.availableCredit() == 0):
+		found.append(Problem.new(Problem.Kind.CreditMaxed, finances.debt, 0.0))
+	return found
+
+
 func _yearSatisfaction() -> float:
 	if (satisfactionSamples.is_empty()):
 		return satisfactionNow().total()
