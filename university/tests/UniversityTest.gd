@@ -46,3 +46,129 @@ func test_a_bill_past_the_cash_is_borrowed() -> void:
 	var upkeep: int = _upkept().upkeep
 	assert_int(university.finances.cash).is_equal(0)
 	assert_int(university.finances.debt).is_equal(upkeep + roundi(float(upkeep) * Finances.ShortfallFee))
+
+
+const HallSeats: int = 100
+const HallBeds: int = 60
+const HallMeals: int = 80
+# Upkeep, so the monthly bill is never zero: a zero bill cannot show what it
+# was paid from.
+const HallUpkeepK: int = 100
+const Students: int = 50
+const Grade: float = 3.0
+
+
+func _hall() -> BuildingInfo:
+	return BuildingInfo.new({"id": "hall", "name": "Hall", "diameter": Diameter, "seats": HallSeats, "beds": HallBeds, "meals": HallMeals, "upkeepK": HallUpkeepK})
+
+
+## A university with an open hall, a first cohort and money, just after the
+## spring start at which the hall opened.
+func _running() -> University:
+	var university: University = University.new()
+	university.finances.setCash(Cash)
+	var building: Building = university.campus.place(_hall(), Vector2.ZERO, 0.0)
+	university.students.admit(Students, Grade)
+	university.startMonth(building.opensAtMonth)
+	return university
+
+
+## The latest semester report. Indexed, not back(): back() answers an untyped
+## Variant, and reading a field off one is an error in this project.
+func _last(university: University) -> SemesterReport:
+	return university.reports[university.reports.size() - 1]
+
+
+func _nextFall(university: University) -> int:
+	var month: int = university.campus.month + 1
+	while (not GameCalendar.isFallStart(month)):
+		month += 1
+	return month
+
+
+func test_admission_happens_only_at_a_fall_start() -> void:
+	var university: University = _running()
+	# _running() ended on a spring start: one cohort, the one it began with.
+	assert_int(university.students.cohorts.size()).is_equal(1)
+	university.startMonth(_nextFall(university))
+	assert_int(university.students.cohorts.size()).is_equal(2)
+	assert_bool(_last(university).isFall).is_true()
+	assert_int(_last(university).admitted).is_greater(0)
+
+
+func test_fees_arrive_before_that_months_bill() -> void:
+	var university: University = _running()
+	# Cash below the bill: were the bill charged first, it would borrow.
+	university.finances.setCash(0)
+	var borrowed: Array[int] = []
+	university.finances.AutoBorrowed.connect(func(drawn: int, _charged: int) -> void: borrowed.append(drawn))
+	var bill: int = university.monthlyExpenses()
+	university.startMonth(_nextFall(university))
+	var report: SemesterReport = _last(university)
+	assert_array(borrowed).is_empty()
+	assert_int(university.finances.cash).is_equal(report.totalFees() - bill)
+
+
+func test_overflow_students_pay_tuition_only() -> void:
+	var university: University = University.new()
+	var building: Building = university.campus.place(_hall(), Vector2.ZERO, 0.0)
+	university.students.admit(HallBeds * 2, Grade)
+	university.startMonth(building.opensAtMonth)
+	var report: SemesterReport = _last(university)
+	assert_int(report.housed).is_equal(HallBeds)
+	assert_int(report.roomFees).is_equal(university.policy.current.room * HallBeds)
+	assert_int(report.tuitionFees).is_equal(university.policy.current.tuition * HallBeds * 2)
+
+
+func test_a_building_opening_at_a_semester_start_counts_that_semester() -> void:
+	var university: University = University.new()
+	var building: Building = university.campus.place(_hall(), Vector2.ZERO, 0.0)
+	university.students.admit(Students, Grade)
+	university.startMonth(building.opensAtMonth)
+	var report: SemesterReport = _last(university)
+	assert_int(report.beds).is_equal(HallBeds)
+	assert_int(report.housed).is_equal(Students)
+	assert_array(report.opened).contains_exactly([_hall().name])
+
+
+func test_a_cohort_graduates_after_eight_semesters_and_is_reported() -> void:
+	var university: University = _running()
+	university.students.cohorts[0].semestersCompleted = StudentBody.SemestersToGraduate - 1
+	university.startMonth(_nextFall(university))
+	assert_int(_last(university).graduated).is_equal(Students)
+
+
+func test_reputation_steps_toward_its_target_only_at_a_fall_start() -> void:
+	var university: University = _running()
+	var before: float = university.reputation
+	var target: float = university.reputationTarget()
+	university.startMonth(university.campus.month + 1)
+	assert_float(university.reputation).is_equal(before)
+	university.startMonth(_nextFall(university))
+	assert_float(university.reputation).is_equal_approx(UniversityRules.nextReputation(before, target), 0.0001)
+
+
+func test_without_an_admissions_office_the_fall_charges_the_defaults() -> void:
+	var university: University = _running()
+	university.policy.setNextTuition(Policy.DefaultTuition * 2)
+	university.startMonth(_nextFall(university))
+	assert_int(university.policy.current.total()).is_equal(Policy.defaultPrices().total())
+
+
+func test_every_semester_start_is_reported_and_announced() -> void:
+	var university: University = _running()
+	var announced: Array[SemesterReport] = []
+	university.SemesterStarted.connect(func(report: SemesterReport) -> void: announced.append(report))
+	var reportsBefore: int = university.reports.size()
+	university.startMonth(_nextFall(university))
+	assert_int(university.reports.size()).is_equal(reportsBefore + 1)
+	assert_array(announced).contains_exactly([_last(university)])
+
+
+func test_a_plain_month_charges_exactly_the_monthly_expenses() -> void:
+	var university: University = _running()
+	university.finances.borrow(Debt)
+	var before: int = university.finances.cash
+	var bill: int = university.monthlyExpenses()
+	university.startMonth(university.campus.month + 1)
+	assert_int(university.finances.cash).is_equal(before - bill)

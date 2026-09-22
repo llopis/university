@@ -97,3 +97,10 @@ func test_a_save_missing_a_key_is_refused() -> void:
 	await assert_error(func() -> void: loaded.append(Finances.fromDict(data))) \
 		.is_push_error(Variants.MissingKeysError % ["Finances", "debt"])
 	assert_object(loaded[0]).is_null()
+
+
+func test_receiving_adds_to_the_cash() -> void:
+	var finances: Finances = _finances(Cash, Borrowed)
+	finances.receive(Bill)
+	assert_int(finances.cash).is_equal(Cash + Bill)
+	assert_int(finances.debt).is_equal(Borrowed)

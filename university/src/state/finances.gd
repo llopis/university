@@ -37,9 +37,14 @@ func spend(amount: int) -> void:
 	_write(cash - amount, debt)
 
 
+## Money coming in: a semester's fees.
+func receive(amount: int) -> void:
+	_write(cash + amount, debt)
+
+
 ## What destroying a building still under construction gives back.
 func refund(amount: int) -> void:
-	_write(cash + amount, debt)
+	receive(amount)
 
 
 ## What may still be borrowed before the credit limit.

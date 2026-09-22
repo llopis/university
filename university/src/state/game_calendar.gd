@@ -39,6 +39,11 @@ static func isSemesterStart(monthIndex: int) -> bool:
 	return SemesterStartMonths.has(calendarMonth(monthIndex))
 
 
+## A September: the fall start, when the year's prices lock and a class is admitted.
+static func isFallStart(monthIndex: int) -> bool:
+	return calendarMonth(monthIndex) == September
+
+
 ## The first semester start strictly after a month: a month that itself starts
 ## a semester looks ahead to the following one.
 static func nextSemesterStart(monthIndex: int) -> int:

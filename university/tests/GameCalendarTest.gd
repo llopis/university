@@ -43,3 +43,9 @@ func test_next_semester_is_strictly_after_the_given_month() -> void:
 func test_next_semester_from_the_month_before_is_one_month_away() -> void:
 	var february: int = GameCalendar.nextSemesterStart(0)
 	assert_int(GameCalendar.nextSemesterStart(february - 1)).is_equal(february)
+
+
+func test_only_september_starts_a_fall() -> void:
+	assert_bool(GameCalendar.isFallStart(0)).is_true()
+	assert_bool(GameCalendar.isFallStart(GameCalendar.MonthsPerYear)).is_true()
+	assert_bool(GameCalendar.isFallStart(GameCalendar.nextSemesterStart(0))).is_false()
