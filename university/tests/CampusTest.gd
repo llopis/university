@@ -222,3 +222,16 @@ func test_destroying_an_open_building_refunds_nothing() -> void:
 	campus.startMonth(building.opensAtMonth)
 	campus.destroy(building)
 	assert_int(campus.finances.cash).is_equal(afterPaying)
+
+
+const UpkeepInK: int = 3
+
+
+func test_upkeep_counts_only_open_buildings() -> void:
+	var campus: Campus = _campus()
+	var info: BuildingInfo = BuildingInfo.new({"id": "hall", "name": "Hall", "diameter": Diameter, "upkeepK": UpkeepInK})
+	var first: Building = campus.place(info, Vector2.ZERO, 0.0)
+	assert_int(campus.upkeep()).is_equal(0)
+	campus.startMonth(first.opensAtMonth)
+	campus.place(info, Vector2(Diameter * 2.0, 0.0), 0.0)
+	assert_int(campus.upkeep()).is_equal(info.upkeep)

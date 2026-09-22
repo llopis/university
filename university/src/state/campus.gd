@@ -75,6 +75,16 @@ func destroy(building: Building) -> void:
 	BuildingRemoved.emit(building)
 
 
+## The month's upkeep in whole dollars: every open building's. One still under
+## construction costs nothing yet.
+func upkeep() -> int:
+	var total: int = 0
+	for building: Building in buildings:
+		if (not building.underConstruction):
+			total += building.info.upkeep
+	return total
+
+
 ## A new month began: every building due by now opens. The due ones are
 ## collected before any is announced, so a listener that destroys the building
 ## it hears about cannot cut the pass short.

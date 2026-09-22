@@ -15,8 +15,8 @@ const Borrowed: int = 3000000
 
 func _db() -> BuildingInfoDB:
 	var records: Array[Dictionary] = [
-		{"id": "hall", "name": "Hall", "diameter": Diameter, "costM": 1},
-		{"id": "lab", "name": "Lab", "diameter": Diameter, "costM": 2},
+		{"id": "hall", "name": "Hall", "diameter": Diameter, "costM": 1, "upkeepK": 7},
+		{"id": "lab", "name": "Lab", "diameter": Diameter, "costM": 2, "upkeepK": 11},
 	]
 	return BuildingInfoDB.new(records)
 

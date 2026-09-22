@@ -1,5 +1,5 @@
-id,name,category,costM,buildTime,diameter
-admissions,Admissions,Administration,1,,20
-dorm,Dorm,Residential,2,,30
-engineering_1,Engineering,Academic,10,,40
-dining_1,Dining Commons,Dining,7,,60
+id,name,category,costM,buildTime,diameter,upkeepK
+admissions,Admissions,Administration,1,,20,90
+dorm,Dorm,Residential,2,,30,150
+engineering_1,Engineering,Academic,10,,40,210
+dining_1,Dining Commons,Dining,7,,60,220

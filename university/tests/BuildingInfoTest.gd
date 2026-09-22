@@ -79,3 +79,9 @@ func test_a_whole_number_of_millions_reads_the_same_way() -> void:
 func test_a_negative_cost_reads_as_free() -> void:
 	var info: BuildingInfo = BuildingInfo.new({"id": "odd", "name": "Odd", "diameter": 5, "costM": -20})
 	assert_int(info.cost).is_equal(0)
+
+
+func test_upkeep_is_read_in_thousands_and_held_in_dollars() -> void:
+	var info: BuildingInfo = BuildingInfo.new({"id": "x", "name": "X", "upkeepK": 2.5})
+	assert_int(info.upkeep).is_equal(roundi(2.5 * BuildingInfo.DollarsPerK))
+	assert_int(BuildingInfo.new({"id": "y", "name": "Y"}).upkeep).is_equal(0)

@@ -16,9 +16,12 @@ func _init() -> void:
 	campus = Campus.new(finances)
 
 
-## A new month began. The campus opens whatever is due.
+## A new month began. The campus opens whatever is due, then the month's bill is
+## charged: the upkeep of every open building (including any that just opened)
+## and the interest on the debt.
 func startMonth(newMonth: int) -> void:
 	campus.startMonth(newMonth)
+	finances.charge(campus.upkeep() + finances.interest())
 
 
 func toDict() -> Dictionary:
