@@ -220,12 +220,11 @@ func _save(path: String = NoPath) -> void:
 
 func _load(path: String = NoPath) -> void:
 	var target: String = _savePath(path)
-	LimboConsole.print_line(("Loaded %s" if (Global.loadGame(target)) else "No save at %s") % target)
+	LimboConsole.print_line(("Loaded %s" if (Global.loadGame(target)) else "Could not load %s") % target)
 
 
 func _newGame() -> void:
-	Global.newGame()
-	LimboConsole.print_line("New game from %s" % Global.StartStatePath)
+	LimboConsole.print_line(("New game from %s" if (Global.newGame()) else "Could not start a new game from %s") % Global.StartStatePath)
 
 
 # The button a name stands for, or MOUSE_BUTTON_NONE when the name is not one.

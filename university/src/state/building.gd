@@ -34,6 +34,10 @@ static func rectFor(buildingInfo: BuildingInfo, at: Vector2, facing: float) -> O
 	return OrientedRect.new(at, size, facing)
 
 
+# Keys toDict writes; fromDict refuses a dictionary missing any of them.
+const SavedKeys: Array[String] = ["type", "pos", "angle", "underConstruction", "opensAtMonth"]
+
+
 ## The type is saved by id; the campus looks it up when loading.
 func toDict() -> Dictionary:
 	return {
@@ -45,8 +49,12 @@ func toDict() -> Dictionary:
 	}
 
 
-## A saved building standing again, as the type it was looked up to be.
+## A saved building standing again, as the type it was looked up to be
+## (`type` is read by `Campus.fromDict`, which looks it up before calling
+## here). Null when data is missing a key.
 static func fromDict(data: Dictionary, buildingInfo: BuildingInfo) -> Building:
+	if (not Variants.hasKeys(data, SavedKeys, "Building")):
+		return null
 	var saved: Array = data["pos"] as Array
 	var at: Vector2 = Vector2(Variants.toFloat(saved[0]), Variants.toFloat(saved[1]))
 	var building: Building = Building.new(buildingInfo, at, Variants.toFloat(data["angle"]))

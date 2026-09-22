@@ -9,6 +9,7 @@ const SortKeys: bool = true
 const FullPrecision: bool = true
 const NotASaveError: String = "SaveFile: '%s' does not hold a saved game."
 const WriteError: String = "SaveFile: could not write '%s' (error %d)."
+const ReadError: String = "SaveFile: could not open '%s' (error %d)."
 
 
 static func encode(data: Dictionary) -> String:
@@ -37,6 +38,9 @@ static func read(path: String) -> Variant:
 	if (not FileAccess.file_exists(path)):
 		return null
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
+	if (file == null):
+		push_error(ReadError % [path, FileAccess.get_open_error()])
+		return null
 	var data: Variant = decode(file.get_as_text())
 	if (data == null):
 		push_error(NotASaveError % path)

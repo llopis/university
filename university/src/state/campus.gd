@@ -15,6 +15,8 @@ const Size: float = 1000.0
 const StartingMoney: int = 50000000
 # Reported when a save names a building type the building data no longer has.
 const UnknownTypeError: String = "Campus: saved building type '%s' is not in the building data; leaving it out."
+# Keys toDict writes; fromDict refuses a dictionary missing any of them.
+const SavedKeys: Array[String] = ["month", "money", "buildings"]
 
 var buildings: Array[Building]
 var money: int = StartingMoney
@@ -120,19 +122,31 @@ func toDict() -> Dictionary:
 	return {"month": month, "money": money, "buildings": saved}
 
 
-## A saved campus, rebuilt without announcing anything: nothing is listening
-## yet, and the view makes what it needs from `buildings` when it starts. A
-## building whose type is gone from the data is reported and left out.
+## A saved campus, rebuilt without announcing any building: nothing is
+## listening yet, and the view makes what it needs from `buildings` when it
+## starts (`setMoney` still emits `MoneyChanged` here, harmlessly, since
+## nobody is listening yet). A building whose type is gone from the data is
+## reported and left out; a save missing a key, at the campus level or a
+## building's, is refused: null for the whole campus.
 static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> Campus:
+	if (not Variants.hasKeys(data, SavedKeys, "Campus")):
+		return null
 	var campus: Campus = Campus.new()
 	campus.month = Variants.toInt(data["month"])
 	campus.setMoney(Variants.toInt(data["money"]))
 	for saved: Variant in data["buildings"] as Array:
 		var entry: Dictionary = saved as Dictionary
+		# Checked before reading "type", which Building.fromDict never reads
+		# itself (it is given buildingInfo already looked up).
+		if (not Variants.hasKeys(entry, Building.SavedKeys, "Campus building")):
+			return null
 		var typeId: String = str(entry["type"])
 		var buildingInfo: BuildingInfo = buildingDB.info(typeId)
 		if (buildingInfo == null):
 			push_error(UnknownTypeError % typeId)
 			continue
-		campus.buildings.append(Building.fromDict(entry, buildingInfo))
+		var building: Building = Building.fromDict(entry, buildingInfo)
+		if (building == null):
+			return null
+		campus.buildings.append(building)
 	return campus

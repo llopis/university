@@ -26,3 +26,10 @@ func test_every_start_building_stands_where_it_could_be_placed() -> void:
 	for building: Building in _startState().university.campus.buildings:
 		assert_bool(check.canPlace(building.info, building.pos, building.angle)).is_true()
 		check.buildings.append(building)
+
+
+func test_the_saved_month_matches_the_tick_count() -> void:
+	# Two sources of the same month: a mismatch would make the first tick run
+	# a spurious month start.
+	var state: GameState = _startState()
+	assert_int(state.university.campus.month).is_equal(state.month())

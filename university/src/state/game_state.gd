@@ -92,6 +92,10 @@ func advanceMonths(months: int) -> void:
 		step()
 
 
+# Keys toDict writes; fromDict refuses a dictionary missing any of them.
+const SavedKeys: Array[String] = ["tickCount", "university"]
+
+
 ## The clock is saved as its tick count. Speed, pause and the partial tick in
 ## `remainingDt` belong to the session, so a loaded game starts the way a new
 ## one does.
@@ -99,8 +103,14 @@ func toDict() -> Dictionary:
 	return {"tickCount": tickCount, "university": university.toDict()}
 
 
+## Null when data is missing a key, or its university refused.
 static func fromDict(data: Dictionary, buildingDB: BuildingInfoDB) -> GameState:
+	if (not Variants.hasKeys(data, SavedKeys, "GameState")):
+		return null
+	var university: University = University.fromDict(data["university"] as Dictionary, buildingDB)
+	if (university == null):
+		return null
 	var state: GameState = GameState.new()
 	state.tickCount = Variants.toInt(data["tickCount"])
-	state.university = University.fromDict(data["university"] as Dictionary, buildingDB)
+	state.university = university
 	return state

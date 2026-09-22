@@ -10,7 +10,7 @@ var buildingDB: BuildingInfoDB
 const StartStatePath: String = "res://data/start_state.json"
 # Where F5 saves and F9 loads, and the console's save/load with no path.
 const QuickSavePath: String = "user://quicksave.json"
-const NoStartStateError: String = "Global: no start state at '%s'; starting with an empty campus."
+const NoStartStateError: String = "Global: could not load the start state at '%s'; starting with an empty campus."
 
 # Game data. Loaded from the start state in _ready, after buildingDB, which
 # loading needs to look building types up. A load replaces it.
@@ -38,9 +38,9 @@ func _ready() -> void:
 		_muteBus(SfxBus)
 
 
-## Starts over from the start state.
-func newGame() -> void:
-	loadGame(StartStatePath)
+## Starts over from the start state. False when the start state was refused.
+func newGame() -> bool:
+	return loadGame(StartStatePath)
 
 
 func saveGame(path: String) -> bool:

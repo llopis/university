@@ -83,3 +83,36 @@ func test_a_building_whose_type_is_gone_is_left_out_and_reported() -> void:
 	var buildings: Array[Building] = loaded[0].university.campus.buildings
 	assert_int(buildings.size()).is_equal(1)
 	assert_str(buildings[0].info.id).is_equal("hall")
+
+
+func test_a_save_missing_a_campus_key_is_refused() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var data: Dictionary = _playedState(buildingDB).toDict()
+	var campusData: Dictionary = (data["university"] as Dictionary)["campus"] as Dictionary
+	campusData.erase("money")
+	var loaded: Array[GameState] = []
+	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
+		.is_push_error(Variants.MissingKeysError % ["Campus", "money"])
+	assert_object(loaded[0]).is_null()
+
+
+func test_a_save_missing_a_building_key_is_refused() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var data: Dictionary = _playedState(buildingDB).toDict()
+	var campusData: Dictionary = (data["university"] as Dictionary)["campus"] as Dictionary
+	var buildingsData: Array = campusData["buildings"] as Array
+	(buildingsData[0] as Dictionary).erase("pos")
+	var loaded: Array[GameState] = []
+	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
+		.is_push_error(Variants.MissingKeysError % ["Campus building", "pos"])
+	assert_object(loaded[0]).is_null()
+
+
+func test_pause_and_speed_are_not_saved() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var state: GameState = _playedState(buildingDB)
+	state.setPaused(true)
+	state.setSpeedIndex(GameState.SpeedSteps.size() - 1)
+	var loaded: GameState = _reloaded(state, buildingDB)
+	assert_bool(loaded.paused).is_false()
+	assert_int(loaded.speedIndex).is_equal(0)
