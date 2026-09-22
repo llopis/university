@@ -85,3 +85,12 @@ func test_upkeep_is_read_in_thousands_and_held_in_dollars() -> void:
 	var info: BuildingInfo = BuildingInfo.new({"id": "x", "name": "X", "upkeepK": 2.5})
 	assert_int(info.upkeep).is_equal(roundi(2.5 * BuildingInfo.DollarsPerK))
 	assert_int(BuildingInfo.new({"id": "y", "name": "Y"}).upkeep).is_equal(0)
+
+
+func test_capacities_read_as_whole_numbers_and_blanks_as_none() -> void:
+	var info: BuildingInfo = BuildingInfo.new({"id": "x", "name": "X", "seats": 400, "beds": "", "meals": 650, "admissionsOffice": true})
+	assert_int(info.seats).is_equal(400)
+	assert_int(info.beds).is_equal(0)
+	assert_int(info.meals).is_equal(650)
+	assert_bool(info.admissionsOffice).is_true()
+	assert_bool(BuildingInfo.new({"id": "y", "name": "Y"}).admissionsOffice).is_false()

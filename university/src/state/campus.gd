@@ -75,31 +75,63 @@ func destroy(building: Building) -> void:
 	BuildingRemoved.emit(building)
 
 
-## The month's upkeep in whole dollars: every open building's. One still under
-## construction costs nothing yet.
-func upkeep() -> int:
-	var total: int = 0
-	for building: Building in buildings:
-		if (not building.underConstruction):
-			total += building.info.upkeep
-	return total
-
-
 ## A new month began: every building due by now opens. The due ones are
 ## collected before any is announced, so a listener that destroys the building
-## it hears about cannot cut the pass short.
-func startMonth(newMonth: int) -> void:
+## it hears about cannot cut the pass short. Answers the buildings it opened,
+## in the order announced.
+func startMonth(newMonth: int) -> Array[Building]:
 	month = newMonth
 	var due: Array[Building] = []
 	for building: Building in buildings:
 		if (building.underConstruction and building.opensAtMonth <= month):
 			due.append(building)
+	var opened: Array[Building] = []
 	for building: Building in due:
 		# A listener may have destroyed it while an earlier one was announced.
 		if (not buildings.has(building)):
 			continue
 		building.underConstruction = false
+		opened.append(building)
 		BuildingOpened.emit(building)
+	return opened
+
+
+## The month's upkeep in whole dollars: every open building's. One still under
+## construction costs nothing yet.
+func upkeep() -> int:
+	return _openTotal(func(info: BuildingInfo) -> int: return info.upkeep)
+
+
+## Academic seats in open buildings.
+func seats() -> int:
+	return _openTotal(func(info: BuildingInfo) -> int: return info.seats)
+
+
+## Beds in open buildings.
+func beds() -> int:
+	return _openTotal(func(info: BuildingInfo) -> int: return info.beds)
+
+
+## The diners every open dining hall is meant for, together.
+func meals() -> int:
+	return _openTotal(func(info: BuildingInfo) -> int: return info.meals)
+
+
+## Whether an open building grants the price and minimum-grade levers.
+func hasOpenAdmissionsOffice() -> bool:
+	for building: Building in buildings:
+		if (not building.underConstruction and building.info.admissionsOffice):
+			return true
+	return false
+
+
+# The one sum over open buildings: amount answers what one type contributes.
+func _openTotal(amount: Callable) -> int:
+	var total: int = 0
+	for building: Building in buildings:
+		if (not building.underConstruction):
+			total += Variants.toInt(amount.call(building.info))
+	return total
 
 
 ## The first building a ray (unit `dir`) reaches, or null.

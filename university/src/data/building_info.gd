@@ -19,6 +19,12 @@ var category: String
 var cost: int
 # Whole dollars a month, while the building is open.
 var upkeep: int
+# Academic seats, beds, and how many diners a dining hall is meant for.
+var seats: int
+var beds: int
+var meals: int
+# This type grants the price and minimum-grade levers: the Admissions Office.
+var admissionsOffice: bool
 # Seconds.
 var buildTime: float
 # Metres: the footprint's longest side (see Building.rectFor).
@@ -31,6 +37,10 @@ func _init(data: Dictionary) -> void:
 	category = str(data.get("category", ""))
 	cost = _dollars(data.get("costM", 0.0), DollarsPerM)
 	upkeep = _dollars(data.get("upkeepK", 0.0), DollarsPerK)
+	seats = maxi(Variants.toInt(data.get("seats", 0)), 0)
+	beds = maxi(Variants.toInt(data.get("beds", 0)), 0)
+	meals = maxi(Variants.toInt(data.get("meals", 0)), 0)
+	admissionsOffice = Variants.toBool(data.get("admissionsOffice", false))
 	buildTime = Variants.toFloat(data.get("buildTime", 0.0))
 	diameter = Variants.toFloat(data.get("diameter", 0.0))
 

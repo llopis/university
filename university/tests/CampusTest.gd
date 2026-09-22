@@ -235,3 +235,37 @@ func test_upkeep_counts_only_open_buildings() -> void:
 	campus.startMonth(first.opensAtMonth)
 	campus.place(info, Vector2(Diameter * 2.0, 0.0), 0.0)
 	assert_int(campus.upkeep()).is_equal(info.upkeep)
+
+
+const Seats: int = 40
+const Beds: int = 30
+const Meals: int = 20
+
+
+func test_capacities_count_only_open_buildings() -> void:
+	var campus: Campus = _campus()
+	var hall: BuildingInfo = BuildingInfo.new({"id": "hall", "name": "Hall", "diameter": Diameter, "seats": Seats, "beds": Beds, "meals": Meals})
+	var first: Building = campus.place(hall, Vector2.ZERO, 0.0)
+	assert_int(campus.seats() + campus.beds() + campus.meals()).is_equal(0)
+	campus.startMonth(first.opensAtMonth)
+	campus.place(hall, Vector2(Diameter * 2.0, 0.0), 0.0)
+	assert_int(campus.seats()).is_equal(Seats)
+	assert_int(campus.beds()).is_equal(Beds)
+	assert_int(campus.meals()).is_equal(Meals)
+
+
+func test_only_an_open_admissions_office_counts() -> void:
+	var campus: Campus = _campus()
+	var office: BuildingInfo = BuildingInfo.new({"id": "office", "name": "Office", "diameter": Diameter, "admissionsOffice": true})
+	var building: Building = campus.place(office, Vector2.ZERO, 0.0)
+	assert_bool(campus.hasOpenAdmissionsOffice()).is_false()
+	campus.startMonth(building.opensAtMonth)
+	assert_bool(campus.hasOpenAdmissionsOffice()).is_true()
+
+
+func test_a_month_start_answers_the_buildings_it_opened() -> void:
+	var campus: Campus = _campus()
+	var first: Building = campus.place(_info(), Vector2.ZERO, 0.0)
+	var opened: Array[Building] = campus.startMonth(first.opensAtMonth)
+	assert_array(opened).contains_exactly([first])
+	assert_array(campus.startMonth(first.opensAtMonth + 1)).is_empty()

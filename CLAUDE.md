@@ -131,7 +131,12 @@ code ever sees $M. A renamed or missing column reads as free, not as an error.
 Its `buildTime` column is still parsed and deliberately unread — construction
 ends at the next semester start, not after a duration. Upkeep is authored the
 same way in thousands a month, in `upkeepK`, and `BuildingInfo.DollarsPerK`
-turns it into `BuildingInfo.upkeep`, whole dollars.
+turns it into `BuildingInfo.upkeep`, whole dollars. Capacities are whole
+numbers: `seats` (academic), `beds` and `meals` (the diners a dining hall is
+meant for, not a hard cap), and `admissionsOffice` is TRUE on the type that
+grants the price and minimum-grade levers. A blank reads as none. `Campus`
+answers `seats()`, `beds()`, `meals()` and `upkeep()` over open buildings only,
+through one `_openTotal`, and `hasOpenAdmissionsOffice()`.
 
 ## LimboConsole
 
