@@ -53,8 +53,18 @@ func housed() -> int:
 	return UniversityRules.housed(students.enrolled(), campus.beds())
 
 
+## Enrolled students without a bed on campus.
+func offCampus() -> int:
+	return students.enrolled() - housed()
+
+
 func mealPlans() -> int:
 	return UniversityRules.mealPlans(housed(), campus.meals())
+
+
+## Housed students with no meal plan.
+func unfed() -> int:
+	return housed() - mealPlans()
 
 
 func satisfactionNow() -> Satisfaction:
@@ -77,14 +87,13 @@ func reputationTarget() -> float:
 func problems() -> Array[Problem]:
 	var found: Array[Problem] = []
 	var enrolledCount: int = students.enrolled()
-	var housedCount: int = housed()
-	var offCampus: int = enrolledCount - housedCount
-	if (enrolledCount > 0 and float(offCampus) / float(enrolledCount) > UniversityRules.OverflowThreshold):
-		found.append(Problem.new(Problem.Kind.HousingOverflow, offCampus, float(offCampus) / float(enrolledCount)))
-	var dining: float = UniversityRules.diningLoad(housedCount, campus.meals())
-	var unfed: int = housedCount - mealPlans()
-	if (unfed > 0):
-		found.append(Problem.new(Problem.Kind.DiningUnfed, unfed, dining))
+	var offCampusCount: int = offCampus()
+	if (enrolledCount > 0 and float(offCampusCount) / float(enrolledCount) > UniversityRules.OverflowThreshold):
+		found.append(Problem.new(Problem.Kind.HousingOverflow, offCampusCount, float(offCampusCount) / float(enrolledCount)))
+	var dining: float = UniversityRules.diningLoad(housed(), campus.meals())
+	var unfedCount: int = unfed()
+	if (unfedCount > 0):
+		found.append(Problem.new(Problem.Kind.DiningUnfed, unfedCount, dining))
 	elif (dining > 1.0):
 		found.append(Problem.new(Problem.Kind.DiningCrowded, 0, dining))
 	if (finances.availableCredit() == 0):

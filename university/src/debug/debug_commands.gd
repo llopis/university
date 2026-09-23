@@ -259,7 +259,7 @@ func _students() -> void:
 	var enrolledCount: int = university.students.enrolled()
 	LimboConsole.print_line("Enrolled %d of %d seats | housed %d of %d beds, %d off campus | meal plans %d, dining %.0f%%" % [
 		enrolledCount, university.campus.seats(), university.housed(), university.campus.beds(),
-		enrolledCount - university.housed(), university.mealPlans(),
+		university.offCampus(), university.mealPlans(),
 		UniversityRules.diningLoad(university.housed(), university.campus.meals()) * Percent])
 	var now: Satisfaction = university.satisfactionNow()
 	LimboConsole.print_line("Satisfaction %.1f = %.1f - housing %.1f - crowding %.1f - unfed %.1f" % [

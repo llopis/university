@@ -60,11 +60,17 @@ static func housed(enrolled: int, beds: int) -> int:
 	return mini(enrolled, beds)
 
 
-## Housed students who eat on campus: all of them, up to DiningHardLimit times
-## what the dining halls are meant for. Past that the rest can't eat, and buy
-## no meal plan. Off-campus students buy none either.
+## The most students the dining halls can sell a meal plan to: DiningHardLimit
+## times what they are meant for.
+static func diningLimit(meals: int) -> int:
+	return floori(DiningHardLimit * float(meals))
+
+
+## Housed students who eat on campus: all of them, up to the dining limit. Past
+## that the rest can't eat, and buy no meal plan. Off-campus students buy none
+## either.
 static func mealPlans(housedCount: int, meals: int) -> int:
-	return mini(housedCount, floori(DiningHardLimit * float(meals)))
+	return mini(housedCount, diningLimit(meals))
 
 
 ## Housed students per diner the dining halls are meant for. With no dining
