@@ -270,18 +270,19 @@ the panel is open, `Demolish` while the destroy tool is armed. ☰, the game men
 at the bar's left, holds Save, Load, New Game and Quit. Next to it, the crest
 opens the university menu — `Tab` toggles it too — Admissions Office, Finances
 and Reputation under University, Housing and Dining (each with its building
-count) under Services; a building-backed entry selects its building and moves
-the camera there and is disabled with none open, while Finances and Reputation
-open their dropdown instead. `F2` opens the side panel on the Admissions Office
+count) under Services; Admissions Office and Dining select their first open
+building and move the camera there, and are disabled with none open, while
+Finances, Reputation and Housing open their dropdown instead. `F2` opens the side panel on the Admissions Office
 directly, the way clicking its row does; `F3` toggles the Money dropdown
 directly, without opening the university menu. Six slots, read live off the
 university every frame, fill the rest of the bar — Students, Beds, Cash,
 Monthly expenses, Fees and Reputation — and clicking one opens its dropdown:
 Students and Reputation their own, Beds the Housing dropdown, any of Cash,
 Monthly expenses or Fees the Money dropdown (what `F3` opens too), with exactly
-the slot last clicked reading pressed while Money is open. Housing, Students
-and Reputation each carry a jump onward to what they don't already show —
-Housing's "Room & meal plan prices →" opens Admissions. With no tool armed, LMB
+the slot last clicked reading pressed while Money is open. The dropdowns carry
+jumps onward to what they don't already show — Students to Housing and
+Reputation, Reputation to Housing, and Housing's "Room & meal plan prices →"
+to the Admissions pane, disabled with no office open. With no tool armed, LMB
 selects the building under the cursor — or clears the selection when it hits
 nothing — and the docked side panel on the right opens with it: the header
 names it, its category and what it holds, with a status pill while it is still
