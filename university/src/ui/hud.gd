@@ -1,9 +1,11 @@
 class_name Hud
 extends Control
-## The HUD's root: the top bar, its popovers (one open at a time) and the
-## semester popup. It carries the shared theme. Everything it shows is read
-## from the game state it is set up with. A click on the world closes the open
-## popover and still reaches the world; Esc closes it first of all.
+## The HUD's root: the campus markers, the top bar, the side panel, the
+## alerts, the action bar, its popovers (including the build panel; one open
+## at a time) and the semester popup. It carries the shared theme, routes
+## keys, panes and places, and everything it shows is read from the game
+## state it is set up with. A click on the world closes the open popover and
+## still reaches the world; Esc closes it first of all.
 
 const None: StringName = &""
 const PaneConstruction: StringName = &"construction"
@@ -14,6 +16,7 @@ const PaneDining: StringName = &"dining"
 const PopoverBuild: StringName = &"build"
 const PopoverHousing: StringName = &"housing"
 const PopoverMoney: StringName = &"money"
+const PopoverStudents: StringName = &"students"
 const PopoverUniversity: StringName = &"unimenu"
 # The alerts' left/right offsets keep this clear of the side panel's edge.
 const AlertsMargin: float = 16.0
@@ -45,13 +48,13 @@ var _pausedBefore: bool = false
 
 func _ready() -> void:
 	_popovers = {
-		&"gamemenu": gameMenu, PopoverUniversity: universityMenu, &"students": studentsDropdown,
+		&"gamemenu": gameMenu, PopoverUniversity: universityMenu, PopoverStudents: studentsDropdown,
 		&"reputation": reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
 		PopoverBuild: buildPanel,
 	}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
 	topBar.UniversityMenuPressed.connect(toggle.bind(PopoverUniversity))
-	topBar.StudentsPressed.connect(toggle.bind(&"students"))
+	topBar.StudentsPressed.connect(toggle.bind(PopoverStudents))
 	topBar.HousingPressed.connect(toggle.bind(PopoverHousing))
 	topBar.MoneyPressed.connect(toggle.bind(PopoverMoney))
 	topBar.ReputationPressed.connect(toggle.bind(&"reputation"))
@@ -116,6 +119,11 @@ func popoverOpen() -> StringName:
 ## Whether a name is one of the popovers, for the console.
 func hasPopover(which: StringName) -> bool:
 	return _popovers.has(which)
+
+
+## Whether a name is one of the side-panel panes, for the console.
+func isPaneName(which: StringName) -> bool:
+	return which == PaneConstruction or which == PaneAdmissions or which == PaneAcademic or which == PaneDorm or which == PaneDining
 
 
 func toggle(which: StringName) -> void:
@@ -250,16 +258,20 @@ func _armPlace(info: BuildingInfo) -> void:
 
 
 # Demolish, the button or X, arms the destroy tool, or puts it away when armed.
+# Arming it puts the build panel away too, so the ground is clear to act on.
 func _toggleDemolish() -> void:
 	if (controller.activeTool == BuildController.Tool.Destroy):
 		controller.cancel()
 	else:
 		controller.armDestroy()
+		if (_open == PopoverBuild):
+			closePopover()
 
 
 func _onToolChanged() -> void:
 	buildPanel.showTool(controller.activeTool, controller.placeInfo)
 	actionBar.showTool(controller.activeTool)
+	campusMarkers.setClickable(controller.activeTool == BuildController.Tool.None)
 
 
 func _unhandled_input(event: InputEvent) -> void:

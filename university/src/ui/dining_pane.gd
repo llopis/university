@@ -1,9 +1,9 @@
 class_name DiningPane
 extends VBoxContainer
 ## The dining load against every open dining hall's capacity: meal plans sold,
-## the load itself and who can't eat, then this hall's meal plan fees against
-## its upkeep. Follows the pane pattern: filled every `_process` while
-## visible; no list of its own to rebuild.
+## the load itself and who can't eat, then all dining halls' meal plan fees
+## against this hall's upkeep. Follows the pane pattern: filled every
+## `_process` while visible; no list of its own to rebuild.
 
 signal BuildWanted(category: String)
 
@@ -11,9 +11,8 @@ const PlansCaption: String = "Meal plans"
 const LoadCaption: String = "Load"
 const UnfedCaption: String = "Can't eat"
 const LoadNoteFormat: String = "Up to %s diners it is comfortable. Past that it gets crowded and satisfaction drops. Past %s (%s) the rest can't eat: they buy no meal plan and satisfaction drops harder."
-const MealFeesKey: String = "Meal plan fees per semester"
+const MealFeesKey: String = "Meal plan fees per semester · all halls"
 const UpkeepKey: String = "Upkeep and staff"
-const UpkeepValueFormat: String = "%s / mo"
 
 @onready var plansKpi: KpiView = %PlansKpi
 @onready var loadKpi: KpiView = %LoadKpi
@@ -49,4 +48,4 @@ func _process(_dt: float) -> void:
 	var meals: int = campus.meals()
 	loadNote.text = LoadNoteFormat % [NumberFormat.count(meals), NumberFormat.count(UniversityRules.diningLimit(meals)), NumberFormat.percent(UniversityRules.DiningHardLimit)]
 	mealFeesRow.display(MealFeesKey, MoneyFormat.signed(university.feesNow().meals), "", UiTone.Tone.Good)
-	upkeepRow.display(UpkeepKey, UpkeepValueFormat % MoneyFormat.signed(-info.upkeep), "", UiTone.Tone.Bad)
+	upkeepRow.display(UpkeepKey, BuildingText.upkeep(info), "", UiTone.Tone.Bad)

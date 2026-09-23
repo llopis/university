@@ -11,6 +11,7 @@ const AddsSeats: String = "+%s seats"
 const AddsBeds: String = "+%s beds"
 const AddsMeals: String = "+%s diners"
 const FootprintFormat: String = "%d × %d m"
+const UpkeepSuffix: String = " / mo"
 
 
 static func holds(info: BuildingInfo) -> String:
@@ -42,3 +43,8 @@ static func adds(info: BuildingInfo) -> String:
 static func footprint(info: BuildingInfo) -> String:
 	var box: Vector2 = Building.rectFor(info, Vector2.ZERO, 0.0).size
 	return FootprintFormat % [roundi(box.x), roundi(box.y)]
+
+
+## A type's upkeep as a monthly cost: −$2,400 / mo.
+static func upkeep(info: BuildingInfo) -> String:
+	return MoneyFormat.signed(-info.upkeep) + UpkeepSuffix

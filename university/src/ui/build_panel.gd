@@ -116,6 +116,7 @@ func _addCategoryButton(category: String) -> void:
 	count.anchor_bottom = 0.5
 	count.offset_right = -CategoryCountMargin
 	count.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	count.grow_vertical = Control.GROW_DIRECTION_BOTH
 	button.add_child(count)
 
 	_categoryButtons[category] = button

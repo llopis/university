@@ -26,6 +26,8 @@ const HudNone: String = "none"
 const HudPopup: String = "popup"
 # hud's error for a name that is none of the above, a pane or a popover.
 const UnknownHudFormat: String = "Unknown HUD name: %s"
+# hud's error for a pane name with no matching building.
+const NoBuildingForPaneFormat: String = "No building for HUD pane: %s"
 
 const ToolPlace: String = "place"
 const ToolDestroy: String = "destroy"
@@ -352,9 +354,10 @@ func _hud(which: String) -> void:
 		hud.closePopover()
 	elif (which == HudPopup):
 		hud.showLatestReport()
-	elif (hud.showPane(StringName(which))):
-		LimboConsole.print_line("HUD: %s" % which)
-		return
+	elif (hud.isPaneName(StringName(which))):
+		if (not hud.showPane(StringName(which))):
+			LimboConsole.print_line(NoBuildingForPaneFormat % which)
+			return
 	elif (hud.hasPopover(StringName(which))):
 		hud.openPopover(StringName(which))
 	else:

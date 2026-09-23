@@ -1078,6 +1078,21 @@ StepValue/fonts/font = ExtResource("FontFile_barlowSemiBold")
 StepValue/font_sizes/font_size = 14
 StepValue/colors/font_color = Color(0.925, 0.906, 0.859, 1)
 
+StepValueGood/base_type = &"Label"
+StepValueGood/fonts/font = ExtResource("FontFile_barlowSemiBold")
+StepValueGood/font_sizes/font_size = 14
+StepValueGood/colors/font_color = Color(0.388, 0.741, 0.447, 1)
+
+StepValueWarn/base_type = &"Label"
+StepValueWarn/fonts/font = ExtResource("FontFile_barlowSemiBold")
+StepValueWarn/font_sizes/font_size = 14
+StepValueWarn/colors/font_color = Color(0.886, 0.663, 0.227, 1)
+
+StepValueBad/base_type = &"Label"
+StepValueBad/fonts/font = ExtResource("FontFile_barlowSemiBold")
+StepValueBad/font_sizes/font_size = 14
+StepValueBad/colors/font_color = Color(0.886, 0.353, 0.306, 1)
+
 StepValueDim/base_type = &"Label"
 StepValueDim/fonts/font = ExtResource("FontFile_barlowMedium")
 StepValueDim/font_sizes/font_size = 14

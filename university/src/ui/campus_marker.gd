@@ -6,8 +6,6 @@ extends VBoxContainer
 
 signal Activated
 
-const AccentBase: String = "AlertAccent"
-
 @onready var box: PanelContainer = %Box
 @onready var accent: Panel = %Accent
 @onready var textLabel: Label = %Text
@@ -26,7 +24,7 @@ func _ready() -> void:
 func display(text: String, small: String, accentName: String) -> void:
 	textLabel.text = text
 	smallLabel.text = small
-	accent.theme_type_variation = StringName(AccentBase + accentName)
+	accent.theme_type_variation = StringName(AlertRow.AccentBase + accentName)
 
 
 ## Sets position so the stem's foot sits on point (viewport/design-space coordinates).

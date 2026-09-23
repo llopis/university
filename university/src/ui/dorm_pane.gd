@@ -18,7 +18,6 @@ const HousingNoteFormat: String = "With more students than beds, the rest live o
 const RoomFeesKey: String = "Room fees per semester"
 const RoomFeesNoteFormat: String = "%s × %s"
 const UpkeepKey: String = "Upkeep and staff"
-const UpkeepValueFormat: String = "%s / mo"
 
 @onready var filledKpi: KpiView = %FilledKpi
 @onready var offCampusKpi: KpiView = %OffCampusKpi
@@ -34,7 +33,7 @@ var building: Building
 
 
 func _ready() -> void:
-	housingJump.pressed.connect(func() -> void: PopoverWanted.emit(&"housing"))
+	housingJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverHousing))
 
 
 func setUniversity(shown: University) -> void:
@@ -59,4 +58,4 @@ func _process(_dt: float) -> void:
 	housingNote.text = HousingNoteFormat % NumberFormat.percent(UniversityRules.OverflowThreshold)
 	roomFeesRow.display(RoomFeesKey, MoneyFormat.signed(university.roomFeesOf(building)),
 		RoomFeesNoteFormat % [NumberFormat.count(residents), MoneyFormat.full(university.policy.current.room)], UiTone.Tone.Good)
-	upkeepRow.display(UpkeepKey, UpkeepValueFormat % MoneyFormat.signed(-info.upkeep), "", UiTone.Tone.Bad)
+	upkeepRow.display(UpkeepKey, BuildingText.upkeep(info), "", UiTone.Tone.Bad)

@@ -16,10 +16,6 @@ const CreditMaxedText: String = "Credit line used up"
 const AutoBorrowedFormat: String = "Monthly bill short by %s: borrowed automatically (+%s fee)"
 const OpenedFormat: String = "%s opened"
 
-const AccentWarn: String = "Warn"
-const AccentBad: String = "Bad"
-const AccentInfo: String = "Info"
-
 var feed: AlertFeed = AlertFeed.new()
 var state: GameState
 var _rows: Array[AlertRow]
@@ -108,22 +104,9 @@ func _problemText(problem: Problem) -> String:
 func _accentFor(entry: AlertEntry) -> String:
 	match entry.source:
 		AlertEntry.Source.Problem:
-			return _problemAccent(entry.problem.kind)
+			return AlertRow.accentFor(entry.problem.kind)
 		AlertEntry.Source.AutoBorrowed:
-			return AccentWarn
+			return AlertRow.AccentWarn
 		AlertEntry.Source.Opened:
-			return AccentInfo
-	return AccentInfo
-
-
-func _problemAccent(kind: Problem.Kind) -> String:
-	match kind:
-		Problem.Kind.HousingOverflow:
-			return AccentBad
-		Problem.Kind.DiningCrowded:
-			return AccentWarn
-		Problem.Kind.DiningUnfed:
-			return AccentBad
-		Problem.Kind.CreditMaxed:
-			return AccentBad
-	return AccentBad
+			return AlertRow.AccentInfo
+	return AlertRow.AccentInfo

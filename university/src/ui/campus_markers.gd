@@ -17,18 +17,26 @@ const DiningCrowdedSmall: String = "crowded"
 const DiningUnfedSmall: String = "can't eat"
 const OpensFormat: String = "Opens %s"
 
-const AccentWarn: String = "Warn"
-const AccentBad: String = "Bad"
-const AccentInfo: String = "Info"
-
 var university: University
 var camera: GameCamera
 var _pool: Array[CampusMarker]
+# Whether a pooled marker's box takes the mouse; false while a tool is armed,
+# so it stops swallowing the click that should place or destroy.
+var _clickable: bool = true
 
 
 func setup(shown: University, gameCamera: GameCamera) -> void:
 	university = shown
 	camera = gameCamera
+
+
+## Whether the pooled markers take the mouse; off while a tool is armed, so
+## they stop eating the click a build or destroy tool needs. A marker keeps
+## showing either way.
+func setClickable(on: bool) -> void:
+	_clickable = on
+	for marker: CampusMarker in _pool:
+		marker.box.mouse_filter = Control.MOUSE_FILTER_STOP if (on) else Control.MOUSE_FILTER_IGNORE
 
 
 func _process(_dt: float) -> void:
@@ -43,14 +51,15 @@ func _process(_dt: float) -> void:
 
 
 ## A marker over the dorms' centroid while students are without on-campus
-## housing past UniversityRules.OverflowThreshold.
+## housing past UniversityRules.OverflowThreshold; none with no dorm open.
 func _placeHousing(index: int) -> int:
-	if (not university.hasProblem(Problem.Kind.HousingOverflow)):
+	var dorms: Array[Building] = university.campus.openWithRole(BuildingInfo.Role.Housing)
+	if (dorms.is_empty() or not university.hasProblem(Problem.Kind.HousingOverflow)):
 		return index
-	var point: Vector2 = Campus.centroid(university.campus.openWithRole(BuildingInfo.Role.Housing))
+	var point: Vector2 = Campus.centroid(dorms)
 	var text: String = HousingOverflowText % NumberFormat.count(university.offCampus())
 	var small: String = HousingOverflowSmallFormat % [NumberFormat.percent(university.offCampusShare()), NumberFormat.percent(UniversityRules.OverflowThreshold)]
-	var marker: CampusMarker = _place(index, point, text, small, AccentBad)
+	var marker: CampusMarker = _place(index, point, text, small, AlertRow.accentFor(Problem.Kind.HousingOverflow))
 	marker.building = null
 	marker.problemKind = Problem.Kind.HousingOverflow
 	return index + 1
@@ -64,20 +73,17 @@ func _placeDining(index: int) -> int:
 		return index
 	var kind: Problem.Kind
 	var small: String
-	var accentName: String
 	if (university.hasProblem(Problem.Kind.DiningUnfed)):
 		kind = Problem.Kind.DiningUnfed
 		small = DiningUnfedSmall
-		accentName = AccentBad
 	elif (university.hasProblem(Problem.Kind.DiningCrowded)):
 		kind = Problem.Kind.DiningCrowded
 		small = DiningCrowdedSmall
-		accentName = AccentWarn
 	else:
 		return index
 	var point: Vector2 = Campus.centroid(diningHalls)
 	var text: String = DiningLoadFormat % NumberFormat.percent(university.diningLoad())
-	var marker: CampusMarker = _place(index, point, text, small, accentName)
+	var marker: CampusMarker = _place(index, point, text, small, AlertRow.accentFor(kind))
 	marker.building = null
 	marker.problemKind = kind
 	return index + 1
@@ -91,7 +97,7 @@ func _placeConstruction(index: int) -> int:
 			continue
 		var text: String = OpensFormat % GameCalendar.periodLabel(building.opensAtMonth)
 		var small: String = BuildingText.adds(building.info)
-		var marker: CampusMarker = _place(used, building.pos, text, small, AccentInfo)
+		var marker: CampusMarker = _place(used, building.pos, text, small, AlertRow.AccentInfo)
 		marker.building = building
 		used += 1
 	return used
@@ -116,6 +122,7 @@ func _markerAt(index: int) -> CampusMarker:
 		var marker: CampusMarker = MarkerScene.instantiate()
 		add_child(marker)
 		marker.Activated.connect(_onActivated.bind(marker))
+		marker.box.mouse_filter = Control.MOUSE_FILTER_STOP if (_clickable) else Control.MOUSE_FILTER_IGNORE
 		_pool.append(marker)
 	return _pool[index]
 

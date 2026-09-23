@@ -16,7 +16,6 @@ const OffCampusKey: String = "Off campus"
 const UnderThresholdFormat: String = "%s → %s, under the threshold"
 const OverThresholdFormat: String = "%s → %s, still above the threshold"
 const UpkeepKey: String = "Upkeep"
-const UpkeepValueFormat: String = "%s / mo"
 const UpkeepNote: String = "from then on"
 const RefundNoteFormat: String = "Demolishing it before it opens refunds the full %s. Once it has opened, nothing comes back."
 const HousingJumpText: String = "All housing →"
@@ -83,7 +82,7 @@ func _showOffCampus(info: BuildingInfo) -> void:
 
 
 func _showUpkeep(info: BuildingInfo) -> void:
-	upkeepRow.display(UpkeepKey, UpkeepValueFormat % MoneyFormat.signed(-info.upkeep), UpkeepNote, UiTone.Tone.Bad)
+	upkeepRow.display(UpkeepKey, BuildingText.upkeep(info), UpkeepNote, UiTone.Tone.Bad)
 
 
 func _showJump(role: BuildingInfo.Role) -> void:
@@ -101,6 +100,6 @@ func _showJump(role: BuildingInfo.Role) -> void:
 func _onJumpPressed() -> void:
 	match building.info.role():
 		BuildingInfo.Role.Housing, BuildingInfo.Role.Dining:
-			PopoverWanted.emit(&"housing")
+			PopoverWanted.emit(Hud.PopoverHousing)
 		BuildingInfo.Role.Academic:
-			PopoverWanted.emit(&"students")
+			PopoverWanted.emit(Hud.PopoverStudents)

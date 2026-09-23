@@ -30,7 +30,7 @@ const DinersNoteFormat: String = "recommended %s · limit %s"
 @onready var loadLine: HBoxContainer = %LoadLine
 @onready var diningLoadLine: DiningLoadLine = %DiningLoadLine
 @onready var noDiningNote: Label = %NoDiningNote
-@onready var moneyJump: Button = %MoneyJump
+@onready var admissionsJump: Button = %AdmissionsJump
 
 var university: University
 # The header labels the dorms table starts with; rows follow them.
@@ -40,7 +40,7 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = dormsGrid.get_child_count()
 	visibility_changed.connect(_rebuildDorms)
-	moneyJump.pressed.connect(func() -> void: AdmissionsJumped.emit())
+	admissionsJump.pressed.connect(func() -> void: AdmissionsJumped.emit())
 
 
 func setUniversity(shown: University) -> void:
@@ -54,7 +54,7 @@ func _process(_dt: float) -> void:
 	title.text = TitleFormat % GameCalendar.periodLabel(university.campus.month)
 	_showKpis()
 	_showDining()
-	moneyJump.disabled = not university.campus.hasOpenAdmissionsOffice()
+	admissionsJump.disabled = not university.campus.hasOpenAdmissionsOffice()
 
 
 func _showKpis() -> void:

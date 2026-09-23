@@ -4,7 +4,8 @@ extends VBoxContainer
 ## every open seat, this fall's entry grade, and each open academic building
 ## with what it holds and costs. Follows the pane pattern: filled every
 ## `_process` while visible, its building list rebuilt on `visibility_changed`
-## and when the shown building changes.
+## and at each semester start, since buildings open only then — the list does
+## not depend on which academic building is shown.
 
 signal PopoverWanted(which: StringName)
 signal BuildWanted(category: String)
@@ -33,26 +34,22 @@ const RowFormat: String = "%s   %s · %s / mo"
 var university: University
 var building: Building
 
-var _lastBuilding: Building
-
 
 func _ready() -> void:
 	addButton.pressed.connect(func() -> void: BuildWanted.emit(building.info.category))
-	studentsJump.pressed.connect(func() -> void: PopoverWanted.emit(&"students"))
+	studentsJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverStudents))
 	admissionsJump.pressed.connect(_onAdmissionsJumpPressed)
 	visibility_changed.connect(_rebuildList)
 
 
 func setUniversity(shown: University) -> void:
 	university = shown
+	shown.SemesterStarted.connect(func(_report: SemesterReport) -> void: _rebuildList())
 
 
 func _process(_dt: float) -> void:
 	if (university == null or building == null or not visible):
 		return
-	if (building != _lastBuilding):
-		_lastBuilding = building
-		_rebuildList()
 	var campus: Campus = university.campus
 	var enrolled: int = university.students.enrolled()
 	var seats: int = campus.seats()
@@ -69,7 +66,7 @@ func _process(_dt: float) -> void:
 
 
 func _rebuildList() -> void:
-	if (university == null or not visible):
+	if (university == null or not is_visible_in_tree()):
 		return
 	while (list.get_child_count() > 0):
 		var old: Node = list.get_child(list.get_child_count() - 1)

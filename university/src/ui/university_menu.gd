@@ -47,7 +47,8 @@ func _process(_dt: float) -> void:
 	diningButton.disabled = (halls == 0)
 	_tint(admissionsDot, &"good" if (university.campus.hasOpenAdmissionsOffice()) else &"dim")
 	_tint(housingDot, &"warn" if (university.hasProblem(Problem.Kind.HousingOverflow)) else &"dim")
-	_tint(diningDot, &"bad" if (university.hasProblem(Problem.Kind.DiningUnfed)) else (&"warn" if (university.hasProblem(Problem.Kind.DiningCrowded)) else &"dim"))
+	var diningTone: UiTone.Tone = DiningLoadLine.toneFor(university)
+	_tint(diningDot, &"bad" if (diningTone == UiTone.Tone.Bad) else (&"warn" if (diningTone == UiTone.Tone.Warn) else &"dim"))
 
 
 func _chooseFirst(buildings: Array[Building]) -> void:

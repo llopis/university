@@ -56,6 +56,9 @@ func setUniversity(shown: University) -> void:
 func showBuilding(selected: Building) -> void:
 	building = selected
 	visible = (building != null)
+	if (selected == null):
+		# Otherwise the last pane stays visible with a stale building.
+		_showPane(null)
 
 
 func _process(_dt: float) -> void:

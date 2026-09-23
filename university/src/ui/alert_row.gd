@@ -8,6 +8,9 @@ signal Dismissed
 
 const WeekFormat: String = "wk %d"
 const AccentBase: String = "AlertAccent"
+const AccentWarn: String = "Warn"
+const AccentBad: String = "Bad"
+const AccentInfo: String = "Info"
 
 @onready var whenLabel: Label = %When
 @onready var textLabel: Label = %Text
@@ -34,3 +37,17 @@ func _onGuiInput(event: InputEvent) -> void:
 	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
 		Activated.emit()
 		accept_event()
+
+
+## The accent a problem reads in, wherever one is shown: an alert, a marker.
+static func accentFor(kind: Problem.Kind) -> String:
+	match kind:
+		Problem.Kind.HousingOverflow:
+			return AccentBad
+		Problem.Kind.DiningCrowded:
+			return AccentWarn
+		Problem.Kind.DiningUnfed:
+			return AccentBad
+		Problem.Kind.CreditMaxed:
+			return AccentBad
+	return AccentBad

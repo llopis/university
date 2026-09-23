@@ -63,8 +63,8 @@ func _ready() -> void:
 	mealStepper.Stepped.connect(func(direction: int) -> void:
 		if (university != null):
 			university.policy.stepNextMealPlan(direction))
-	studentsJump.pressed.connect(func() -> void: PopoverWanted.emit(&"students"))
-	financesJump.pressed.connect(func() -> void: PopoverWanted.emit(&"money"))
+	studentsJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverStudents))
+	financesJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverMoney))
 	visibility_changed.connect(_rebuildChart)
 
 
