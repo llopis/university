@@ -25,6 +25,9 @@ const TargetUp: String = "↑ %.0f"
 const TargetDown: String = "↓ %.0f"
 const TargetHeld: String = "→ %.0f"
 const ReputationFormat: String = "%.0f"
+# The crest name shrinks from its size in the scene until it fits, but no
+# further than this; a name longer still is clipped.
+const MinNameFontSize: int = 12
 
 @onready var menuButton: Button = %MenuButton
 @onready var crestButton: Button = %CrestButton
@@ -46,12 +49,16 @@ const ReputationFormat: String = "%.0f"
 
 var state: GameState
 
+# The crest name's size as the scene authors it, the largest it is shown at.
+var _nameFontSize: int
+
 # Transport buttons in speed order: index i runs GameState.SpeedSteps[i].
 var _speedButtons: Array[Button]
 var _toggles: Dictionary[StringName, Button]
 
 
 func _ready() -> void:
+	_nameFontSize = universityName.get_theme_font_size(&"font_size")
 	_speedButtons = [playButton, fastButton, fasterButton]
 	for i: int in range(_speedButtons.size()):
 		_speedButtons[i].text = SpeedFormat % GameState.SpeedSteps[i]
@@ -98,6 +105,20 @@ func _process(_dt: float) -> void:
 func _showCrest(university: University) -> void:
 	universityName.text = university.name
 	shieldLetter.text = university.name.left(1)
+	var fontSize: int = _fittingNameSize(university.name)
+	if (fontSize != universityName.get_theme_font_size(&"font_size")):
+		universityName.add_theme_font_size_override(&"font_size", fontSize)
+
+
+## The largest size, up to the scene's, at which the name fits the crest's
+## fixed width.
+func _fittingNameSize(text: String) -> int:
+	var font: Font = universityName.get_theme_font(&"font")
+	var fontSize: int = _nameFontSize
+	while (fontSize > MinNameFontSize
+			and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fontSize).x > universityName.size.x):
+		fontSize -= 1
+	return fontSize
 
 
 func _showStudents(university: University) -> void:

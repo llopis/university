@@ -84,7 +84,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Title"
 theme_override_font_sizes/font_size = 22
-text_overrun_behavior = 3
+clip_text = true
 
 [node name="Slots" type="HBoxContainer" parent="Row"]
 layout_mode = 2
