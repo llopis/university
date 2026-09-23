@@ -86,7 +86,9 @@ func step() -> void:
 func update(dt: float) -> void:
 	if (not paused):
 		remainingDt += minf(dt, MaxFrameDt) * float(speedMultiplier())
-		while (remainingDt >= TickStepDuration):
+		# A listener may pause from inside a tick (the semester popup), and the
+		# rest of the frame's ticks must wait rather than run through it.
+		while (not paused and remainingDt >= TickStepDuration):
 			step()
 			remainingDt -= TickStepDuration
 	university.campus.update(dt)

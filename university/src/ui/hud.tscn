@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://src/ui/reputation_dropdown.tscn" id="7_reputation"]
 [ext_resource type="PackedScene" path="res://src/ui/housing_dropdown.tscn" id="8_housing"]
 [ext_resource type="PackedScene" path="res://src/ui/money_dropdown.tscn" id="9_money"]
+[ext_resource type="PackedScene" path="res://src/ui/semester_popup.tscn" id="10_semesterpopup"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -49,4 +50,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="MoneyDropdown" parent="Popovers" instance=ExtResource("9_money")]
+unique_name_in_owner = true
+
+[node name="SemesterPopup" parent="." instance=ExtResource("10_semesterpopup")]
 unique_name_in_owner = true

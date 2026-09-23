@@ -1,0 +1,159 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/semester_popup.gd" id="1_popup"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="2_row"]
+
+[node name="SemesterPopup" type="Control"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_popup")
+
+[node name="Dim" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PopupDim"
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+theme_type_variation = &"PopupBox"
+
+[node name="Body" type="VBoxContainer" parent="Center/Box"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Accent" type="Panel" parent="Center/Box/Body"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+theme_type_variation = &"PopupBoxAccent"
+
+[node name="Title" type="Label" parent="Center/Box/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PopupTitle"
+
+[node name="Sub" type="Label" parent="Center/Box/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PopupSub"
+uppercase = true
+
+[node name="GridMargin" type="MarginContainer" parent="Center/Box/Body"]
+layout_mode = 2
+theme_override_constants/margin_top = 18
+
+[node name="Grid" type="HBoxContainer" parent="Center/Box/Body/GridMargin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="NewStudents" type="VBoxContainer" parent="Center/Box/Body/GridMargin/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SectionTitle" type="Label" parent="Center/Box/Body/GridMargin/Grid/NewStudents"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "New students"
+
+[node name="ApplicantsRow" parent="Center/Box/Body/GridMargin/Grid/NewStudents" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AdmittedRow" parent="Center/Box/Body/GridMargin/Grid/NewStudents" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GradeRow" parent="Center/Box/Body/GridMargin/Grid/NewStudents" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GraduatedRow" parent="Center/Box/Body/GridMargin/Grid/NewStudents" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SpringNote" type="Label" parent="Center/Box/Body/GridMargin/Grid/NewStudents"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"Note"
+text = "No admission or graduation in spring."
+
+[node name="Campus" type="VBoxContainer" parent="Center/Box/Body/GridMargin/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SectionTitle" type="Label" parent="Center/Box/Body/GridMargin/Grid/Campus"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Campus"
+
+[node name="FeesRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OnCampusRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OffCampusRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DiningRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ReputationRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SatisfactionRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OpenedRow" parent="Center/Box/Body/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonsMargin" type="MarginContainer" parent="Center/Box/Body"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="Buttons" type="HBoxContainer" parent="Center/Box/Body/ButtonsMargin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="HousingButton" type="Button" parent="Center/Box/Body/ButtonsMargin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"GhostButton"
+text = "Look at housing"
+
+[node name="ContinueButton" type="Button" parent="Center/Box/Body/ButtonsMargin/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Continue"

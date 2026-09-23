@@ -14,6 +14,7 @@ const None: StringName = &""
 @onready var reputationDropdown: ReputationDropdown = %ReputationDropdown
 @onready var housingDropdown: HousingDropdown = %HousingDropdown
 @onready var moneyDropdown: MoneyDropdown = %MoneyDropdown
+@onready var semesterPopup: SemesterPopup = %SemesterPopup
 
 var state: GameState
 var camera: GameCamera
@@ -21,6 +22,9 @@ var controller: BuildController
 
 var _popovers: Dictionary[StringName, Control]
 var _open: StringName = None
+# The pause state from before the first of a run of semester reports, so
+# Continue hands it back rather than whatever showReport itself set.
+var _pausedBefore: bool = false
 
 
 func _ready() -> void:
@@ -56,6 +60,9 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	housingDropdown.setUniversity(state.university)
 	moneyDropdown.setState(state)
 	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
+	state.university.SemesterStarted.connect(showReport)
+	semesterPopup.Continued.connect(_onContinued)
+	semesterPopup.HousingWanted.connect(_onHousingWanted)
 
 
 func popoverOpen() -> StringName:
@@ -94,7 +101,40 @@ func _showBuilding(building: Building) -> void:
 	camera.setTarget(building.pos)
 
 
+## Shows a semester's report, pausing the game. Several in a row show the
+## latest; the pause remembered is the one from before the first of them.
+## Runs mid-tick (University.SemesterStarted fires before the month's bill),
+## so this must only pause and show, never save, load or change state.
+func showReport(report: SemesterReport) -> void:
+	if (not semesterPopup.visible):
+		_pausedBefore = state.paused
+	state.setPaused(true)
+	closePopover()
+	semesterPopup.showReport(report)
+
+
+## Shows the latest semester report, for the console.
+func showLatestReport() -> void:
+	var reports: Array[SemesterReport] = state.university.reports
+	if (not reports.is_empty()):
+		showReport(reports[reports.size() - 1])
+
+
+func _onContinued() -> void:
+	state.setPaused(_pausedBefore)
+
+
+func _onHousingWanted() -> void:
+	state.setPaused(_pausedBefore)
+	openPopover(&"housing")
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if (event.is_action_pressed(&"ExitGame") and semesterPopup.visible):
+		semesterPopup.visible = false
+		_onContinued()
+		get_viewport().set_input_as_handled()
+		return
 	if (event.is_action_pressed(&"ExitGame") and closePopover()):
 		get_viewport().set_input_as_handled()
 		return

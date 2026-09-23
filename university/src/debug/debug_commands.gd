@@ -22,6 +22,8 @@ const NoPath: String = ""
 
 # hud's sentinel: closes whichever popover is open.
 const HudNone: String = "none"
+# hud's popup: shows the latest semester report.
+const HudPopup: String = "popup"
 
 const ToolPlace: String = "place"
 const ToolDestroy: String = "destroy"
@@ -345,6 +347,8 @@ func _hud(which: String) -> void:
 	var hud: Hud = _campusView().hud
 	if (which == HudNone):
 		hud.closePopover()
+	elif (which == HudPopup):
+		hud.showLatestReport()
 	else:
 		hud.openPopover(StringName(which))
 	LimboConsole.print_line("HUD: %s" % which)

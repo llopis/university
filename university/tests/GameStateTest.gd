@@ -143,3 +143,18 @@ func test_a_month_is_a_whole_number_of_weeks() -> void:
 	var state: GameState = GameState.new()
 	state.advanceMonths(1)
 	assert_int(state.week()).is_equal(GameCalendar.WeeksPerMonth)
+
+
+func test_a_pause_during_a_tick_stops_the_rest_of_the_frame() -> void:
+	var state: GameState = GameState.new()
+	state.setSpeedIndex(GameState.SpeedSteps.size() - 1)
+	var spring: int = GameCalendar.nextSemesterStart(0)
+	state.tickCount = spring * GameState.TicksPerMonth - 1
+	var onStart: Callable = func(_report: SemesterReport) -> void: state.setPaused(true)
+	state.university.SemesterStarted.connect(onStart)
+	state.update(GameState.MaxFrameDt)
+	state.university.SemesterStarted.disconnect(onStart)
+	# The frame had many ticks left at top speed; the pause at the semester
+	# start stopped them there.
+	assert_int(state.tickCount).is_equal(spring * GameState.TicksPerMonth)
+	assert_bool(state.paused).is_true()
