@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://src/ui/ui_theme.tres" id="2_theme"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://src/ui/side_panel.tscn" id="11_sidepanel"]
 [ext_resource type="PackedScene" path="res://src/ui/action_bar.tscn" id="12_actionbar"]
 [ext_resource type="PackedScene" path="res://src/ui/build_panel.tscn" id="13_buildpanel"]
+[ext_resource type="PackedScene" path="res://src/ui/alerts.tscn" id="14_alerts"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -29,6 +30,9 @@ script = ExtResource("1_hud")
 unique_name_in_owner = true
 
 [node name="SidePanel" parent="." instance=ExtResource("11_sidepanel")]
+unique_name_in_owner = true
+
+[node name="Alerts" parent="." instance=ExtResource("14_alerts")]
 unique_name_in_owner = true
 
 [node name="ActionBar" parent="." instance=ExtResource("12_actionbar")]

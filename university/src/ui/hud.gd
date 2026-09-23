@@ -12,9 +12,14 @@ const PaneAcademic: StringName = &"academic"
 const PaneDorm: StringName = &"dorm"
 const PaneDining: StringName = &"dining"
 const PopoverBuild: StringName = &"build"
+const PopoverHousing: StringName = &"housing"
+const PopoverMoney: StringName = &"money"
+# The alerts' left/right offsets keep this clear of the side panel's edge.
+const AlertsMargin: float = 16.0
 
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
+@onready var alerts: Alerts = %Alerts
 @onready var actionBar: ActionBar = %ActionBar
 @onready var gameMenu: GameMenu = %GameMenu
 @onready var universityMenu: UniversityMenu = %UniversityMenu
@@ -39,24 +44,24 @@ var _pausedBefore: bool = false
 func _ready() -> void:
 	_popovers = {
 		&"gamemenu": gameMenu, &"unimenu": universityMenu, &"students": studentsDropdown,
-		&"reputation": reputationDropdown, &"housing": housingDropdown, &"money": moneyDropdown,
+		&"reputation": reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
 		PopoverBuild: buildPanel,
 	}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
 	topBar.UniversityMenuPressed.connect(toggle.bind(&"unimenu"))
 	topBar.StudentsPressed.connect(toggle.bind(&"students"))
-	topBar.HousingPressed.connect(toggle.bind(&"housing"))
-	topBar.MoneyPressed.connect(toggle.bind(&"money"))
+	topBar.HousingPressed.connect(toggle.bind(PopoverHousing))
+	topBar.MoneyPressed.connect(toggle.bind(PopoverMoney))
 	topBar.ReputationPressed.connect(toggle.bind(&"reputation"))
 	gameMenu.Chosen.connect(closePopover)
 	universityMenu.BuildingChosen.connect(showBuilding)
 	universityMenu.ReputationChosen.connect(openPopover.bind(&"reputation"))
-	universityMenu.HousingChosen.connect(openPopover.bind(&"housing"))
-	universityMenu.FinancesChosen.connect(openPopover.bind(&"money"))
+	universityMenu.HousingChosen.connect(openPopover.bind(PopoverHousing))
+	universityMenu.FinancesChosen.connect(openPopover.bind(PopoverMoney))
 	studentsDropdown.ReputationJumped.connect(openPopover.bind(&"reputation"))
-	studentsDropdown.HousingJumped.connect(openPopover.bind(&"housing"))
-	reputationDropdown.HousingJumped.connect(openPopover.bind(&"housing"))
-	housingDropdown.MoneyJumped.connect(openPopover.bind(&"money"))
+	studentsDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
+	reputationDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
+	housingDropdown.MoneyJumped.connect(openPopover.bind(PopoverMoney))
 
 
 func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController, buildingDB: BuildingInfoDB) -> void:
@@ -70,6 +75,8 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	housingDropdown.setUniversity(state.university)
 	moneyDropdown.setState(state)
 	sidePanel.setUniversity(state.university)
+	alerts.setup(state)
+	alerts.PlaceWanted.connect(_openPlace)
 	controller.SelectionChanged.connect(sidePanel.showBuilding)
 	sidePanel.CloseRequested.connect(func() -> void: controller.select(null))
 	sidePanel.PopoverWanted.connect(openPopover)
@@ -87,6 +94,14 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	actionBar.BuildPressed.connect(toggle.bind(PopoverBuild))
 	actionBar.DemolishPressed.connect(_toggleDemolish)
 	controller.ToolChanged.connect(_onToolChanged)
+
+
+# Keeps the alerts to the left of the side panel while it's open; the anchors
+# are both pinned to the right edge, so left and right shift together.
+func _process(_dt: float) -> void:
+	var shift: float = -(AlertsMargin + (sidePanel.size.x if (sidePanel.visible) else 0.0))
+	alerts.offset_right = shift
+	alerts.offset_left = shift
 
 
 func popoverOpen() -> StringName:
@@ -159,6 +174,29 @@ func _firstOpen(role: BuildingInfo.Role) -> Building:
 	return found[0] if (not found.is_empty()) else null
 
 
+## Where a problem is dealt with: its dropdown, or its building's pane.
+func openProblem(kind: Problem.Kind) -> void:
+	match kind:
+		Problem.Kind.HousingOverflow:
+			openPopover(PopoverHousing)
+		Problem.Kind.DiningCrowded, Problem.Kind.DiningUnfed:
+			if (not showPane(PaneDining)):
+				openPopover(PopoverHousing)
+		Problem.Kind.CreditMaxed:
+			openPopover(PopoverMoney)
+
+
+func _openPlace(entry: AlertEntry) -> void:
+	match entry.source:
+		AlertEntry.Source.Problem:
+			openProblem(entry.problem.kind)
+		AlertEntry.Source.AutoBorrowed:
+			openPopover(PopoverMoney)
+		AlertEntry.Source.Opened:
+			if (state.university.campus.buildings.has(entry.building)):
+				showBuilding(entry.building)
+
+
 ## Shows a semester's report, pausing the game. Several in a row show the
 ## latest; the pause remembered is the one from before the first of them.
 ## Runs mid-tick (University.SemesterStarted fires before the month's bill),
@@ -186,7 +224,7 @@ func _onContinued() -> void:
 ## picking back up at whatever speed was running before the popup.
 func _onHousingWanted() -> void:
 	state.setPaused(true)
-	openPopover(&"housing")
+	openPopover(PopoverHousing)
 
 
 ## Opens the build panel on one category, as the panes' "add a building" jumps do.
