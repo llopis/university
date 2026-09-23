@@ -1,7 +1,7 @@
 class_name SlotView
 extends Button
-## One top-bar slot: an icon, a number with a note beside it, and a caption.
-## Pressing it opens its dropdown; it reads as pressed while that is open.
+## One top-bar slot: an icon and a number with a note beside it, named by its
+## tooltip. Pressing it opens its dropdown; it reads as pressed while that is open.
 
 const ValueBase: String = "Value"
 const SubBase: String = "Caption"
@@ -14,7 +14,6 @@ const PaddingX: float = 36.0
 @onready var iconRect: TextureRect = %Icon
 @onready var valueLabel: Label = %Value
 @onready var subLabel: Label = %Sub
-@onready var captionLabel: Label = %Caption
 
 
 func _ready() -> void:
@@ -22,11 +21,11 @@ func _ready() -> void:
 	iconRect.self_modulate = get_theme_color("accent", "Palette")
 
 
-func display(value: String, sub: String, caption: String, valueTone: UiTone.Tone, subTone: UiTone.Tone) -> void:
+func display(value: String, sub: String, tooltip: String, valueTone: UiTone.Tone, subTone: UiTone.Tone) -> void:
 	valueLabel.text = value
 	valueLabel.theme_type_variation = UiTone.variation(ValueBase, valueTone)
 	subLabel.text = sub
 	subLabel.visible = (sub != "")
 	subLabel.theme_type_variation = UiTone.variation(SubBase, subTone)
-	captionLabel.text = caption
+	tooltip_text = tooltip
 	custom_minimum_size.x = content.get_combined_minimum_size().x + PaddingX

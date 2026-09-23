@@ -7,9 +7,9 @@
 custom_minimum_size = Vector2(56, 56)
 anchors_preset = 0
 offset_left = 16.0
-offset_top = 84.0
+offset_top = 60.0
 offset_right = 72.0
-offset_bottom = 140.0
+offset_bottom = 116.0
 focus_mode = 0
 theme_type_variation = &"ActionButton"
 toggle_mode = true

@@ -658,3 +658,12 @@ Four decisions this round settles:
 - While an overlay is open, only Esc, Space and +/− still work.
 - The building panel takes 3/4 of the screen.
 - The Beds slot has no warning badge. The amber "+N off campus" and the notifications bell already say it.
+
+## Top bar simplified (2026-09-23)
+
+The user asked for a plainer, shorter top bar. These decisions override the sections above wherever they differ.
+
+- **No captions.** The slots lose STUDENTS, BEDS and the rest, and the crest loses UNIVERSITY. Hovering a slot shows its name as a tooltip instead.
+- **No words in the notes.** Each note keeps only its numbers: "/ 800" and "+440". "/ month" and "in N wk" go, and the Fees tooltip names the semester and the weeks until it. The reputation change stays.
+- **Debt.** Cash shows any debt as a red "−$2.0M", since automatic loans are otherwise silent.
+- **Height.** The bar drops from 72 px to 48 px. The clock becomes one line over its progress bar, and everything under the bar moves up to match.

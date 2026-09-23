@@ -13,12 +13,14 @@ signal MoneyPressed
 signal ReputationPressed
 
 const SpeedFormat: String = "%d×"
-const SeatsFormat: String = "/ %s seats"
-const OffCampusFormat: String = "+%s off campus"
-const OwedFormat: String = "%s owed"
-const PerMonth: String = "/ month"
-const InWeeksFormat: String = "in %d wk"
-const FeesCaptionFormat: String = "%s fees"
+const SeatsFormat: String = "/ %s"
+const OffCampusFormat: String = "+%s"
+const StudentsTooltip: String = "Students / seats"
+const BedsTooltip: String = "Housed + off campus"
+const CashTooltip: String = "Cash − owed"
+const ExpensesTooltip: String = "Monthly expenses"
+const FeesTooltipFormat: String = "%s fees, in %d wk"
+const ReputationTooltip: String = "Reputation → target"
 const TargetUp: String = "↑ %.0f"
 const TargetDown: String = "↓ %.0f"
 const TargetHeld: String = "→ %.0f"
@@ -100,7 +102,7 @@ func _showCrest(university: University) -> void:
 
 func _showStudents(university: University) -> void:
 	studentsSlot.display(NumberFormat.count(university.students.enrolled()),
-		SeatsFormat % NumberFormat.count(university.campus.seats()), "Students",
+		SeatsFormat % NumberFormat.count(university.campus.seats()), StudentsTooltip,
 		UiTone.Tone.Normal, UiTone.Tone.Normal)
 
 
@@ -108,21 +110,21 @@ func _showBeds(university: University) -> void:
 	var overflowing: bool = university.hasProblem(Problem.Kind.HousingOverflow)
 	var offCampus: int = university.offCampus()
 	bedsSlot.display(NumberFormat.count(university.housed()),
-		(OffCampusFormat % NumberFormat.count(offCampus)) if (offCampus > 0) else "", "Beds",
+		(OffCampusFormat % NumberFormat.count(offCampus)) if (offCampus > 0) else "", BedsTooltip,
 		UiTone.Tone.Normal, UiTone.Tone.Warn if (overflowing) else UiTone.Tone.Normal)
 
 
 func _showMoney(university: University) -> void:
 	var finances: Finances = university.finances
 	cashSlot.display(MoneyFormat.short(finances.cash),
-		(OwedFormat % MoneyFormat.short(finances.debt)) if (finances.debt > 0) else "", "Cash",
-		UiTone.Tone.Normal, UiTone.Tone.Normal)
-	expensesSlot.display(MoneyFormat.signed(-university.monthlyExpenses()), PerMonth, "Monthly expenses",
+		MoneyFormat.signed(-finances.debt) if (finances.debt > 0) else "", CashTooltip,
+		UiTone.Tone.Normal, UiTone.Tone.Bad)
+	expensesSlot.display(MoneyFormat.signed(-university.monthlyExpenses()), "", ExpensesTooltip,
 		UiTone.Tone.Bad, UiTone.Tone.Normal)
 	var start: int = university.nextSemesterStart()
-	feesSlot.display(MoneyFormat.signed(university.projectedFees().total()),
-		InWeeksFormat % GameCalendar.weeksUntil(state.week(), start),
-		FeesCaptionFormat % GameCalendar.PeriodNames[GameCalendar.period(start)],
+	feesSlot.display(MoneyFormat.signed(university.projectedFees().total()), "",
+		FeesTooltipFormat % [GameCalendar.PeriodNames[GameCalendar.period(start)],
+			GameCalendar.weeksUntil(state.week(), start)],
 		UiTone.Tone.Good, UiTone.Tone.Normal)
 
 
@@ -134,7 +136,7 @@ func _showReputation(university: University) -> void:
 		trend = TargetUp
 	elif (tone == UiTone.Tone.Bad):
 		trend = TargetDown
-	reputationSlot.display(ReputationFormat % university.reputation, trend % target, "Reputation",
+	reputationSlot.display(ReputationFormat % university.reputation, trend % target, ReputationTooltip,
 		UiTone.Tone.Normal, tone)
 
 

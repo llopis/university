@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/ui/slot.gd" id="1_slot"]
 
 [node name="Slot" type="Button"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 48)
 theme_type_variation = &"SlotButton"
 toggle_mode = true
 focus_mode = 0
@@ -51,9 +51,3 @@ theme_type_variation = &"Value"
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Caption"
-
-[node name="Caption" type="Label" parent="Content/Text"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
-uppercase = true
