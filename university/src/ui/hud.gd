@@ -21,7 +21,6 @@ const PopoverUniversity: StringName = &"unimenu"
 # The alerts' left/right offsets keep this clear of the side panel's edge.
 const AlertsMargin: float = 16.0
 
-@onready var campusMarkers: CampusMarkers = %CampusMarkers
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
 @onready var alerts: Alerts = %Alerts
@@ -73,9 +72,6 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	state = gameState
 	camera = gameCamera
 	controller = buildController
-	campusMarkers.setup(state.university, camera)
-	campusMarkers.ProblemWanted.connect(openProblem)
-	campusMarkers.BuildingWanted.connect(showBuilding)
 	topBar.state = state
 	universityMenu.university = state.university
 	studentsDropdown.setUniversity(state.university)
@@ -93,7 +89,6 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
 	state.university.SemesterStarted.connect(showReport)
 	semesterPopup.Continued.connect(_onContinued)
-	semesterPopup.HousingWanted.connect(_onHousingWanted)
 	buildPanel.university = state.university
 	buildPanel.populate(buildingDB)
 	buildPanel.showAffordable(state.university.campus)
@@ -238,13 +233,6 @@ func _onContinued() -> void:
 	state.setPaused(_pausedBefore)
 
 
-## The player chose to inspect housing, so the clock stays paused rather than
-## picking back up at whatever speed was running before the popup.
-func _onHousingWanted() -> void:
-	state.setPaused(true)
-	openPopover(PopoverHousing)
-
-
 ## Opens the build panel on one category, as the panes' "add a building" jumps do.
 func openBuildPanel(category: String) -> void:
 	openPopover(PopoverBuild)
@@ -271,13 +259,12 @@ func _toggleDemolish() -> void:
 func _onToolChanged() -> void:
 	buildPanel.showTool(controller.activeTool, controller.placeInfo)
 	actionBar.showTool(controller.activeTool)
-	campusMarkers.setClickable(controller.activeTool == BuildController.Tool.None)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if (semesterPopup.visible):
-		# The popup is modal: Continue, Esc and "Look at housing" are the ways
-		# out, and Space, B and X do nothing while it is up.
+		# The popup is modal: Continue and Esc are the ways out, and Space, B
+		# and X do nothing while it is up.
 		if (event.is_action_pressed(&"ExitGame")):
 			semesterPopup.dismiss()
 			get_viewport().set_input_as_handled()

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bpvllfy7rmoqq"
-path="res://.godot/imported/bed.svg-a7e1447a551846a1a9a1424caac1b204.ctex"
+uid="uid://jtrwfyg3akvn"
+path="res://.godot/imported/trash.png-aaaeef11303df603059fbaffb961930f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/bed.svg"
-dest_files=["res://.godot/imported/bed.svg-a7e1447a551846a1a9a1424caac1b204.ctex"]
+source_file="res://assets/icons/trash.png"
+dest_files=["res://.godot/imported/trash.png-aaaeef11303df603059fbaffb961930f.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

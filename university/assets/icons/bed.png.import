@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmdpbc6cp7sfa"
-path="res://.godot/imported/hammer.svg-9d5bd153edf402f7ccbae7490f41cd66.ctex"
+uid="uid://dulfklu7cl5it"
+path="res://.godot/imported/bed.png-baacab2a54eacb8c5fd4f1355a0ffeee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/hammer.svg"
-dest_files=["res://.godot/imported/hammer.svg-9d5bd153edf402f7ccbae7490f41cd66.ctex"]
+source_file="res://assets/icons/bed.png"
+dest_files=["res://.godot/imported/bed.png-baacab2a54eacb8c5fd4f1355a0ffeee.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

@@ -181,17 +181,6 @@ func refundFor(building: Building) -> int:
 	return building.info.cost if (building.underConstruction) else 0
 
 
-## The middle of some buildings on the ground, where a marker about them
-## stands; the origin for none.
-static func centroid(group: Array[Building]) -> Vector2:
-	if (group.is_empty()):
-		return Vector2.ZERO
-	var sum: Vector2 = Vector2.ZERO
-	for building: Building in group:
-		sum += building.pos
-	return sum / float(group.size())
-
-
 # Open now, or due to open by that month. At the campus's own month this is
 # exactly "open": a building placed this month opens at a later one.
 static func _isOpenBy(building: Building, byMonth: int) -> bool:

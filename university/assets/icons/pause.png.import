@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bvvs6g110ywv5"
-path="res://.godot/imported/flow.svg-1e9ddce32342e3325e30e48ebc054964.ctex"
+uid="uid://uy7j22w21c6w"
+path="res://.godot/imported/pause.png-379e7f6da7dfcf892b36c0ac65c6e5bc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/flow.svg"
-dest_files=["res://.godot/imported/flow.svg-1e9ddce32342e3325e30e48ebc054964.ctex"]
+source_file="res://assets/icons/pause.png"
+dest_files=["res://.godot/imported/pause.png-379e7f6da7dfcf892b36c0ac65c6e5bc.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

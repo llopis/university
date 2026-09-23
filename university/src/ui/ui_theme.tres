@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=72 format=3]
+[gd_resource type="Theme" load_steps=70 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Medium.ttf" id="FontFile_barlowMedium"]
@@ -645,27 +645,6 @@ bg_color = Color(0.886, 0.353, 0.306, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alertAccentInfo"]
 bg_color = Color(0.353, 0.655, 0.878, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_markerBox"]
-bg_color = Color(0.078, 0.094, 0.118, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 0.16)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 16
-content_margin_left = 0
-content_margin_top = 0
-content_margin_right = 0
-content_margin_bottom = 0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_markerStem"]
-bg_color = Color(1, 1, 1, 0.16)
-
 [resource]
 default_font = ExtResource("FontFile_barlowRegular")
 default_font_size = 14
@@ -840,11 +819,6 @@ MenuGroup/base_type = &"Label"
 MenuGroup/fonts/font = ExtResource("FontFile_condSemiBold")
 MenuGroup/font_sizes/font_size = 11
 MenuGroup/colors/font_color = Color(0.604, 0.643, 0.690, 1)
-
-MenuKey/base_type = &"Label"
-MenuKey/fonts/font = ExtResource("FontFile_condMedium")
-MenuKey/font_sizes/font_size = 11
-MenuKey/colors/font_color = Color(0.420, 0.459, 0.502, 1)
 
 StatusDot/base_type = &"Panel"
 StatusDot/styles/panel = SubResource("StyleBoxFlat_statusDot")
@@ -1180,11 +1154,6 @@ ActionButton/colors/icon_hover_color = Color(0.925, 0.906, 0.859, 1)
 ActionButton/colors/icon_pressed_color = Color(0.102, 0.078, 0.031, 1)
 ActionButton/colors/icon_hover_pressed_color = Color(0.102, 0.078, 0.031, 1)
 
-ActionKey/base_type = &"Label"
-ActionKey/fonts/font = ExtResource("FontFile_condSemiBold")
-ActionKey/font_sizes/font_size = 10
-ActionKey/colors/font_color = Color(0.420, 0.459, 0.502, 1)
-
 BuildPanel/base_type = &"PanelContainer"
 BuildPanel/styles/panel = SubResource("StyleBoxFlat_buildPanel")
 
@@ -1257,19 +1226,3 @@ AlertAccentBad/styles/panel = SubResource("StyleBoxFlat_alertAccentBad")
 
 AlertAccentInfo/base_type = &"Panel"
 AlertAccentInfo/styles/panel = SubResource("StyleBoxFlat_alertAccentInfo")
-
-MarkerBox/base_type = &"PanelContainer"
-MarkerBox/styles/panel = SubResource("StyleBoxFlat_markerBox")
-
-MarkerText/base_type = &"Label"
-MarkerText/fonts/font = ExtResource("FontFile_condSemiBold")
-MarkerText/font_sizes/font_size = 13
-MarkerText/colors/font_color = Color(0.925, 0.906, 0.859, 1)
-
-MarkerSmall/base_type = &"Label"
-MarkerSmall/fonts/font = ExtResource("FontFile_condMedium")
-MarkerSmall/font_sizes/font_size = 13
-MarkerSmall/colors/font_color = Color(0.604, 0.643, 0.690, 1)
-
-MarkerStem/base_type = &"Panel"
-MarkerStem/styles/panel = SubResource("StyleBoxFlat_markerStem")

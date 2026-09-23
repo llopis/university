@@ -5,7 +5,6 @@ extends Control
 ## opened. Shown by Hud.showReport, which pauses the game around it.
 
 signal Continued
-signal HousingWanted
 
 const TitleFormat: String = "%s begins"
 const SubFall: String = "Admissions resolved · buildings opened · fees collected"
@@ -46,13 +45,11 @@ const OpenedSeparator: String = ", "
 @onready var reputationRow: InfoRow = %ReputationRow
 @onready var satisfactionRow: InfoRow = %SatisfactionRow
 @onready var openedRow: InfoRow = %OpenedRow
-@onready var housingButton: Button = %HousingButton
 @onready var continueButton: Button = %ContinueButton
 
 
 func _ready() -> void:
 	continueButton.pressed.connect(dismiss)
-	housingButton.pressed.connect(_wantHousing)
 
 
 func showReport(report: SemesterReport) -> void:
@@ -114,8 +111,3 @@ func _showChange(row: InfoRow, key: String, value: float, change: float) -> void
 func dismiss() -> void:
 	visible = false
 	Continued.emit()
-
-
-func _wantHousing() -> void:
-	visible = false
-	HousingWanted.emit()
