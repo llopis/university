@@ -152,7 +152,7 @@ func _startSemester(semesterMonth: int, opened: Array[Building]) -> void:
 ## The fall start: reputation takes its yearly step on the year just ended, the
 ## year's prices lock, and the new class is admitted into the open seats.
 func _startYear(report: SemesterReport) -> void:
-	reputation = UniversityRules.nextReputation(reputation, reputationTarget())
+	setReputation(UniversityRules.nextReputation(reputation, reputationTarget()))
 	satisfactionSamples.clear()
 	var hasOffice: bool = campus.hasOpenAdmissionsOffice()
 	policy.lockYear(hasOffice)

@@ -91,12 +91,10 @@ func test_no_students_means_base_satisfaction() -> void:
 	assert_float(UniversityRules.satisfaction(0, 0, 0).total()).is_equal_approx(UniversityRules.SatisfactionBase, Epsilon)
 
 
-func test_reputation_moves_part_of_the_way_to_its_target_and_stays_in_range() -> void:
+func test_reputation_moves_part_of_the_way_to_its_target() -> void:
 	var target: float = Reputation + 10.0
 	var moved: float = UniversityRules.nextReputation(Reputation, target)
 	assert_float(moved - Reputation).is_equal_approx(UniversityRules.ReputationRate * (target - Reputation), Epsilon)
-	assert_float(UniversityRules.nextReputation(UniversityRules.MaxScore, UniversityRules.MaxScore * 3.0)).is_less_equal(UniversityRules.MaxScore)
-	assert_float(UniversityRules.nextReputation(0.0, -UniversityRules.MaxScore)).is_greater_equal(0.0)
 
 
 func test_the_grades_reputation_applicants_loop_settles_by_itself() -> void:

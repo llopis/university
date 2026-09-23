@@ -91,7 +91,7 @@ static func reputationTarget(intakeGrade: float, meanSatisfaction: float) -> flo
 
 ## A fall's step: ReputationRate of the way to the target.
 static func nextReputation(reputation: float, target: float) -> float:
-	return clampf(reputation + ReputationRate * (target - reputation), 0.0, MaxScore)
+	return reputation + ReputationRate * (target - reputation)
 
 
 static func fees(prices: Prices, enrolled: int, housedCount: int, plans: int) -> Fees:

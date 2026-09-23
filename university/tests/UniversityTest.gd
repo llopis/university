@@ -164,6 +164,14 @@ func test_the_falls_report_measures_the_reputation_change() -> void:
 	assert_float(report.reputationChange).is_equal_approx(report.reputation - before, Epsilon)
 
 
+func test_setReputation_clamps_both_ends() -> void:
+	var university: University = University.new()
+	university.setReputation(UniversityRules.MaxScore + 10.0)
+	assert_float(university.reputation).is_equal_approx(UniversityRules.MaxScore, Epsilon)
+	university.setReputation(-10.0)
+	assert_float(university.reputation).is_equal_approx(0.0, Epsilon)
+
+
 func test_without_an_admissions_office_the_fall_charges_the_defaults() -> void:
 	var university: University = _running()
 	university.policy.setNextTuition(Policy.DefaultTuition * 2)
