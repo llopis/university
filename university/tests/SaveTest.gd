@@ -6,7 +6,9 @@ const Diameter: float = 20.0
 const Spacing: float = 40.0
 # No short decimal form, so a save that lost precision would show.
 const Angle: float = PI / 7.0
-const MonthsAfterLoading: int = 7
+# _playedState ends right at month 12's fall start; this crosses the next one
+# (month 24) and a month past it, so both games run a second fall after loading.
+const MonthsAfterLoading: int = GameCalendar.MonthsPerYear + 1
 const Name: String = "Test University"
 # Non-default balances, so a save that forgot either would show.
 const StartCash: int = 20000000
@@ -29,7 +31,10 @@ func _db() -> BuildingInfoDB:
 	return BuildingInfoDB.new(records)
 
 
-## A game some months in: one building open, one still under construction.
+## A game some months in, played through a fall start: two buildings open
+## (the hall's admissions office locked NextTuition into current, and the
+## class was admitted into the lab's seats) and a third still under
+## construction.
 func _playedState(buildingDB: BuildingInfoDB) -> GameState:
 	var state: GameState = GameState.new()
 	state.university.name = Name
@@ -44,7 +49,10 @@ func _playedState(buildingDB: BuildingInfoDB) -> GameState:
 	state.university.campus.place(buildingDB.info("hall"), Vector2.ZERO, Angle)
 	state.advanceMonths(GameCalendar.nextSemesterStart(0))
 	state.university.campus.place(buildingDB.info("lab"), Vector2(Spacing, Spacing), -Angle)
-	state.advanceMonths(1)
+	var fallStart: int = GameCalendar.nextFallStart(state.university.campus.month)
+	state.advanceMonths(fallStart - state.university.campus.month)
+	var underConstruction: Building = state.university.campus.place(buildingDB.info("hall"), Vector2(-Spacing, -Spacing), Angle)
+	assert_object(underConstruction).is_not_null()
 	return state
 
 
@@ -101,8 +109,9 @@ func test_a_building_whose_type_is_gone_is_left_out_and_reported() -> void:
 	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, withoutLab))) \
 		.is_push_error(Campus.UnknownTypeError % "lab")
 	var buildings: Array[Building] = loaded[0].university.campus.buildings
-	assert_int(buildings.size()).is_equal(1)
+	assert_int(buildings.size()).is_equal(2)
 	assert_str(buildings[0].info.id).is_equal("hall")
+	assert_str(buildings[1].info.id).is_equal("hall")
 
 
 func test_a_save_missing_a_campus_key_is_refused() -> void:
@@ -136,6 +145,17 @@ func test_a_save_missing_a_building_key_is_refused() -> void:
 	var loaded: Array[GameState] = []
 	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
 		.is_push_error(Variants.MissingKeysError % ["Campus building", "pos"])
+	assert_object(loaded[0]).is_null()
+
+
+func test_a_save_missing_a_report_key_is_refused() -> void:
+	var buildingDB: BuildingInfoDB = _db()
+	var data: Dictionary = _playedState(buildingDB).toDict()
+	var reportsData: Array = (data["university"] as Dictionary)["reports"] as Array
+	(reportsData[0] as Dictionary).erase("applicants")
+	var loaded: Array[GameState] = []
+	await assert_error(func() -> void: loaded.append(GameState.fromDict(data, buildingDB))) \
+		.is_push_error(Variants.MissingKeysError % ["SemesterReport", "applicants"])
 	assert_object(loaded[0]).is_null()
 
 
