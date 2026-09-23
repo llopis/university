@@ -18,3 +18,15 @@ static func short(dollars: int) -> String:
 	if (dollars >= Thousand):
 		return "$%dK" % floori(float(dollars) / float(Thousand))
 	return "$%d" % dollars
+
+
+## Whole dollars with thousands grouped: $9,606. For prices.
+static func full(dollars: int) -> String:
+	return (NumberFormat.Minus if (dollars < 0) else "") + "$" + NumberFormat.count(absi(dollars))
+
+
+## Abbreviated with its direction: +$16.6M in, −$1.9M out, $0 for nothing.
+static func signed(dollars: int) -> String:
+	if (dollars == 0):
+		return short(0)
+	return ("+" if (dollars > 0) else NumberFormat.Minus) + short(absi(dollars))
