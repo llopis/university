@@ -1,0 +1,228 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://src/ui/top_bar.gd" id="1_topbar"]
+[ext_resource type="Texture2D" path="res://assets/icons/menu.svg" id="2_menu"]
+[ext_resource type="PackedScene" path="res://src/ui/slot.tscn" id="3_slot"]
+[ext_resource type="Texture2D" path="res://assets/icons/users.svg" id="4_users"]
+[ext_resource type="Texture2D" path="res://assets/icons/bed.svg" id="5_bed"]
+[ext_resource type="Texture2D" path="res://assets/icons/coin.svg" id="6_coin"]
+[ext_resource type="Texture2D" path="res://assets/icons/flow.svg" id="7_flow"]
+[ext_resource type="Texture2D" path="res://assets/icons/cal.svg" id="8_cal"]
+[ext_resource type="Texture2D" path="res://assets/icons/star.svg" id="9_star"]
+[ext_resource type="Texture2D" path="res://assets/icons/pause.svg" id="10_pause"]
+[ext_resource type="Script" path="res://src/ui/meter_bar.gd" id="11_meter"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_slotSep"]
+color = Color(1, 1, 1, 0.09)
+thickness = 1
+vertical = true
+
+[node name="TopBar" type="PanelContainer"]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 58.0
+grow_horizontal = 2
+theme_type_variation = &"TopBar"
+script = ExtResource("1_topbar")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MenuButton" type="Button" parent="Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(58, 58)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+icon = ExtResource("2_menu")
+icon_alignment = 1
+expand_icon = false
+
+[node name="Separator1" type="VSeparator" parent="Row"]
+layout_mode = 2
+
+[node name="CrestButton" type="Button" parent="Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 58)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+
+[node name="Crest" type="HBoxContainer" parent="Row/CrestButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_right = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Shield" type="PanelContainer" parent="Row/CrestButton/Crest"]
+custom_minimum_size = Vector2(36, 40)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"Shield"
+
+[node name="Letter" type="Label" parent="Row/CrestButton/Crest/Shield"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ShieldLetter"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Names" type="VBoxContainer" parent="Row/CrestButton/Crest"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="UniversityName" type="Label" parent="Row/CrestButton/Crest/Names"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CrestName"
+
+[node name="UniversitySub" type="Label" parent="Row/CrestButton/Crest/Names"]
+layout_mode = 2
+theme_type_variation = &"CrestSub"
+uppercase = true
+text = "University"
+
+[node name="Slots" type="HBoxContainer" parent="Row"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="StudentsSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("4_users")
+
+[node name="StudentsSep" type="VSeparator" parent="Row/Slots"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+
+[node name="BedsSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("5_bed")
+
+[node name="BedsSep" type="VSeparator" parent="Row/Slots"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+
+[node name="CashSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("6_coin")
+
+[node name="CashSep" type="VSeparator" parent="Row/Slots"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+
+[node name="ExpensesSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("7_flow")
+
+[node name="ExpensesSep" type="VSeparator" parent="Row/Slots"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+
+[node name="FeesSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("8_cal")
+
+[node name="FeesSep" type="VSeparator" parent="Row/Slots"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+
+[node name="ReputationSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("9_star")
+
+[node name="ReputationSep" type="VSeparator" parent="Row/Slots"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+
+[node name="Spacer" type="Control" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Separator2" type="VSeparator" parent="Row"]
+layout_mode = 2
+
+[node name="Clock" type="HBoxContainer" parent="Row"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Period" type="VBoxContainer" parent="Row/Clock"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 4
+
+[node name="PeriodLabel" type="Label" parent="Row/Clock/Period"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ClockValue"
+uppercase = true
+horizontal_alignment = 2
+
+[node name="WeekLabel" type="Label" parent="Row/Clock/Period"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ClockCaption"
+horizontal_alignment = 2
+
+[node name="Progress" type="Control" parent="Row/Clock/Period"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 8)
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("11_meter")
+
+[node name="Transport" type="HBoxContainer" parent="Row/Clock"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 4
+
+[node name="PauseButton" type="Button" parent="Row/Clock/Transport"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SpeedButton"
+toggle_mode = true
+icon = ExtResource("10_pause")
+icon_alignment = 1
+
+[node name="PlayButton" type="Button" parent="Row/Clock/Transport"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SpeedButton"
+toggle_mode = true
+
+[node name="FastButton" type="Button" parent="Row/Clock/Transport"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SpeedButton"
+toggle_mode = true
+
+[node name="FasterButton" type="Button" parent="Row/Clock/Transport"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(34, 34)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SpeedButton"
+toggle_mode = true

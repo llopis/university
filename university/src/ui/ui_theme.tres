@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=38 format=3]
+[gd_resource type="Theme" load_steps=39 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Medium.ttf" id="FontFile_barlowMedium"]
@@ -65,7 +65,7 @@ shadow_color = Color(0, 0, 0, 0.35)
 shadow_size = 20
 content_margin_left = 0
 content_margin_top = 0
-content_margin_right = 0
+content_margin_right = 16
 content_margin_bottom = 0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_focus"]
@@ -99,6 +99,11 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.851, 0.643, 0.255, 1)
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_separator"]
+color = Color(1, 1, 1, 0.16)
+thickness = 1
+vertical = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_speedNormal"]
 bg_color = Color(0.125, 0.149, 0.184, 1)
@@ -365,6 +370,10 @@ SlotButton/styles/hover = SubResource("StyleBoxFlat_slotButtonHover")
 SlotButton/styles/pressed = SubResource("StyleBoxFlat_slotButtonPressed")
 SlotButton/styles/hover_pressed = SubResource("StyleBoxFlat_slotButtonPressed")
 SlotButton/styles/focus = SubResource("StyleBoxEmpty_focus")
+SlotButton/colors/icon_normal_color = Color(0.604, 0.643, 0.690, 1)
+SlotButton/colors/icon_hover_color = Color(0.925, 0.906, 0.859, 1)
+SlotButton/colors/icon_pressed_color = Color(0.941, 0.788, 0.416, 1)
+SlotButton/colors/icon_hover_pressed_color = Color(0.941, 0.788, 0.416, 1)
 
 SlotValue/base_type = &"Label"
 SlotValue/fonts/font = ExtResource("FontFile_condSemiBold")
@@ -460,6 +469,10 @@ SpeedButton/styles/hover = SubResource("StyleBoxFlat_speedHover")
 SpeedButton/styles/pressed = SubResource("StyleBoxFlat_speedPressed")
 SpeedButton/styles/hover_pressed = SubResource("StyleBoxFlat_speedPressed")
 SpeedButton/styles/focus = SubResource("StyleBoxEmpty_focus")
+SpeedButton/colors/icon_normal_color = Color(0.604, 0.643, 0.690, 1)
+SpeedButton/colors/icon_hover_color = Color(0.925, 0.906, 0.859, 1)
+SpeedButton/colors/icon_pressed_color = Color(0.102, 0.078, 0.031, 1)
+SpeedButton/colors/icon_hover_pressed_color = Color(0.102, 0.078, 0.031, 1)
 
 Dropdown/base_type = &"PanelContainer"
 Dropdown/styles/panel = SubResource("StyleBoxFlat_dropdown")
@@ -656,6 +669,9 @@ PopupSub/base_type = &"Label"
 PopupSub/fonts/font = ExtResource("FontFile_condMedium")
 PopupSub/font_sizes/font_size = 12
 PopupSub/colors/font_color = Color(0.604, 0.643, 0.690, 1)
+
+VSeparator/styles/separator = SubResource("StyleBoxLine_separator")
+VSeparator/constants/separation = 1
 
 MeterBar/colors/track = Color(0.165, 0.196, 0.239, 1)
 MeterBar/colors/fill = Color(0.851, 0.643, 0.255, 1)

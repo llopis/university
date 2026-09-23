@@ -4,7 +4,7 @@ extends Node3D
 ## and drives the state clock. Lighting and layout are authored in the scene.
 
 @onready var camera: GameCamera = %Camera
-@onready var statusBar: StatusBar = %StatusBar
+@onready var hud: Hud = %Hud
 @onready var buildingsRoot: Node3D = %Buildings
 @onready var controller: BuildController = %BuildController
 @onready var buildMenu: BuildMenu = %BuildMenu
@@ -20,7 +20,7 @@ var _hoveredView: BuildingView
 
 func _ready() -> void:
 	gameState = Global.gameState
-	statusBar.gameState = gameState
+	hud.setup(gameState, camera, controller)
 	gameState.university.campus.BuildingAdded.connect(_onBuildingAdded)
 	gameState.university.campus.BuildingRemoved.connect(_onBuildingRemoved)
 	gameState.university.campus.BuildingOpened.connect(_onBuildingOpened)
