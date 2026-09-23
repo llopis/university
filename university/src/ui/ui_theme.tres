@@ -744,27 +744,27 @@ BodyDim/colors/font_color = Color(0.420, 0.459, 0.502, 1)
 
 Caption/base_type = &"Label"
 Caption/fonts/font = ExtResource("FontFile_condMedium")
-Caption/font_sizes/font_size = 14
+Caption/font_sizes/font_size = 16
 Caption/colors/font_color = Color(0.604, 0.643, 0.690, 1)
 
 CaptionGood/base_type = &"Label"
 CaptionGood/fonts/font = ExtResource("FontFile_condMedium")
-CaptionGood/font_sizes/font_size = 14
+CaptionGood/font_sizes/font_size = 16
 CaptionGood/colors/font_color = Color(0.388, 0.741, 0.447, 1)
 
 CaptionWarn/base_type = &"Label"
 CaptionWarn/fonts/font = ExtResource("FontFile_condMedium")
-CaptionWarn/font_sizes/font_size = 14
+CaptionWarn/font_sizes/font_size = 16
 CaptionWarn/colors/font_color = Color(0.886, 0.663, 0.227, 1)
 
 CaptionBad/base_type = &"Label"
 CaptionBad/fonts/font = ExtResource("FontFile_condMedium")
-CaptionBad/font_sizes/font_size = 14
+CaptionBad/font_sizes/font_size = 16
 CaptionBad/colors/font_color = Color(0.886, 0.353, 0.306, 1)
 
 CaptionDim/base_type = &"Label"
 CaptionDim/fonts/font = ExtResource("FontFile_condMedium")
-CaptionDim/font_sizes/font_size = 14
+CaptionDim/font_sizes/font_size = 16
 CaptionDim/colors/font_color = Color(0.420, 0.459, 0.502, 1)
 
 SlotBadge/base_type = &"Panel"
@@ -820,31 +820,31 @@ StatusDot/styles/panel = SubResource("StyleBoxFlat_statusDot")
 
 Pill/base_type = &"Label"
 Pill/fonts/font = ExtResource("FontFile_condMedium")
-Pill/font_sizes/font_size = 14
+Pill/font_sizes/font_size = 16
 Pill/colors/font_color = Color(0.290, 0.565, 0.886, 1)
 Pill/styles/normal = SubResource("StyleBoxFlat_pill")
 
 PillGood/base_type = &"Label"
 PillGood/fonts/font = ExtResource("FontFile_condMedium")
-PillGood/font_sizes/font_size = 14
+PillGood/font_sizes/font_size = 16
 PillGood/colors/font_color = Color(0.388, 0.741, 0.447, 1)
 PillGood/styles/normal = SubResource("StyleBoxFlat_pillGood")
 
 PillWarn/base_type = &"Label"
 PillWarn/fonts/font = ExtResource("FontFile_condMedium")
-PillWarn/font_sizes/font_size = 14
+PillWarn/font_sizes/font_size = 16
 PillWarn/colors/font_color = Color(0.886, 0.663, 0.227, 1)
 PillWarn/styles/normal = SubResource("StyleBoxFlat_pillWarn")
 
 PillBad/base_type = &"Label"
 PillBad/fonts/font = ExtResource("FontFile_condMedium")
-PillBad/font_sizes/font_size = 14
+PillBad/font_sizes/font_size = 16
 PillBad/colors/font_color = Color(0.886, 0.353, 0.306, 1)
 PillBad/styles/normal = SubResource("StyleBoxFlat_pillBad")
 
 PillDim/base_type = &"Label"
 PillDim/fonts/font = ExtResource("FontFile_condMedium")
-PillDim/font_sizes/font_size = 14
+PillDim/font_sizes/font_size = 16
 PillDim/colors/font_color = Color(0.420, 0.459, 0.502, 1)
 PillDim/styles/normal = SubResource("StyleBoxFlat_pillDim")
 

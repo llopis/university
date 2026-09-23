@@ -96,7 +96,7 @@ theme_override_constants/separation = 10
 [node name="Key" type="Label" parent="Body/Dining/LoadLine"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"Caption"
+theme_type_variation = &"Body"
 text = "Load"
 
 [node name="DiningLoadLine" parent="Body/Dining/LoadLine" instance=ExtResource("4_dining")]

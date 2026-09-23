@@ -104,8 +104,8 @@ func _rebuildDorms() -> void:
 		_addCell(nameText, &"Body")
 		var bedsText: String = (BedsCellUnderConstruction % NumberFormat.count(building.info.beds)) if (building.underConstruction) \
 			else (BedsCellFormat % [NumberFormat.count(university.residentsOf(building)), NumberFormat.count(building.info.beds)])
-		_addCell(bedsText, &"Caption")
-		_addCell(UpkeepUnderConstruction if (building.underConstruction) else MoneyFormat.short(building.info.upkeep), &"Caption")
+		_addCell(bedsText, &"Body")
+		_addCell(UpkeepUnderConstruction if (building.underConstruction) else MoneyFormat.short(building.info.upkeep), &"Body")
 
 
 func _addCell(text: String, variation: StringName) -> void:
