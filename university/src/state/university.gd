@@ -79,7 +79,7 @@ func setReputation(value: float) -> void:
 ## Where the next fall start will step reputation toward: the latest intake's
 ## grade and this year's mean satisfaction (today's, before any sample).
 func reputationTarget() -> float:
-	return UniversityRules.reputationTarget(lastIntakeGrade, _yearSatisfaction())
+	return UniversityRules.reputationTarget(lastIntakeGrade, yearSatisfaction())
 
 
 ## What is wrong on campus right now. The one list alerts and markers draw
@@ -94,14 +94,14 @@ func problems() -> Array[Problem]:
 	var unfedCount: int = unfed()
 	if (unfedCount > 0):
 		found.append(Problem.new(Problem.Kind.DiningUnfed, unfedCount, dining))
-	elif (dining > 1.0):
+	elif (dining > UniversityRules.RecommendedLoad):
 		found.append(Problem.new(Problem.Kind.DiningCrowded, 0, dining))
 	if (finances.availableCredit() == 0):
 		found.append(Problem.new(Problem.Kind.CreditMaxed, finances.debt, 0.0))
 	return found
 
 
-func _yearSatisfaction() -> float:
+func yearSatisfaction() -> float:
 	if (satisfactionSamples.is_empty()):
 		return satisfactionNow().total()
 	var sum: float = 0.0
@@ -182,7 +182,7 @@ func toDict() -> Dictionary:
 	return {
 		"name": name, "finances": finances.toDict(), "campus": campus.toDict(),
 		"students": students.toDict(), "policy": policy.toDict(),
-		"reputation": reputation, "satisfactionSamples": satisfactionSamples,
+		"reputation": reputation, "satisfactionSamples": satisfactionSamples.duplicate(),
 		"lastIntakeGrade": lastIntakeGrade, "reports": savedReports,
 	}
 

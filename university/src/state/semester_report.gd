@@ -56,7 +56,7 @@ func toDict() -> Dictionary:
 		"diningLoad": diningLoad, "tuitionFees": tuitionFees, "roomFees": roomFees,
 		"mealFees": mealFees, "reputation": reputation, "reputationChange": reputationChange,
 		"satisfaction": satisfaction, "satisfactionChange": satisfactionChange,
-		"cash": cash, "debt": debt, "opened": opened,
+		"cash": cash, "debt": debt, "opened": opened.duplicate(),
 	}
 
 

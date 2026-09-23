@@ -27,6 +27,8 @@ const OverflowThreshold: float = 0.25
 const OverflowWeight: float = 100.0
 const CrowdingWeight: float = 50.0
 const DiningHardLimit: float = 1.3
+# A dining load of 1 is every diner seat full; crowding begins past it.
+const RecommendedLoad: float = 1.0
 const UnfedWeight: float = 150.0
 const ReputationRate: float = 0.3
 const ReputationGradeWeight: float = 0.5
@@ -87,7 +89,7 @@ static func satisfaction(enrolled: int, housedCount: int, meals: int) -> Satisfa
 	var plans: int = mealPlans(housedCount, meals)
 	var perStudent: float = 1.0 / float(enrolled)
 	result.housing = OverflowWeight * maxf(0.0, float(enrolled - housedCount) * perStudent - OverflowThreshold)
-	result.crowding = CrowdingWeight * clampf(diningLoad(housedCount, meals) - 1.0, 0.0, DiningHardLimit - 1.0) * float(plans) * perStudent
+	result.crowding = CrowdingWeight * clampf(diningLoad(housedCount, meals) - RecommendedLoad, 0.0, DiningHardLimit - RecommendedLoad) * float(plans) * perStudent
 	result.unfed = UnfedWeight * float(housedCount - plans) * perStudent
 	return result
 
