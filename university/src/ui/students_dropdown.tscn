@@ -16,27 +16,36 @@ offset_top = 72.0
 theme_type_variation = &"Overlay"
 script = ExtResource("1_students")
 
-[node name="Body" type="VBoxContainer" parent="."]
+[node name="Scroll" type="ScrollContainer" parent="."]
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="Center" type="CenterContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Scroll/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(1440, 0)
 theme_override_constants/separation = 14
 
-[node name="Header" type="HBoxContainer" parent="Body"]
+[node name="Header" type="HBoxContainer" parent="Scroll/Center/Content"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Body/Header"]
+[node name="Title" type="Label" parent="Scroll/Center/Content/Header"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Title"
 
-[node name="TitleHelp" parent="Body/Header" instance=ExtResource("4_help")]
+[node name="TitleHelp" parent="Scroll/Center/Content/Header" instance=ExtResource("4_help")]
 layout_mode = 2
 tooltip_text = "Admissions each fall · graduation before the next fall"
 
-[node name="Spacer" type="Control" parent="Body/Header"]
+[node name="Spacer" type="Control" parent="Scroll/Center/Content/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CloseButton" type="Button" parent="Body/Header"]
+[node name="CloseButton" type="Button" parent="Scroll/Center/Content/Header"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
@@ -44,147 +53,138 @@ focus_mode = 0
 theme_type_variation = &"CloseButton"
 text = "×"
 
-[node name="Center" type="CenterContainer" parent="Body"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Content" type="VBoxContainer" parent="Body/Center"]
-layout_mode = 2
-custom_minimum_size = Vector2(1440, 0)
-theme_override_constants/separation = 14
-
-[node name="Kpis" type="HBoxContainer" parent="Body/Center/Content"]
+[node name="Kpis" type="HBoxContainer" parent="Scroll/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 26
 
-[node name="EnrolledKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="EnrolledKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OpenSeatsKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="OpenSeatsKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AdmittedKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="AdmittedKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GraduatingKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="GraduatingKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GradeKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="GradeKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Columns" type="HBoxContainer" parent="Body/Center/Content"]
+[node name="Columns" type="HBoxContainer" parent="Scroll/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 48
 
-[node name="Left" type="VBoxContainer" parent="Body/Center/Content/Columns"]
+[node name="Left" type="VBoxContainer" parent="Scroll/Center/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Cohorts" type="GridContainer" parent="Body/Center/Content/Columns/Left"]
+[node name="Cohorts" type="GridContainer" parent="Scroll/Center/Content/Columns/Left"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 6
 columns = 4
 
-[node name="Class" type="Label" parent="Body/Center/Content/Columns/Left/Cohorts"]
+[node name="Class" type="Label" parent="Scroll/Center/Content/Columns/Left/Cohorts"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Class"
 
-[node name="Students" type="Label" parent="Body/Center/Content/Columns/Left/Cohorts"]
+[node name="Students" type="Label" parent="Scroll/Center/Content/Columns/Left/Cohorts"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Students"
 
-[node name="EntryGrade" type="Label" parent="Body/Center/Content/Columns/Left/Cohorts"]
+[node name="EntryGrade" type="Label" parent="Scroll/Center/Content/Columns/Left/Cohorts"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Entry grade"
 
-[node name="SemestersLeft" type="Label" parent="Body/Center/Content/Columns/Left/Cohorts"]
+[node name="SemestersLeft" type="Label" parent="Scroll/Center/Content/Columns/Left/Cohorts"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Semesters left"
 
-[node name="Right" type="VBoxContainer" parent="Body/Center/Content/Columns"]
+[node name="Right" type="VBoxContainer" parent="Scroll/Center/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="Housing" type="VBoxContainer" parent="Body/Center/Content/Columns/Right"]
+[node name="Housing" type="VBoxContainer" parent="Scroll/Center/Content/Columns/Right"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Title" type="Label" parent="Body/Center/Content/Columns/Right/Housing"]
+[node name="Title" type="Label" parent="Scroll/Center/Content/Columns/Right/Housing"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Housing"
 
-[node name="OnCampusRow" parent="Body/Center/Content/Columns/Right/Housing" instance=ExtResource("3_row")]
+[node name="OnCampusRow" parent="Scroll/Center/Content/Columns/Right/Housing" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OffCampusRow" parent="Body/Center/Content/Columns/Right/Housing" instance=ExtResource("3_row")]
+[node name="OffCampusRow" parent="Scroll/Center/Content/Columns/Right/Housing" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OpeningRow" parent="Body/Center/Content/Columns/Right/Housing" instance=ExtResource("3_row")]
+[node name="OpeningRow" parent="Scroll/Center/Content/Columns/Right/Housing" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="NextFall" type="VBoxContainer" parent="Body/Center/Content/Columns/Right"]
+[node name="NextFall" type="VBoxContainer" parent="Scroll/Center/Content/Columns/Right"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NextFallHeader" type="HBoxContainer" parent="Body/Center/Content/Columns/Right/NextFall"]
+[node name="NextFallHeader" type="HBoxContainer" parent="Scroll/Center/Content/Columns/Right/NextFall"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="NextFallTitle" type="Label" parent="Body/Center/Content/Columns/Right/NextFall/NextFallHeader"]
+[node name="NextFallTitle" type="Label" parent="Scroll/Center/Content/Columns/Right/NextFall/NextFallHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="NextFallHelp" parent="Body/Center/Content/Columns/Right/NextFall/NextFallHeader" instance=ExtResource("4_help")]
+[node name="NextFallHelp" parent="Scroll/Center/Content/Columns/Right/NextFall/NextFallHeader" instance=ExtResource("4_help")]
 layout_mode = 2
 tooltip_text = "At today's reputation and next year's prices."
 
-[node name="SeatsToFillRow" parent="Body/Center/Content/Columns/Right/NextFall" instance=ExtResource("3_row")]
+[node name="SeatsToFillRow" parent="Scroll/Center/Content/Columns/Right/NextFall" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ApplicantsRow" parent="Body/Center/Content/Columns/Right/NextFall" instance=ExtResource("3_row")]
+[node name="ApplicantsRow" parent="Scroll/Center/Content/Columns/Right/NextFall" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="IntakeRow" parent="Body/Center/Content/Columns/Right/NextFall" instance=ExtResource("3_row")]
+[node name="IntakeRow" parent="Scroll/Center/Content/Columns/Right/NextFall" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Foot" type="HBoxContainer" parent="Body/Center/Content"]
+[node name="Foot" type="HBoxContainer" parent="Scroll/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="HousingJump" type="Button" parent="Body/Center/Content/Foot"]
+[node name="HousingJump" type="Button" parent="Scroll/Center/Content/Foot"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"JumpButton"
 text = "Housing →"
 
-[node name="ReputationJump" type="Button" parent="Body/Center/Content/Foot"]
+[node name="ReputationJump" type="Button" parent="Scroll/Center/Content/Foot"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0

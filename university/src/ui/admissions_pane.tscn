@@ -127,7 +127,7 @@ custom_minimum_size = Vector2(0, 80)
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &"BodyWarn"
+theme_type_variation = &"Body"
 text = "No fall admission yet."
 
 [node name="Levers" type="VBoxContainer" parent="."]

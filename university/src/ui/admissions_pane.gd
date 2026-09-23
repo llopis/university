@@ -121,7 +121,7 @@ func _rebuildChart() -> void:
 	for i: int in range(start, falls.size()):
 		most = maxi(most, falls[i].applicants)
 	# Fixed slots: empty columns lead so the shown reports sit in the rightmost
-	# columns, oldest to latest, and the latest (gold) bar is always on the right.
+	# columns, oldest to latest, and the latest (accent) bar is always on the right.
 	for i: int in range(ChartFalls - (falls.size() - start)):
 		chart.add_child(_makeEmptySlot())
 	for i: int in range(start, falls.size()):

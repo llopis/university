@@ -1,7 +1,7 @@
 class_name BuildingText
 ## How a building type reads: what it holds ("400 seats"), what building one
 ## adds ("+400 seats") and its footprint ("40 × 24 m"). The one place these are
-## worded, for the side panel, the build cards and the campus markers.
+## worded, for the side panel and the build cards.
 
 const HoldsSeats: String = "%s seats"
 const HoldsBeds: String = "%s beds"

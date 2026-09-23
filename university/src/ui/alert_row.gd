@@ -39,7 +39,7 @@ func _onGuiInput(event: InputEvent) -> void:
 		accept_event()
 
 
-## The accent a problem reads in, wherever one is shown: an alert, a marker.
+## The accent a problem reads in, wherever one is shown: an alert.
 static func accentFor(kind: Problem.Kind) -> String:
 	match kind:
 		Problem.Kind.HousingOverflow:

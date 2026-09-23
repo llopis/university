@@ -1,8 +1,8 @@
 class_name Hud
 extends Control
-## The HUD's root: the campus markers, the top bar, the side panel, the
-## alerts, the action bar, its popovers (including the build panel; one open
-## at a time) and the semester popup. It carries the shared theme, routes
+## The HUD's root: the top bar, the side panel, the alerts, the action bar,
+## its popovers (including the build panel; one open at a time) and the
+## semester popup. It carries the shared theme, routes
 ## keys, panes and places, and everything it shows is read from the game
 ## state it is set up with. A click on the world closes the open popover and
 ## still reaches the world; Esc closes it first of all.
@@ -13,6 +13,7 @@ const PaneAdmissions: StringName = &"admissions"
 const PaneAcademic: StringName = &"academic"
 const PaneDorm: StringName = &"dorm"
 const PaneDining: StringName = &"dining"
+const PopoverGame: StringName = &"gamemenu"
 const PopoverBuild: StringName = &"build"
 const PopoverHousing: StringName = &"housing"
 const PopoverMoney: StringName = &"money"
@@ -48,11 +49,11 @@ var _pausedBefore: bool = false
 
 func _ready() -> void:
 	_popovers = {
-		&"gamemenu": gameMenu, PopoverUniversity: universityMenu, PopoverStudents: studentsDropdown,
+		PopoverGame: gameMenu, PopoverUniversity: universityMenu, PopoverStudents: studentsDropdown,
 		PopoverReputation: reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
 		PopoverBuild: buildPanel,
 	}
-	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
+	topBar.GameMenuPressed.connect(toggle.bind(PopoverGame))
 	topBar.UniversityMenuPressed.connect(toggle.bind(PopoverUniversity))
 	topBar.StudentsPressed.connect(toggle.bind(PopoverStudents))
 	topBar.HousingPressed.connect(toggle.bind(PopoverHousing))
@@ -91,7 +92,7 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	sidePanel.PopoverWanted.connect(openPopover)
 	sidePanel.BuildingWanted.connect(showBuilding)
 	sidePanel.BuildWanted.connect(openBuildPanel)
-	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
+	controller.NothingToCancel.connect(openPopover.bind(PopoverGame))
 	state.university.SemesterStarted.connect(showReport)
 	semesterPopup.Continued.connect(_onContinued)
 	buildPanel.university = state.university

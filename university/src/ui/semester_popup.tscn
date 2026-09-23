@@ -108,7 +108,7 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &"BodyWarn"
+theme_type_variation = &"Body"
 text = "No admission or graduation in spring."
 
 [node name="Campus" type="VBoxContainer" parent="Center/Box/Body/ContentMargin/Content/GridMargin/Grid"]

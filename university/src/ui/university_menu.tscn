@@ -6,7 +6,7 @@
 visible = false
 custom_minimum_size = Vector2(460, 0)
 anchors_preset = 0
-offset_left = 58.0
+offset_left = 72.0
 offset_top = 72.0
 theme_type_variation = &"MenuPanel"
 script = ExtResource("1_menu")

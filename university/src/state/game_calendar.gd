@@ -120,11 +120,6 @@ static func weekInPeriod(weekIndex: int) -> int:
 	return _monthsIntoPeriod(monthIndex) * WeeksPerMonth + (weekIndex - monthIndex * WeeksPerMonth) + 1
 
 
-## Weeks until the next period's first week: 1 in a period's last week.
-static func weeksToNextPeriod(weekIndex: int) -> int:
-	return weeksInPeriod(_monthOfWeek(weekIndex)) - weekInPeriod(weekIndex) + 1
-
-
 ## Weeks from this week until a month's first week.
 static func weeksUntil(weekIndex: int, monthIndex: int) -> int:
 	return monthIndex * WeeksPerMonth - weekIndex

@@ -85,11 +85,7 @@ func test_weeks_count_up_through_a_period_and_down_to_the_next() -> void:
 	var weeks: int = GameCalendar.weeksInPeriod(0)
 	assert_int(GameCalendar.weekInPeriod(0)).is_equal(1)
 	assert_int(GameCalendar.weekInPeriod(weeks - 1)).is_equal(weeks)
-	# The last week of a period has the next one a week away.
-	assert_int(GameCalendar.weeksToNextPeriod(weeks - 1)).is_equal(1)
 	assert_int(GameCalendar.weekInPeriod(weeks)).is_equal(1)
-	# Fall ends at a semester start, so the clock and the fees count the same weeks.
-	assert_int(GameCalendar.weeksToNextPeriod(0)).is_equal(GameCalendar.weeksUntil(0, GameCalendar.nextSemesterStart(0)))
 
 
 func test_the_clock_line_names_the_week_and_the_periods_length() -> void:

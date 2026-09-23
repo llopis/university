@@ -93,7 +93,7 @@ func reputationTarget() -> float:
 	return UniversityRules.reputationTarget(lastIntakeGrade, yearSatisfaction())
 
 
-## What is wrong on campus right now. The one list alerts and markers draw
+## What is wrong on campus right now. The one list alerts draw
 ## from, so each threshold is checked in one place.
 func problems() -> Array[Problem]:
 	var found: Array[Problem] = []

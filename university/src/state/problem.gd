@@ -1,5 +1,5 @@
 class_name Problem
-## Something wrong on campus right now, for alerts and campus markers. Every
+## Something wrong on campus right now, for alerts. Every
 ## threshold lives in UniversityRules or Finances; this only carries what was
 ## found. count and fraction mean what the kind says.
 
