@@ -49,7 +49,10 @@ static func admission(applicantCount: int, openSeats: int, minimum: float) -> In
 		return Intake.new(0, 0.0)
 	var cutoff: float = clampf(GradeBase + GradeSpread * log(float(applicantCount) / float(openSeats)), 0.0, MaxGrade)
 	var kept: float = exp(-maxf(0.0, minimum - cutoff) / GradeSpread)
-	return Intake.new(floori(float(mini(applicantCount, openSeats)) * kept), maxf(cutoff, minimum))
+	var admitted: int = floori(float(mini(applicantCount, openSeats)) * kept)
+	if (admitted <= 0):
+		return Intake.new(0, 0.0)
+	return Intake.new(admitted, maxf(cutoff, minimum))
 
 
 ## Students in a bed on campus; the rest live off campus.

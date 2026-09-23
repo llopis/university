@@ -14,6 +14,8 @@ const QuarterEnrolled: int = 250
 # A dining load between recommended and the hard limit.
 const Crowded: float = 1.2
 const Epsilon: float = 0.0001
+# Far above any plausible cutoff, so the trimmed class floors to nobody.
+const NoOneQualifies: float = 100.0
 
 
 func test_applicants_rise_with_reputation() -> void:
@@ -60,6 +62,12 @@ func test_a_minimum_above_the_cutoff_trades_students_for_grade() -> void:
 func test_no_open_seats_admits_no_one() -> void:
 	assert_int(UniversityRules.admission(Seats, 0, 0.0).admitted).is_equal(0)
 	assert_int(UniversityRules.admission(0, Seats, 0.0).admitted).is_equal(0)
+
+
+func test_a_minimum_too_high_for_anyone_admits_no_one_at_grade_zero() -> void:
+	var shutOut: Intake = UniversityRules.admission(Seats * 3, Seats, NoOneQualifies)
+	assert_int(shutOut.admitted).is_equal(0)
+	assert_float(shutOut.entryGrade).is_equal_approx(0.0, Epsilon)
 
 
 func test_housing_costs_satisfaction_only_past_the_threshold() -> void:
