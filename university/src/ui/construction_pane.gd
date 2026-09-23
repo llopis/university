@@ -2,10 +2,7 @@ class_name ConstructionPane
 extends VBoxContainer
 ## What opening changes for a building still under construction: the capacity
 ## it adds, the effect on who lives off campus (housing only) and its upkeep
-## from then on. Demolish and its refund rule live in SidePanel's footer; this
-## only jumps to the housing or students pane.
-
-signal PopoverWanted(which: StringName)
+## from then on. Demolish and its refund rule live in SidePanel's footer.
 
 const CapacityKeyBeds: String = "Beds"
 const CapacityKeySeats: String = "Seats"
@@ -17,20 +14,13 @@ const UnderThresholdFormat: String = "%s → %s, under the threshold"
 const OverThresholdFormat: String = "%s → %s, still above the threshold"
 const UpkeepKey: String = "Upkeep"
 const UpkeepNote: String = "from then on"
-const HousingJumpText: String = "All housing →"
-const StudentsJumpText: String = "All students →"
 
 @onready var capacityRow: InfoRow = %CapacityRow
 @onready var offCampusRow: InfoRow = %OffCampusRow
 @onready var upkeepRow: InfoRow = %UpkeepRow
-@onready var jump: Button = %Jump
 
 var university: University
 var building: Building
-
-
-func _ready() -> void:
-	jump.pressed.connect(_onJumpPressed)
 
 
 func _process(_dt: float) -> void:
@@ -40,7 +30,6 @@ func _process(_dt: float) -> void:
 	_showCapacity(info)
 	_showOffCampus(info)
 	_showUpkeep(info)
-	_showJump(info.role())
 
 
 func _showCapacity(info: BuildingInfo) -> void:
@@ -80,23 +69,3 @@ func _showOffCampus(info: BuildingInfo) -> void:
 
 func _showUpkeep(info: BuildingInfo) -> void:
 	upkeepRow.display(UpkeepKey, BuildingText.upkeep(info), UpkeepNote, UiTone.Tone.Bad)
-
-
-func _showJump(role: BuildingInfo.Role) -> void:
-	match role:
-		BuildingInfo.Role.Housing, BuildingInfo.Role.Dining:
-			jump.visible = true
-			jump.text = HousingJumpText
-		BuildingInfo.Role.Academic:
-			jump.visible = true
-			jump.text = StudentsJumpText
-		_:
-			jump.visible = false
-
-
-func _onJumpPressed() -> void:
-	match building.info.role():
-		BuildingInfo.Role.Housing, BuildingInfo.Role.Dining:
-			PopoverWanted.emit(Hud.PopoverHousing)
-		BuildingInfo.Role.Academic:
-			PopoverWanted.emit(Hud.PopoverStudents)

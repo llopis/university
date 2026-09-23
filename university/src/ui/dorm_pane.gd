@@ -5,8 +5,6 @@ extends VBoxContainer
 ## pattern: filled every `_process` while visible; no list of its own to
 ## rebuild.
 
-signal PopoverWanted(which: StringName)
-
 const FilledFormat: String = "%s / %s"
 const FilledCaption: String = "Beds filled"
 const OffCampusCaptionFormat: String = "Off campus · %s"
@@ -26,14 +24,9 @@ const UpkeepKey: String = "Upkeep and staff"
 @onready var housingHelp: HelpIcon = %HousingHelp
 @onready var roomFeesRow: InfoRow = %RoomFeesRow
 @onready var upkeepRow: InfoRow = %UpkeepRow
-@onready var housingJump: Button = %HousingJump
 
 var university: University
 var building: Building
-
-
-func _ready() -> void:
-	housingJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverHousing))
 
 
 func setUniversity(shown: University) -> void:

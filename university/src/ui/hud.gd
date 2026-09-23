@@ -46,7 +46,7 @@ var controller: BuildController
 var _popovers: Dictionary[StringName, Control]
 var _open: StringName = None
 # The pause state from before the first of a run of semester reports, so
-# Continue hands it back rather than whatever showReport itself set.
+# dismissing hands it back rather than whatever showReport itself set.
 var _pausedBefore: bool = false
 
 
@@ -73,7 +73,6 @@ func _ready() -> void:
 	studentsDropdown.ReputationJumped.connect(openPopover.bind(PopoverReputation))
 	studentsDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
 	reputationDropdown.CloseRequested.connect(closePopover)
-	reputationDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
 	housingDropdown.CloseRequested.connect(closePopover)
 	housingDropdown.AdmissionsJumped.connect(func() -> void: showPane(PaneAdmissions))
 	moneyDropdown.CloseRequested.connect(closePopover)
@@ -93,9 +92,7 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	notificationsPanel.university = state.university
 	controller.SelectionChanged.connect(sidePanel.showBuilding)
 	sidePanel.CloseRequested.connect(func() -> void: controller.select(null))
-	sidePanel.PopoverWanted.connect(openPopover)
 	sidePanel.BuildingWanted.connect(showBuilding)
-	sidePanel.BuildWanted.connect(openBuildPanel)
 	controller.NothingToCancel.connect(openPopover.bind(PopoverGame))
 	state.university.SemesterStarted.connect(showReport)
 	semesterPopup.Continued.connect(_onContinued)
@@ -245,12 +242,6 @@ func _onContinued() -> void:
 	state.setPaused(_pausedBefore)
 
 
-## Opens the build panel on one category, as the panes' "add a building" jumps do.
-func openBuildPanel(category: String) -> void:
-	openPopover(PopoverBuild)
-	buildPanel.showCategory(category)
-
-
 # Choosing a card arms it and puts the panel away, so the ground is clear to place on.
 func _armPlace(info: BuildingInfo) -> void:
 	controller.armPlace(info)
@@ -275,7 +266,7 @@ func _onToolChanged() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if (semesterPopup.visible):
-		# The popup is modal: Continue and Esc are the ways out, and Space, B
+		# The popup is modal: a click and Esc are the ways out, and Space, B
 		# and X do nothing while it is up.
 		if (event.is_action_pressed(&"ExitGame")):
 			semesterPopup.dismiss()

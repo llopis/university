@@ -7,8 +7,6 @@ extends VBoxContainer
 ## and at each semester start, since buildings open only then — the list does
 ## not depend on which academic building is shown.
 
-signal PopoverWanted(which: StringName)
-signal BuildWanted(category: String)
 signal BuildingWanted(building: Building)
 
 const StudentsFormat: String = "%s / %s"
@@ -27,8 +25,6 @@ const RowFormat: String = "%s   %s · %s / mo"
 @onready var seatsHelp: HelpIcon = %SeatsHelp
 @onready var listTitle: Label = %ListTitle
 @onready var list: VBoxContainer = %List
-@onready var addButton: Button = %AddButton
-@onready var studentsJump: Button = %StudentsJump
 @onready var admissionsJump: Button = %AdmissionsJump
 
 var university: University
@@ -36,8 +32,6 @@ var building: Building
 
 
 func _ready() -> void:
-	addButton.pressed.connect(func() -> void: BuildWanted.emit(building.info.category))
-	studentsJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverStudents))
 	admissionsJump.pressed.connect(_onAdmissionsJumpPressed)
 	visibility_changed.connect(_rebuildList)
 

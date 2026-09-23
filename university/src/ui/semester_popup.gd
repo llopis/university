@@ -7,8 +7,6 @@ extends Control
 signal Continued
 
 const TitleFormat: String = "%s begins"
-const SubFall: String = "Admissions resolved · buildings opened · fees collected"
-const SubSpring: String = "Buildings opened · fees collected"
 const ApplicantsKey: String = "Applicants"
 const AdmittedKey: String = "Admitted"
 const OpenSeatsNoteFormat: String = "of %s open seats"
@@ -32,7 +30,6 @@ const OpenedKey: String = "Opened"
 const OpenedSeparator: String = ", "
 
 @onready var title: Label = %Title
-@onready var titleHelp: HelpIcon = %Help
 @onready var applicantsRow: InfoRow = %ApplicantsRow
 @onready var admittedRow: InfoRow = %AdmittedRow
 @onready var gradeRow: InfoRow = %GradeRow
@@ -45,16 +42,21 @@ const OpenedSeparator: String = ", "
 @onready var reputationRow: InfoRow = %ReputationRow
 @onready var satisfactionRow: InfoRow = %SatisfactionRow
 @onready var openedRow: InfoRow = %OpenedRow
-@onready var continueButton: Button = %ContinueButton
 
 
 func _ready() -> void:
-	continueButton.pressed.connect(dismiss)
+	gui_input.connect(_onInput)
+
+
+func _onInput(event: InputEvent) -> void:
+	var click: InputEventMouseButton = event as InputEventMouseButton
+	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
+		dismiss()
+		accept_event()
 
 
 func showReport(report: SemesterReport) -> void:
 	title.text = TitleFormat % GameCalendar.periodLabel(report.month)
-	titleHelp.tooltip_text = SubFall if (report.isFall) else SubSpring
 	_showAdmissions(report)
 	_showCampus(report)
 	visible = true
@@ -106,8 +108,8 @@ func _showChange(row: InfoRow, key: String, value: float, change: float) -> void
 	row.display(key, ChangeFormat % [value, change], "", tone)
 
 
-## The Continue path: hides the popup and hands the pause it interrupted back.
-## Public so Esc, in Hud._unhandled_input, can dismiss the popup the same way.
+## Hides the popup and hands the pause it interrupted back. Public so Esc, in
+## Hud._unhandled_input, can dismiss the popup the same way as a click does.
 func dismiss() -> void:
 	visible = false
 	Continued.emit()

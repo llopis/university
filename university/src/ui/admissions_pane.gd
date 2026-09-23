@@ -3,10 +3,7 @@ extends VBoxContainer
 ## What the Admissions Office lets the player see and set: next fall's live
 ## projection as three stages, applicants per fall as a bar chart, and the
 ## levers (minimum entry grade, tuition, room and meal plan) that apply from
-## next fall. Follows the pane pattern: filled every `_process` while visible,
-## its jumps only announce `PopoverWanted` for `SidePanel` to relay.
-
-signal PopoverWanted(which: StringName)
+## next fall. Follows the pane pattern: filled every `_process` while visible.
 
 const IntakeTitleFormat: String = "Next intake · %s"
 const ApplyNoteFormat: String = "apply from %s"
@@ -43,8 +40,6 @@ const ChartHeight: float = 56.0
 @onready var roomStepper: Stepper = %RoomStepper
 @onready var mealStepper: Stepper = %MealStepper
 @onready var housingHelp: HelpIcon = %HousingHelp
-@onready var studentsJump: Button = %StudentsJump
-@onready var financesJump: Button = %FinancesJump
 
 var university: University
 var building: Building
@@ -63,8 +58,6 @@ func _ready() -> void:
 	mealStepper.Stepped.connect(func(direction: int) -> void:
 		if (university != null):
 			university.policy.stepNextMealPlan(direction))
-	studentsJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverStudents))
-	financesJump.pressed.connect(func() -> void: PopoverWanted.emit(Hud.PopoverMoney))
 	visibility_changed.connect(_rebuildChart)
 
 

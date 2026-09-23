@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=63 format=3]
+[gd_resource type="Theme" load_steps=62 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/BarlowSemiCondensed-Medium.ttf" id="FontFile_condMedium"]
@@ -190,17 +190,6 @@ content_margin_left = 8
 content_margin_top = 4
 content_margin_right = 8
 content_margin_bottom = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primaryButton"]
-bg_color = Color(0.290, 0.565, 0.886, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 14
-content_margin_top = 8
-content_margin_right = 14
-content_margin_bottom = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ghostButtonNormal"]
 bg_color = Color(0, 0, 0, 0)
@@ -846,14 +835,6 @@ JumpButton/styles/normal = SubResource("StyleBoxEmpty_jumpButtonNormal")
 JumpButton/styles/hover = SubResource("StyleBoxFlat_jumpButtonHover")
 JumpButton/styles/focus = SubResource("StyleBoxEmpty_focus")
 
-PrimaryButton/base_type = &"Button"
-PrimaryButton/fonts/font = ExtResource("FontFile_barlowRegular")
-PrimaryButton/font_sizes/font_size = 18
-PrimaryButton/colors/font_color = Color(0.043, 0.078, 0.133, 1)
-PrimaryButton/styles/normal = SubResource("StyleBoxFlat_primaryButton")
-PrimaryButton/styles/hover = SubResource("StyleBoxFlat_primaryButton")
-PrimaryButton/styles/focus = SubResource("StyleBoxEmpty_focus")
-
 GhostButton/base_type = &"Button"
 GhostButton/fonts/font = ExtResource("FontFile_barlowRegular")
 GhostButton/font_sizes/font_size = 18
@@ -870,15 +851,6 @@ BuildingRow/styles/normal = SubResource("StyleBoxFlat_buildingRowNormal")
 BuildingRow/styles/hover = SubResource("StyleBoxFlat_buildingRowHover")
 BuildingRow/styles/pressed = SubResource("StyleBoxFlat_buildingRowHover")
 BuildingRow/styles/focus = SubResource("StyleBoxEmpty_focus")
-
-BuildingRowAdd/base_type = &"Button"
-BuildingRowAdd/fonts/font = ExtResource("FontFile_barlowRegular")
-BuildingRowAdd/font_sizes/font_size = 18
-BuildingRowAdd/colors/font_color = Color(0.290, 0.565, 0.886, 1)
-BuildingRowAdd/styles/normal = SubResource("StyleBoxFlat_buildingRowNormal")
-BuildingRowAdd/styles/hover = SubResource("StyleBoxFlat_buildingRowHover")
-BuildingRowAdd/styles/pressed = SubResource("StyleBoxFlat_buildingRowHover")
-BuildingRowAdd/styles/focus = SubResource("StyleBoxEmpty_focus")
 
 PopupDim/base_type = &"Panel"
 PopupDim/styles/panel = SubResource("StyleBoxFlat_popupDim")

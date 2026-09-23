@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://src/ui/semester_popup.gd" id="1_popup"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="2_row"]
-[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="3_help"]
 
 [node name="SemesterPopup" type="Control"]
 visible = false
@@ -21,6 +20,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 theme_type_variation = &"PopupDim"
 
 [node name="Center" type="CenterContainer" parent="."]
@@ -34,6 +34,7 @@ grow_vertical = 2
 [node name="Box" type="PanelContainer" parent="Center"]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
+mouse_filter = 1
 theme_type_variation = &"PopupBox"
 
 [node name="Body" type="VBoxContainer" parent="Center/Box"]
@@ -56,18 +57,10 @@ theme_override_constants/margin_bottom = 22
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TitleRow" type="HBoxContainer" parent="Center/Box/Body/ContentMargin/Content"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Title" type="Label" parent="Center/Box/Body/ContentMargin/Content/TitleRow"]
+[node name="Title" type="Label" parent="Center/Box/Body/ContentMargin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Title"
-
-[node name="Help" parent="Center/Box/Body/ContentMargin/Content/TitleRow" instance=ExtResource("3_help")]
-unique_name_in_owner = true
-layout_mode = 2
 
 [node name="GridMargin" type="MarginContainer" parent="Center/Box/Body/ContentMargin/Content"]
 layout_mode = 2
@@ -148,19 +141,3 @@ layout_mode = 2
 [node name="OpenedRow" parent="Center/Box/Body/ContentMargin/Content/GridMargin/Grid/Campus" instance=ExtResource("2_row")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ButtonsMargin" type="MarginContainer" parent="Center/Box/Body/ContentMargin/Content"]
-layout_mode = 2
-theme_override_constants/margin_top = 20
-
-[node name="Buttons" type="HBoxContainer" parent="Center/Box/Body/ContentMargin/Content/ButtonsMargin"]
-layout_mode = 2
-theme_override_constants/separation = 6
-alignment = 2
-
-[node name="ContinueButton" type="Button" parent="Center/Box/Body/ContentMargin/Content/ButtonsMargin/Buttons"]
-unique_name_in_owner = true
-layout_mode = 2
-focus_mode = 0
-theme_type_variation = &"PrimaryButton"
-text = "Continue"

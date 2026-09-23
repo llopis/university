@@ -91,7 +91,7 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
-text = "Target: half grades, half satisfaction"
+text = "Target"
 
 [node name="TargetHelp" parent="Frame/Scroll/Center/Content/Columns/Target/TitleRow" instance=ExtResource("4_help")]
 unique_name_in_owner = true
@@ -134,14 +134,3 @@ layout_mode = 2
 [node name="UnfedPenaltyRow" parent="Frame/Scroll/Center/Content/Columns/Satisfaction" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Foot" type="HBoxContainer" parent="Frame/Scroll/Center/Content"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="HousingJump" type="Button" parent="Frame/Scroll/Center/Content/Foot"]
-unique_name_in_owner = true
-layout_mode = 2
-focus_mode = 0
-theme_type_variation = &"JumpButton"
-text = "Housing →"

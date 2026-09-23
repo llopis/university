@@ -7,8 +7,6 @@ extends PanelContainer
 ## each frame, so a building opening mid-view swaps its pane by itself.
 
 signal CloseRequested
-signal PopoverWanted(which: StringName)
-signal BuildWanted(category: String)
 signal BuildingWanted(building: Building)
 
 const SubFormat: String = "%s · %s"
@@ -37,13 +35,7 @@ var building: Building
 func _ready() -> void:
 	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
 	demolishButton.pressed.connect(_demolish)
-	constructionPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
-	admissionsPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
-	academicPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
-	academicPane.BuildWanted.connect(func(category: String) -> void: BuildWanted.emit(category))
 	academicPane.BuildingWanted.connect(func(selected: Building) -> void: BuildingWanted.emit(selected))
-	dormPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
-	diningPane.BuildWanted.connect(func(category: String) -> void: BuildWanted.emit(category))
 
 
 func setUniversity(shown: University) -> void:

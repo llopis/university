@@ -5,7 +5,6 @@ extends Control
 ## penalties.
 
 signal CloseRequested
-signal HousingJumped
 
 const TitleFormat: String = "Reputation · %.0f"
 const ScoreFormat: String = "%.0f"
@@ -40,7 +39,6 @@ const UnfedKey: String = "Can't eat"
 @onready var housingPenaltyRow: InfoRow = %HousingPenaltyRow
 @onready var crowdingPenaltyRow: InfoRow = %CrowdingPenaltyRow
 @onready var unfedPenaltyRow: InfoRow = %UnfedPenaltyRow
-@onready var housingJump: Button = %HousingJump
 
 var university: University
 
@@ -48,7 +46,6 @@ var university: University
 func _ready() -> void:
 	dim.gui_input.connect(_onDimInput)
 	targetHelp.tooltip_text = RateNoteFormat % NumberFormat.percent(UniversityRules.ReputationRate)
-	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
 
 
 func _onDimInput(event: InputEvent) -> void:

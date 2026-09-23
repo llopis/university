@@ -5,8 +5,6 @@ extends VBoxContainer
 ## against this hall's upkeep. Follows the pane pattern: filled every
 ## `_process` while visible; no list of its own to rebuild.
 
-signal BuildWanted(category: String)
-
 const PlansCaption: String = "Meal plans"
 const LoadCaption: String = "Load"
 const UnfedCaption: String = "Can't eat"
@@ -21,14 +19,9 @@ const UpkeepKey: String = "Upkeep and staff"
 @onready var loadHelp: HelpIcon = %LoadHelp
 @onready var mealFeesRow: InfoRow = %MealFeesRow
 @onready var upkeepRow: InfoRow = %UpkeepRow
-@onready var buildJump: Button = %BuildJump
 
 var university: University
 var building: Building
-
-
-func _ready() -> void:
-	buildJump.pressed.connect(func() -> void: BuildWanted.emit(building.info.category))
 
 
 func setUniversity(shown: University) -> void:

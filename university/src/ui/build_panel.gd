@@ -13,7 +13,6 @@ const CountFormat: String = "%d"
 const FxFormat: String = "%s · upkeep %s / mo · %s"
 const FxNoCapacityFormat: String = "upkeep %s / mo · %s"
 const InfoFormat: String = "%s · %s · cash %s"
-const WarnFormat: String = "borrow first, or wait for the %s fees"
 const OpensFormat: String = "Placed now → under construction until %s starts"
 const ChooseText: String = "Choose a building to place it."
 const DisabledAlpha: float = 0.45
@@ -29,7 +28,6 @@ const CategoryCountMargin: float = 8.0
 @onready var categoryList: VBoxContainer = %CategoryList
 @onready var cards: GridContainer = %Cards
 @onready var footInfo: Label = %FootInfo
-@onready var footWarn: Label = %FootWarn
 @onready var footOpens: Label = %FootOpens
 
 var university: University
@@ -84,14 +82,10 @@ func _process(_dt: float) -> void:
 	var shown: BuildingInfo = _hovered if (_hovered != null) else _armed
 	if (shown == null):
 		footInfo.text = ChooseText
-		footWarn.visible = false
 		footOpens.visible = false
 		return
 	footInfo.text = InfoFormat % [shown.name, MoneyFormat.short(shown.cost), MoneyFormat.short(university.finances.cash)]
 	var nextStart: int = university.nextSemesterStart()
-	footWarn.visible = not university.campus.canAfford(shown)
-	if (footWarn.visible):
-		footWarn.text = WarnFormat % GameCalendar.PeriodNames[GameCalendar.period(nextStart)].to_lower()
 	footOpens.visible = true
 	footOpens.text = OpensFormat % GameCalendar.periodLabel(nextStart)
 
