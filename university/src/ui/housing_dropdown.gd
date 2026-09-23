@@ -89,19 +89,16 @@ func _showDining() -> void:
 	dinersRow.display(DinersKey, NumberFormat.count(university.mealPlans()),
 		DinersNoteFormat % [NumberFormat.count(meals), NumberFormat.count(UniversityRules.diningLimit(meals))])
 	var diningLoad: float = university.diningLoad()
-	var unfedCount: int = university.unfed()
 	var tone: UiTone.Tone = UiTone.Tone.Normal
+	var valueFormat: String = LoadNormal
 	if (university.hasProblem(Problem.Kind.DiningUnfed)):
 		tone = UiTone.Tone.Bad
+		valueFormat = LoadUnfed
 	elif (university.hasProblem(Problem.Kind.DiningCrowded)):
 		tone = UiTone.Tone.Warn
+		valueFormat = LoadCrowded
 	var marks: Array[float] = [UniversityRules.RecommendedLoad / UniversityRules.DiningHardLimit]
 	loadBar.setValue(diningLoad / UniversityRules.DiningHardLimit, tone, marks, 1.0)
-	var valueFormat: String = LoadNormal
-	if (unfedCount > 0):
-		valueFormat = LoadUnfed
-	elif (diningLoad > UniversityRules.RecommendedLoad):
-		valueFormat = LoadCrowded
 	loadValue.text = valueFormat % NumberFormat.percent(diningLoad)
 	loadValue.theme_type_variation = UiTone.variation(InfoRow.ValueBase, tone)
 
