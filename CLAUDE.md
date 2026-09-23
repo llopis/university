@@ -211,9 +211,11 @@ the order the sheet first uses them, the build panel's tabs, and
 
 ## UI colours
 
-**`university/src/ui/ui_palette.json` is the one place a UI colour is
-chosen**: named `#rrggbb` or `#rrggbbaa` entries (`chrome`, `accent`, `warn`,
-`shadow`, ...). Godot has no colour variables, so every StyleBox and theme
+**`university/src/ui/ui_palette.tres` is the one place a UI colour is
+chosen**: a `Theme` resource holding nothing but the `Palette` type's named
+colours (`chrome`, `accent`, `warn`, `shadow`, ...), so Godot's Inspector
+edits them with its colour picker. Godot saves them sorted by name, at full
+float precision. Godot has no colour variables, so every StyleBox and theme
 colour holds its own `Color(...)` literal, and `python3 bin/apply_palette.py`
 keeps those literals in step with the palette by value. It covers every
 `.tres` and `.tscn` under `university/src/ui/` (the script's `UiDirs`). A
@@ -221,14 +223,15 @@ changed entry is looked up under its recorded value, which lives in the
 theme's `Palette/colors/*` block, and every literal holding that value is
 rewritten. A tinted copy, the entry's RGB at an alpha of its own (the 18% pill
 backgrounds, the deeper shadows), takes the new RGB and keeps its alpha. The
-script writes the `Palette/colors/*` block itself: never edit it by hand, and
-never in Godot's theme editor. UI code reads a colour with
+script writes the `Palette/colors/*` block itself: never edit it by hand or in
+Godot. `ui_theme.tres`'s `Palette` type is the applied copy, and
+`ui_palette.tres`'s is the one to change. UI code reads a colour with
 `get_theme_color(name, &"Palette")`, never from a `Color(...)` literal.
 `--check` changes nothing and fails while the files are out of step.
 
 From now on:
-- **Every UI colour comes from the palette.** A new colour is a new entry in
-  `ui_palette.json`, followed by a run. Fully transparent and opaque white are
+- **Every UI colour comes from the palette.** A new colour is a new
+  `Palette` colour in `ui_palette.tres`, followed by a run. Fully transparent and opaque white are
   not colours: white is a `self_modulate` base.
 - **Run the script whenever the palette changes, and whenever a UI scene,
   style or theme colour is added or changed.** It lists every colour outside

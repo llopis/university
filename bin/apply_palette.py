@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 # Applies the UI palette to the UI's theme and scenes. The palette,
-# university/src/ui/ui_palette.json, is the ONE place a UI colour is chosen:
+# university/src/ui/ui_palette.tres, is the ONE place a UI colour is chosen:
 # every colour in the UI files is one of its entries or a tinted copy of one.
-# Change a colour there, or add one, and run:
+# It is a Theme resource holding nothing but the Palette type's colours, so
+# Godot's Inspector edits them with a colour picker. Change a colour there, or
+# add one, save it, and run:
 #     python3 bin/apply_palette.py            rewrite the UI files to match
 #     python3 bin/apply_palette.py --check    change nothing; exit 1 if anything is out of step
 #
@@ -13,7 +15,8 @@
 #   theme's Palette/colors block records the value each entry's literals hold
 #   now; a changed entry is found under its recorded value and rewritten to
 #   its new one, block included. The script writes that block: never edit it
-#   by hand, in a text editor or in Godot's theme editor.
+#   by hand, in a text editor or in Godot — ui_theme.tres's Palette type is
+#   the copy, ui_palette.tres's the one to change.
 # - A literal is an entry exactly (all four channels), or a tinted copy of one:
 #   the entry's RGB at an alpha of its own (the 18% pill backgrounds, the
 #   deeper shadows and the dim). A tinted copy takes the new RGB and keeps its
@@ -28,19 +31,18 @@
 #   get_theme_color(name, &"Palette").
 
 import argparse
-import json
 import os
 import re
 
 Root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-PalettePath = 'university/src/ui/ui_palette.json'
+PalettePath = 'university/src/ui/ui_palette.tres'
 ThemePath = 'university/src/ui/ui_theme.tres'
 UiDirs = ['university/src/ui']
 RewrittenExtensions = ('.tres', '.tscn')
 CheckedExtensions = ('.gd',)
 
-# Past half an 8-bit step: the palette holds 8 bits a channel, the theme 3
-# decimals, and a theme saved from Godot's editor full float precision.
+# Past half an 8-bit step: this script writes 3 decimals, Godot full float
+# precision, and the two must still read as the same colour.
 Tolerance = 0.003
 Rgb = range(3)
 Rgba = range(4)
@@ -50,15 +52,6 @@ White = (1.0, 1.0, 1.0, 1.0)
 PaletteLine = re.compile(r'^Palette/colors/(\w+) = (Color\([^)]*\))$')
 ColorLiteral = re.compile(
 	r'Color\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*([\d.]+)\s*)?\)')
-
-
-def parseHex(name, text):
-	digits = text[1:] if text.startswith('#') else ''
-	if not re.fullmatch(r'[0-9a-fA-F]{6}([0-9a-fA-F]{2})?', digits):
-		raise SystemExit('ERROR: palette entry %s is %r, not #rrggbb or #rrggbbaa.' % (name, text))
-	if len(digits) == 6:
-		digits += 'ff'
-	return tuple(int(digits[i:i + 2], 16) / 255 for i in range(0, 8, 2))
 
 
 def toHex(color):
@@ -104,8 +97,7 @@ def classify(color, palette):
 
 def readPalette():
 	with open(os.path.join(Root, PalettePath)) as f:
-		entries = json.load(f)
-	palette = {name: parseHex(name, text) for name, text in entries.items()}
+		palette = readColors(f.read())
 	names = list(palette)
 	for i, first in enumerate(names):
 		for second in names[i + 1:]:
@@ -115,14 +107,15 @@ def readPalette():
 	return palette
 
 
-def readRecorded(themeText):
-	# The theme's Palette block: each entry's value as its literals hold it now.
-	recorded = {}
-	for line in themeText.split('\n'):
+def readColors(text):
+	# A Palette block, from the palette or from the theme, where it records the
+	# value each entry's literals hold now.
+	colors = {}
+	for line in text.split('\n'):
 		match = PaletteLine.match(line)
 		if match:
-			recorded[match.group(1)] = parseLiteral(ColorLiteral.match(match.group(2)))
-	return recorded
+			colors[match.group(1)] = parseLiteral(ColorLiteral.match(match.group(2)))
+	return colors
 
 
 def rewriteLiteral(match, recorded, palette, counts):
@@ -161,11 +154,11 @@ def uiFiles():
 		for folder, _, names in os.walk(os.path.join(Root, uiDir)):
 			paths += [os.path.relpath(os.path.join(folder, name), Root) for name in names
 				if name.endswith(RewrittenExtensions + CheckedExtensions)]
-	return sorted(paths)
+	return sorted(path for path in paths if path != PalettePath)
 
 
 def main():
-	parser = argparse.ArgumentParser(description='Apply ui_palette.json to the UI files.')
+	parser = argparse.ArgumentParser(description='Apply ui_palette.tres to the UI files.')
 	parser.add_argument('--check', action='store_true', help='change nothing; exit 1 if anything is out of step')
 	check = parser.parse_args().check
 
@@ -174,7 +167,7 @@ def main():
 	for path in uiFiles():
 		with open(os.path.join(Root, path)) as f:
 			originals[path] = f.read()
-	recorded = readRecorded(originals[ThemePath])
+	recorded = readColors(originals[ThemePath])
 	for name in recorded:
 		if name not in palette:
 			raise SystemExit('ERROR: %s is in the theme\'s Palette block but not in %s. Put it back, '
