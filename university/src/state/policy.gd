@@ -45,7 +45,13 @@ func setMinimumGrade(grade: float) -> void:
 ## The fall start: next year's prices become this year's, or the defaults when
 ## no Admissions Office is open.
 func lockYear(hasOffice: bool) -> void:
-	current = next.copy() if (hasOffice) else Policy.defaultPrices()
+	current = pricesFor(hasOffice)
+
+
+## The prices a fall start locks in: next year's, or the defaults with no
+## Admissions Office. The one rule for "what next fall will charge".
+func pricesFor(hasOffice: bool) -> Prices:
+	return next.copy() if (hasOffice) else Policy.defaultPrices()
 
 
 ## The minimum the fall admission applies: none without an Admissions Office.

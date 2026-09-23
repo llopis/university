@@ -56,3 +56,10 @@ func test_next_fall_is_strictly_after_the_given_month() -> void:
 	assert_int(GameCalendar.nextFallStart(0)).is_equal(GameCalendar.MonthsPerYear)
 	var february: int = GameCalendar.nextSemesterStart(0)
 	assert_int(GameCalendar.nextFallStart(february)).is_equal(GameCalendar.MonthsPerYear)
+
+
+func test_semester_starts_between_count_only_those_after_the_first_month() -> void:
+	var fall: int = GameCalendar.MonthsPerYear
+	assert_int(GameCalendar.semesterStartsBetween(0, fall)).is_equal(2)
+	assert_int(GameCalendar.semesterStartsBetween(GameCalendar.nextSemesterStart(0), fall)).is_equal(1)
+	assert_int(GameCalendar.semesterStartsBetween(fall, fall)).is_equal(0)

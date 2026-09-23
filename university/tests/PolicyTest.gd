@@ -67,3 +67,10 @@ func test_a_policy_missing_a_key_is_refused() -> void:
 	await assert_error(func() -> void: loaded.append(Policy.fromDict(data))) \
 		.is_push_error(Variants.MissingKeysError % ["Prices", "room"])
 	assert_object(loaded[0]).is_null()
+
+
+func test_the_prices_for_next_fall_follow_the_office() -> void:
+	var policy: Policy = Policy.new()
+	policy.setNextTuition(Tuition)
+	assert_int(policy.pricesFor(true).tuition).is_equal(Tuition)
+	assert_int(policy.pricesFor(false).total()).is_equal(Policy.defaultPrices().total())

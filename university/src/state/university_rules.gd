@@ -62,6 +62,13 @@ static func housed(enrolled: int, beds: int) -> int:
 	return mini(enrolled, beds)
 
 
+## The fraction of enrolled students without a bed on campus; 0 with nobody enrolled.
+static func offCampusShare(enrolled: int, housedCount: int) -> float:
+	if (enrolled <= 0):
+		return 0.0
+	return float(enrolled - housedCount) / float(enrolled)
+
+
 ## The most students the dining halls can sell a meal plan to: DiningHardLimit
 ## times what they are meant for.
 static func diningLimit(meals: int) -> int:
@@ -88,7 +95,7 @@ static func satisfaction(enrolled: int, housedCount: int, meals: int) -> Satisfa
 		return result
 	var plans: int = mealPlans(housedCount, meals)
 	var perStudent: float = 1.0 / float(enrolled)
-	result.housing = OverflowWeight * maxf(0.0, float(enrolled - housedCount) * perStudent - OverflowThreshold)
+	result.housing = OverflowWeight * maxf(0.0, offCampusShare(enrolled, housedCount) - OverflowThreshold)
 	result.crowding = CrowdingWeight * clampf(diningLoad(housedCount, meals) - RecommendedLoad, 0.0, DiningHardLimit - RecommendedLoad) * float(plans) * perStudent
 	result.unfed = UnfedWeight * float(housedCount - plans) * perStudent
 	return result

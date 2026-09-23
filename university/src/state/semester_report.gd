@@ -40,6 +40,10 @@ func offCampus() -> int:
 	return enrolled - housed
 
 
+func offCampusShare() -> float:
+	return UniversityRules.offCampusShare(enrolled, housed)
+
+
 func unfed() -> int:
 	return housed - mealPlans
 

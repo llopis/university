@@ -99,37 +99,70 @@ func startMonth(newMonth: int) -> Array[Building]:
 ## The month's upkeep in whole dollars: every open building's. One still under
 ## construction costs nothing yet.
 func upkeep() -> int:
-	return _openTotal(func(info: BuildingInfo) -> int: return info.upkeep)
+	return _totalBy(month, func(info: BuildingInfo) -> int: return info.upkeep)
 
 
 ## Academic seats in open buildings.
 func seats() -> int:
-	return _openTotal(func(info: BuildingInfo) -> int: return info.seats)
+	return seatsBy(month)
 
 
 ## Beds in open buildings.
 func beds() -> int:
-	return _openTotal(func(info: BuildingInfo) -> int: return info.beds)
+	return bedsBy(month)
 
 
 ## The diners every open dining hall is meant for, together.
 func meals() -> int:
-	return _openTotal(func(info: BuildingInfo) -> int: return info.meals)
+	return mealsBy(month)
 
 
 ## Whether an open building grants the price and minimum-grade levers.
 func hasOpenAdmissionsOffice() -> bool:
+	return hasAdmissionsOfficeBy(month)
+
+
+## Seats in buildings open by that month: open now, or opening at or before it.
+## Projections count what a coming semester start will open.
+func seatsBy(byMonth: int) -> int:
+	return _totalBy(byMonth, func(info: BuildingInfo) -> int: return info.seats)
+
+
+func bedsBy(byMonth: int) -> int:
+	return _totalBy(byMonth, func(info: BuildingInfo) -> int: return info.beds)
+
+
+func mealsBy(byMonth: int) -> int:
+	return _totalBy(byMonth, func(info: BuildingInfo) -> int: return info.meals)
+
+
+func hasAdmissionsOfficeBy(byMonth: int) -> bool:
 	for building: Building in buildings:
-		if (not building.underConstruction and building.info.admissionsOffice):
+		if (_isOpenBy(building, byMonth) and building.info.admissionsOffice):
 			return true
 	return false
 
 
-# The one sum over open buildings: amount answers what one type contributes.
-func _openTotal(amount: Callable) -> int:
-	var total: int = 0
+## The buildings open now, in placement order.
+func openBuildings() -> Array[Building]:
+	var open: Array[Building] = []
 	for building: Building in buildings:
 		if (not building.underConstruction):
+			open.append(building)
+	return open
+
+
+# Open now, or due to open by that month. At the campus's own month this is
+# exactly "open": a building placed this month opens at a later one.
+static func _isOpenBy(building: Building, byMonth: int) -> bool:
+	return not building.underConstruction or building.opensAtMonth <= byMonth
+
+
+# The one sum over buildings open by a month: amount answers what one type contributes.
+func _totalBy(byMonth: int, amount: Callable) -> int:
+	var total: int = 0
+	for building: Building in buildings:
+		if (_isOpenBy(building, byMonth)):
 			total += Variants.toInt(amount.call(building.info))
 	return total
 

@@ -32,6 +32,16 @@ func completeSemester() -> int:
 	return graduated
 
 
+## Students whose cohorts will have completed the course within that many more
+## semester starts: those graduating by then.
+func graduatingWithin(semesterStarts: int) -> int:
+	var total: int = 0
+	for cohort: Cohort in cohorts:
+		if (cohort.semestersCompleted + semesterStarts >= SemestersToGraduate):
+			total += cohort.size
+	return total
+
+
 ## A fall intake joins. Admitting no one adds no cohort.
 func admit(size: int, grade: float) -> void:
 	if (size > 0):

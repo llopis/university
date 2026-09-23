@@ -86,10 +86,9 @@ func reputationTarget() -> float:
 ## from, so each threshold is checked in one place.
 func problems() -> Array[Problem]:
 	var found: Array[Problem] = []
-	var enrolledCount: int = students.enrolled()
-	var offCampusCount: int = offCampus()
-	if (enrolledCount > 0 and float(offCampusCount) / float(enrolledCount) > UniversityRules.OverflowThreshold):
-		found.append(Problem.new(Problem.Kind.HousingOverflow, offCampusCount, float(offCampusCount) / float(enrolledCount)))
+	var share: float = offCampusShare()
+	if (share > UniversityRules.OverflowThreshold):
+		found.append(Problem.new(Problem.Kind.HousingOverflow, offCampus(), share))
 	var dining: float = UniversityRules.diningLoad(housed(), campus.meals())
 	var unfedCount: int = unfed()
 	if (unfedCount > 0):
@@ -99,6 +98,106 @@ func problems() -> Array[Problem]:
 	if (finances.availableCredit() == 0):
 		found.append(Problem.new(Problem.Kind.CreditMaxed, finances.debt, 0.0))
 	return found
+
+
+func nextSemesterStart() -> int:
+	return GameCalendar.nextSemesterStart(campus.month)
+
+
+func nextFallStart() -> int:
+	return GameCalendar.nextFallStart(campus.month)
+
+
+## Students who will have graduated by the next fall start.
+func graduatingByNextFall() -> int:
+	return students.graduatingWithin(GameCalendar.semesterStartsBetween(campus.month, nextFallStart()))
+
+
+## Seats the next fall admission will have: those open by then, less the
+## students still enrolled after that fall's graduation.
+func seatsToFillNextFall() -> int:
+	return maxi(campus.seatsBy(nextFallStart()) - (students.enrolled() - graduatingByNextFall()), 0)
+
+
+## What a coming semester start charges: at a fall start the year's prices lock
+## (next year's, or the defaults with no Admissions Office open by then); a
+## spring start charges this year's.
+func pricesAt(start: int) -> Prices:
+	if (GameCalendar.isFallStart(start)):
+		return policy.pricesFor(campus.hasAdmissionsOfficeBy(start))
+	return policy.current
+
+
+## Applicants at today's reputation and the prices next fall will charge.
+func expectedApplicants() -> int:
+	return UniversityRules.applicants(reputation, pricesAt(nextFallStart()).total())
+
+
+## Next fall's admission from those applicants into those seats.
+func expectedIntake() -> Intake:
+	var fall: int = nextFallStart()
+	return UniversityRules.admission(expectedApplicants(), seatsToFillNextFall(), policy.minimumInUse(campus.hasAdmissionsOfficeBy(fall)))
+
+
+## Students with a bed by a coming month, at today's enrolment: the beds open
+## by then.
+func housedAt(byMonth: int) -> int:
+	return UniversityRules.housed(students.enrolled(), campus.bedsBy(byMonth))
+
+
+## Meal plans by a coming month, at today's enrolment.
+func mealPlansAt(byMonth: int) -> int:
+	return UniversityRules.mealPlans(housedAt(byMonth), campus.mealsBy(byMonth))
+
+
+## The next semester start's fees at today's enrolment, with the beds and dining
+## open by then and the prices that apply then.
+func projectedFees() -> Fees:
+	var start: int = nextSemesterStart()
+	return UniversityRules.fees(pricesAt(start), students.enrolled(), housedAt(start), mealPlansAt(start))
+
+
+## Cash just before the next semester start's fees: today's, after every monthly
+## bill until then. Charged on a copy, so an automatic draw and its fee come
+## out exactly as the real bills would. Nothing opens between semester starts,
+## so the upkeep holds.
+func cashAtSemesterStart() -> int:
+	var copy: Finances = Finances.fromDict(finances.toDict())
+	var upkeep: int = campus.upkeep()
+	for _monthIndex: int in range(campus.month + 1, nextSemesterStart()):
+		copy.charge(upkeep + copy.interest())
+	return copy.cash
+
+
+## How many students live in a building: dorms fill evenly, so each holds its
+## share of everyone housed.
+func residentsOf(building: Building) -> int:
+	var totalBeds: int = campus.beds()
+	if (building.underConstruction or building.info.beds <= 0 or totalBeds <= 0):
+		return 0
+	return floori(float(building.info.beds) * float(housed()) / float(totalBeds))
+
+
+## The most recent fall start's report, or null before any.
+func lastFallReport() -> SemesterReport:
+	for i: int in range(reports.size() - 1, -1, -1):
+		if (reports[i].isFall):
+			return reports[i]
+	return null
+
+
+## The fraction of enrolled students living off campus.
+func offCampusShare() -> float:
+	return UniversityRules.offCampusShare(students.enrolled(), housed())
+
+
+## Whether that kind of problem is on the list right now: the one test views
+## use for a warning tone.
+func hasProblem(kind: Problem.Kind) -> bool:
+	for problem: Problem in problems():
+		if (problem.kind == kind):
+			return true
+	return false
 
 
 func yearSatisfaction() -> float:

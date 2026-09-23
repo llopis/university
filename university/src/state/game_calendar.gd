@@ -60,3 +60,12 @@ static func nextFallStart(monthIndex: int) -> int:
 	while (not isFallStart(next)):
 		next += 1
 	return next
+
+
+## How many semester starts fall after fromMonth and at or before toMonth.
+static func semesterStartsBetween(fromMonth: int, toMonth: int) -> int:
+	var count: int = 0
+	for monthIndex: int in range(fromMonth + 1, toMonth + 1):
+		if (isSemesterStart(monthIndex)):
+			count += 1
+	return count

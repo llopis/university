@@ -269,3 +269,22 @@ func test_a_month_start_answers_the_buildings_it_opened() -> void:
 	var opened: Array[Building] = campus.startMonth(first.opensAtMonth)
 	assert_array(opened).contains_exactly([first])
 	assert_array(campus.startMonth(first.opensAtMonth + 1)).is_empty()
+
+
+func test_buildings_opening_by_a_month_count_for_it() -> void:
+	var campus: Campus = _campus()
+	var hall: BuildingInfo = BuildingInfo.new({"id": "hall", "name": "Hall", "diameter": Diameter, "seats": Seats, "admissionsOffice": true})
+	var building: Building = campus.place(hall, Vector2.ZERO, 0.0)
+	assert_int(campus.seats()).is_equal(0)
+	assert_int(campus.seatsBy(building.opensAtMonth - 1)).is_equal(0)
+	assert_int(campus.seatsBy(building.opensAtMonth)).is_equal(Seats)
+	assert_bool(campus.hasAdmissionsOfficeBy(building.opensAtMonth)).is_true()
+	assert_bool(campus.hasOpenAdmissionsOffice()).is_false()
+
+
+func test_open_buildings_leave_out_those_under_construction() -> void:
+	var campus: Campus = _campus()
+	var first: Building = campus.place(_info(), Vector2.ZERO, 0.0)
+	campus.startMonth(first.opensAtMonth)
+	campus.place(_info(), Vector2(Diameter * 2.0, 0.0), 0.0)
+	assert_array(campus.openBuildings()).contains_exactly([first])

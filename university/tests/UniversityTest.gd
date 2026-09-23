@@ -232,3 +232,91 @@ func test_a_full_credit_line_is_a_problem() -> void:
 	var university: University = _running()
 	university.finances.borrow(Finances.CreditLimit)
 	assert_array(_kinds(university)).contains([Problem.Kind.CreditMaxed])
+
+
+func test_seats_to_fill_next_fall_count_graduates_and_buildings_opening_by_then() -> void:
+	var university: University = _running()
+	university.students.cohorts[0].semestersCompleted = StudentBody.SemestersToGraduate - 1
+	assert_int(university.graduatingByNextFall()).is_equal(Students)
+	assert_int(university.seatsToFillNextFall()).is_equal(HallSeats)
+	# A second hall placed now opens at that fall start, so its seats count.
+	university.campus.place(_hall(), Vector2(Diameter * 3.0, 0.0), 0.0)
+	assert_int(university.seatsToFillNextFall()).is_equal(HallSeats * 2)
+
+
+func test_a_spring_charges_this_years_prices_and_a_fall_next_years() -> void:
+	var university: University = _running()
+	university.policy.setNextTuition(Policy.DefaultTuition * 2)
+	var fall: int = university.nextFallStart()
+	assert_object(university.pricesAt(GameCalendar.nextSemesterStart(fall))).is_same(university.policy.current)
+	# No Admissions Office by next fall: it charges the defaults, whatever is set.
+	assert_int(university.pricesAt(fall).total()).is_equal(Policy.defaultPrices().total())
+	# An office placed now opens at that fall start, so next year's prices apply.
+	var office: BuildingInfo = BuildingInfo.new({"id": "office", "name": "Office", "diameter": Diameter, "admissionsOffice": true})
+	university.campus.place(office, Vector2(Diameter * 3.0, 0.0), 0.0)
+	assert_int(university.pricesAt(fall).tuition).is_equal(Policy.DefaultTuition * 2)
+
+
+func test_expected_applicants_use_the_prices_next_fall_will_charge() -> void:
+	var university: University = _running()
+	university.policy.setNextTuition(Policy.DefaultTuition * 2)
+	# No Admissions Office: next fall charges the defaults, whatever is set.
+	var atDefaults: int = UniversityRules.applicants(university.reputation, Policy.defaultPrices().total())
+	assert_int(university.expectedApplicants()).is_equal(atDefaults)
+	var intake: Intake = university.expectedIntake()
+	assert_int(intake.admitted).is_less_equal(university.seatsToFillNextFall())
+
+
+func test_the_off_campus_share_is_the_fraction_without_a_bed() -> void:
+	assert_float(University.new().offCampusShare()).is_equal(0.0)
+	var university: University = _running()
+	university.students.admit(HallBeds * 2, Grade)
+	var enrolledCount: float = float(university.students.enrolled())
+	assert_float(university.offCampusShare() * enrolledCount).is_equal_approx(float(university.offCampus()), Epsilon)
+
+
+func test_has_problem_agrees_with_the_problem_list() -> void:
+	var university: University = _running()
+	assert_bool(university.hasProblem(Problem.Kind.HousingOverflow)).is_false()
+	university.students.admit(HallBeds * 2, Grade)
+	assert_bool(university.hasProblem(Problem.Kind.HousingOverflow)).is_true()
+	assert_bool(university.hasProblem(Problem.Kind.CreditMaxed)).is_equal(_kinds(university).has(Problem.Kind.CreditMaxed))
+
+
+func test_projected_fees_are_what_the_next_spring_collects() -> void:
+	var university: University = _running()
+	university.startMonth(GameCalendar.nextFallStart(university.campus.month))
+	# From a fall, the next start is a spring: enrolment does not change there.
+	var projected: int = university.projectedFees().total()
+	university.startMonth(university.nextSemesterStart())
+	assert_int(_last(university).totalFees()).is_equal(projected)
+
+
+func test_cash_at_semester_start_is_what_the_monthly_bills_leave() -> void:
+	var university: University = _running()
+	university.finances.borrow(Debt)
+	var predicted: int = university.cashAtSemesterStart()
+	var start: int = university.nextSemesterStart()
+	for monthIndex: int in range(university.campus.month + 1, start):
+		university.startMonth(monthIndex)
+	assert_int(university.finances.cash).is_equal(predicted)
+
+
+func test_dorms_fill_evenly() -> void:
+	var university: University = University.new()
+	var big: Building = university.campus.place(BuildingInfo.new({"id": "big", "name": "Big", "diameter": Diameter, "beds": HallBeds}), Vector2.ZERO, 0.0)
+	var small: Building = university.campus.place(BuildingInfo.new({"id": "small", "name": "Small", "diameter": Diameter, "beds": HallBeds * 2}), Vector2(Diameter * 3.0, 0.0), 0.0)
+	university.campus.startMonth(big.opensAtMonth)
+	university.students.admit(HallBeds, Grade)
+	# HallBeds students in three times as many beds: each dorm a third full.
+	assert_int(university.residentsOf(big)).is_equal(floori(float(HallBeds) / 3.0))
+	assert_int(university.residentsOf(small)).is_equal(floori(float(HallBeds * 2) / 3.0))
+
+
+func test_the_latest_fall_report_is_found() -> void:
+	var university: University = _running()
+	assert_object(university.lastFallReport()).is_null()
+	university.startMonth(GameCalendar.nextFallStart(university.campus.month))
+	assert_object(university.lastFallReport()).is_same(_last(university))
+	university.startMonth(university.nextSemesterStart())
+	assert_bool(university.lastFallReport().isFall).is_true()

@@ -38,3 +38,11 @@ func test_the_saved_month_matches_the_tick_count() -> void:
 func test_the_start_students_fit_the_seats() -> void:
 	var state: GameState = _startState()
 	assert_int(state.university.students.enrolled()).is_less_equal(state.university.campus.seats())
+
+
+func test_the_start_state_opens_just_after_its_own_fall_start() -> void:
+	var state: GameState = _startState()
+	var reports: Array[SemesterReport] = state.university.reports
+	assert_int(reports.size()).is_greater(0)
+	assert_bool(reports[reports.size() - 1].isFall).is_true()
+	assert_int(reports[reports.size() - 1].month).is_equal(state.month())

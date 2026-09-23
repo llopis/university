@@ -21,7 +21,15 @@
 			"minimumGrade": 0.0,
 			"next": { "mealPlan": 4136, "room": 4542, "tuition": 9606 }
 		},
-		"reports": [],
+		"reports": [
+			{
+				"admitted": 200, "applicants": 499, "beds": 360, "cash": 50000000, "debt": 0,
+				"diningLoad": 0.5538461538461539, "enrolled": 800, "entryGrade": 3.12, "graduated": 200,
+				"housed": 360, "isFall": true, "mealFees": 1488960, "mealPlans": 360, "month": 0,
+				"openSeats": 200, "opened": [], "reputation": 61.5, "reputationChange": 0.0,
+				"roomFees": 1635120, "satisfaction": 45.0, "satisfactionChange": 0.0, "tuitionFees": 7684800
+			}
+		],
 		"reputation": 61.5,
 		"satisfactionSamples": [45.0],
 		"students": {

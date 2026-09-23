@@ -48,3 +48,22 @@ func test_a_cohort_missing_a_key_is_refused() -> void:
 	await assert_error(func() -> void: loaded.append(StudentBody.fromDict(data))) \
 		.is_push_error(Variants.MissingKeysError % ["Cohort", "entryGrade"])
 	assert_object(loaded[0]).is_null()
+
+
+func test_graduating_within_counts_the_cohorts_that_finish_in_time() -> void:
+	var body: StudentBody = StudentBody.new()
+	body.admit(Size, Grade)
+	body.admit(OtherSize, Grade)
+	body.cohorts[0].semestersCompleted = StudentBody.SemestersToGraduate - 2
+	assert_int(body.graduatingWithin(1)).is_equal(0)
+	assert_int(body.graduatingWithin(2)).is_equal(Size)
+
+
+func test_a_class_is_named_for_the_year_whose_spring_it_finishes() -> void:
+	var fresh: Cohort = Cohort.new(Size, Grade)
+	var finishing: Cohort = Cohort.new(Size, Grade)
+	finishing.semestersCompleted = StudentBody.SemestersToGraduate - 2
+	# At the first fall start (month 0), a new class finishes three springs on,
+	# and one with two semesters left finishes this academic year's spring.
+	assert_int(fresh.graduationYear(0)).is_equal(GameCalendar.FirstYear + 3)
+	assert_int(finishing.graduationYear(0)).is_equal(GameCalendar.FirstYear)

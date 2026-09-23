@@ -16,6 +16,16 @@ func _init(students: int, grade: float) -> void:
 	entryGrade = grade
 
 
+## The academic year whose spring this cohort finishes, seen from monthIndex:
+## "Class of Year N". It graduates at the semester start that completes its
+## course, which falls in the next academic year.
+func graduationYear(monthIndex: int) -> int:
+	var graduation: int = monthIndex
+	for _semester: int in range(StudentBody.SemestersToGraduate - semestersCompleted):
+		graduation = GameCalendar.nextSemesterStart(graduation)
+	return GameCalendar.year(graduation) - 1
+
+
 func toDict() -> Dictionary:
 	return {"size": size, "entryGrade": entryGrade, "semestersCompleted": semestersCompleted}
 

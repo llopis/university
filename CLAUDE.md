@@ -87,6 +87,22 @@ Strict state/view separation:
        5. A `SemesterReport` is kept in `reports` and `SemesterStarted` is emitted.
     3. Last, always, `finances.charge(monthlyExpenses())`, after the fees so they pay it.
   - **Live queries.** `monthlyExpenses()` (upkeep plus interest) is the one source of the bill. `housed()`, `offCampus()`, `mealPlans()`, `unfed()`, `satisfactionNow()`, `yearSatisfaction()` and `reputationTarget()` are derived live, never stored; `setReputation` is the one writer of `reputation`, clamped to `0..UniversityRules.MaxScore`. `problems()` is the one list of what is wrong right now (`Problem.Kind`: `HousingOverflow` past `OverflowThreshold`, `DiningCrowded` while the dining load is over 1 and nobody goes unfed, `DiningUnfed` once anyone does, `CreditMaxed` when `availableCredit()` is 0), which alerts and campus markers will draw from, so each threshold is checked in one place.
+    The HUD's projections come from the same state, each in one place:
+    - `Campus.seatsBy`, `bedsBy`, `mealsBy` and `hasAdmissionsOfficeBy(m)` count buildings open by month m, including those still under construction that open by then.
+    - `Policy.pricesFor(hasOffice)` is the one rule for what next fall charges.
+    - `University` answers:
+      - `pricesAt(start)`: what a semester start charges
+      - `graduatingByNextFall()`
+      - `seatsToFillNextFall()`
+      - `expectedApplicants()` and `expectedIntake()`, at today's reputation
+      - `housedAt(m)`, `mealPlansAt(m)` and `projectedFees()`, at today's enrolment
+      - `cashAtSemesterStart()`, which runs the monthly bills on a copy of the finances
+      - `residentsOf(building)`: dorms fill evenly
+      - `lastFallReport()`
+      - `offCampusShare()`, backed by `UniversityRules.offCampusShare`, the one off-campus fraction
+      - `hasProblem(kind)`
+    - `Cohort.graduationYear(m)` is "Class of Year N".
+    The start state carries its own Year 1 fall report, since it stands just after that start.
   - **Month 0 never runs `startMonth`,** because tick 0 already is month 0. The start state is therefore the moment just after month 0's fall start: its first cohort is admitted, its fees are paid, and one satisfaction sample is taken.
 - **Data.** Content tables follow the Info/DB pattern: an `Info` class with a typed constructor, a `DB` class holding them keyed by id, loaded from CSV via `CsvLoader` (`university/src/utils/csv_loader.gd`) and owned by the `Global` autoload. Declare a table directly in code only until its sheet exists.
 - **Save/load.** A save is one JSON dictionary. Every state class writes itself with a pure `toDict()` and rebuilds with a `static fromDict`, each taking what it needs — `Finances.fromDict(data)`, `Campus.fromDict(data, buildingDB, fundedBy)`, `Building.fromDict(data, buildingInfo)`:
