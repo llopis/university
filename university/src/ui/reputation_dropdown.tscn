@@ -26,8 +26,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="Body/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Heading"
-uppercase = true
+theme_type_variation = &"Title"
 
 [node name="Spacer" type="Control" parent="Body/Header"]
 layout_mode = 2
@@ -41,87 +40,96 @@ focus_mode = 0
 theme_type_variation = &"CloseButton"
 text = "×"
 
-[node name="Kpis" type="HBoxContainer" parent="Body"]
-layout_mode = 2
-theme_override_constants/separation = 26
-
-[node name="ReputationKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="TargetKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="AfterKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Columns" type="HBoxContainer" parent="Body"]
-layout_mode = 2
-theme_override_constants/separation = 48
-
-[node name="Target" type="VBoxContainer" parent="Body/Columns"]
+[node name="Center" type="CenterContainer" parent="Body"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TitleRow" type="HBoxContainer" parent="Body/Columns/Target"]
+[node name="Content" type="VBoxContainer" parent="Body/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(1440, 0)
+theme_override_constants/separation = 14
+
+[node name="Kpis" type="HBoxContainer" parent="Body/Center/Content"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="ReputationKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TargetKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AfterKpi" parent="Body/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Columns" type="HBoxContainer" parent="Body/Center/Content"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="Target" type="VBoxContainer" parent="Body/Center/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleRow" type="HBoxContainer" parent="Body/Center/Content/Columns/Target"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Title" type="Label" parent="Body/Columns/Target/TitleRow"]
+[node name="Title" type="Label" parent="Body/Center/Content/Columns/Target/TitleRow"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Target: half grades, half satisfaction"
 
-[node name="TargetHelp" parent="Body/Columns/Target/TitleRow" instance=ExtResource("4_help")]
+[node name="TargetHelp" parent="Body/Center/Content/Columns/Target/TitleRow" instance=ExtResource("4_help")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GradeRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
+[node name="GradeRow" parent="Body/Center/Content/Columns/Target" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="YearSatisfactionRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
+[node name="YearSatisfactionRow" parent="Body/Center/Content/Columns/Target" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="TargetRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
+[node name="TargetRow" parent="Body/Center/Content/Columns/Target" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Satisfaction" type="VBoxContainer" parent="Body/Columns"]
+[node name="Satisfaction" type="VBoxContainer" parent="Body/Center/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SatisfactionTitle" type="Label" parent="Body/Columns/Satisfaction"]
+[node name="SatisfactionTitle" type="Label" parent="Body/Center/Content/Columns/Satisfaction"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="BaselineRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+[node name="BaselineRow" parent="Body/Center/Content/Columns/Satisfaction" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HousingPenaltyRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+[node name="HousingPenaltyRow" parent="Body/Center/Content/Columns/Satisfaction" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CrowdingPenaltyRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+[node name="CrowdingPenaltyRow" parent="Body/Center/Content/Columns/Satisfaction" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="UnfedPenaltyRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+[node name="UnfedPenaltyRow" parent="Body/Center/Content/Columns/Satisfaction" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Foot" type="HBoxContainer" parent="Body"]
+[node name="Foot" type="HBoxContainer" parent="Body/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="HousingJump" type="Button" parent="Body/Foot"]
+[node name="HousingJump" type="Button" parent="Body/Center/Content/Foot"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
