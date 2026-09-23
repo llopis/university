@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://src/ui/top_bar.gd" id="1_topbar"]
 [ext_resource type="Texture2D" path="res://assets/icons/menu.svg" id="2_menu"]
@@ -11,11 +11,6 @@
 [ext_resource type="Texture2D" path="res://assets/icons/star.svg" id="9_star"]
 [ext_resource type="Texture2D" path="res://assets/icons/pause.svg" id="10_pause"]
 [ext_resource type="Script" path="res://src/ui/meter_bar.gd" id="11_meter"]
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_slotSep"]
-color = Color(1, 1, 1, 0.09)
-thickness = 1
-vertical = true
 
 [node name="TopBar" type="PanelContainer"]
 layout_mode = 3
@@ -105,7 +100,7 @@ slotIcon = ExtResource("4_users")
 
 [node name="StudentsSep" type="VSeparator" parent="Row/Slots"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+theme_type_variation = &"SlotSeparator"
 
 [node name="BedsSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
 unique_name_in_owner = true
@@ -114,7 +109,7 @@ slotIcon = ExtResource("5_bed")
 
 [node name="BedsSep" type="VSeparator" parent="Row/Slots"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+theme_type_variation = &"SlotSeparator"
 
 [node name="CashSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
 unique_name_in_owner = true
@@ -123,7 +118,7 @@ slotIcon = ExtResource("6_coin")
 
 [node name="CashSep" type="VSeparator" parent="Row/Slots"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+theme_type_variation = &"SlotSeparator"
 
 [node name="ExpensesSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
 unique_name_in_owner = true
@@ -132,7 +127,7 @@ slotIcon = ExtResource("7_flow")
 
 [node name="ExpensesSep" type="VSeparator" parent="Row/Slots"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+theme_type_variation = &"SlotSeparator"
 
 [node name="FeesSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
 unique_name_in_owner = true
@@ -141,7 +136,7 @@ slotIcon = ExtResource("8_cal")
 
 [node name="FeesSep" type="VSeparator" parent="Row/Slots"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+theme_type_variation = &"SlotSeparator"
 
 [node name="ReputationSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
 unique_name_in_owner = true
@@ -150,7 +145,7 @@ slotIcon = ExtResource("9_star")
 
 [node name="ReputationSep" type="VSeparator" parent="Row/Slots"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_slotSep")
+theme_type_variation = &"SlotSeparator"
 
 [node name="Spacer" type="Control" parent="Row"]
 layout_mode = 2
