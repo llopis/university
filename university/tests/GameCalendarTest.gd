@@ -63,3 +63,36 @@ func test_semester_starts_between_count_only_those_after_the_first_month() -> vo
 	assert_int(GameCalendar.semesterStartsBetween(0, fall)).is_equal(2)
 	assert_int(GameCalendar.semesterStartsBetween(GameCalendar.nextSemesterStart(0), fall)).is_equal(1)
 	assert_int(GameCalendar.semesterStartsBetween(fall, fall)).is_equal(0)
+
+
+func test_periods_run_fall_spring_summer_and_cover_the_year() -> void:
+	var fall: int = 0
+	var spring: int = GameCalendar.nextSemesterStart(0)
+	assert_int(GameCalendar.period(fall)).is_equal(GameCalendar.Period.Fall)
+	assert_int(GameCalendar.period(spring)).is_equal(GameCalendar.Period.Spring)
+	var weeks: int = 0
+	var monthIndex: int = 0
+	while (monthIndex < GameCalendar.MonthsPerYear):
+		weeks += GameCalendar.weeksInPeriod(monthIndex)
+		var here: GameCalendar.Period = GameCalendar.period(monthIndex)
+		while (monthIndex < GameCalendar.MonthsPerYear and GameCalendar.period(monthIndex) == here):
+			monthIndex += 1
+	assert_int(weeks).is_equal(GameCalendar.MonthsPerYear * GameCalendar.WeeksPerMonth)
+	assert_str(GameCalendar.periodLabel(spring)).contains(GameCalendar.PeriodNames[GameCalendar.Period.Spring])
+
+
+func test_weeks_count_up_through_a_period_and_down_to_the_next() -> void:
+	var weeks: int = GameCalendar.weeksInPeriod(0)
+	assert_int(GameCalendar.weekInPeriod(0)).is_equal(1)
+	assert_int(GameCalendar.weekInPeriod(weeks - 1)).is_equal(weeks)
+	# The last week of a period has the next one a week away.
+	assert_int(GameCalendar.weeksToNextPeriod(weeks - 1)).is_equal(1)
+	assert_int(GameCalendar.weekInPeriod(weeks)).is_equal(1)
+	# Fall ends at a semester start, so the clock and the fees count the same weeks.
+	assert_int(GameCalendar.weeksToNextPeriod(0)).is_equal(GameCalendar.weeksUntil(0, GameCalendar.nextSemesterStart(0)))
+
+
+func test_the_clock_line_names_the_week_and_the_next_period() -> void:
+	var line: String = GameCalendar.clockLine(0)
+	assert_str(line).contains("Week 1 of %d" % GameCalendar.weeksInPeriod(0))
+	assert_str(line).contains(GameCalendar.nextPeriodName(0))

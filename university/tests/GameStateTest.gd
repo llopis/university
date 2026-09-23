@@ -136,3 +136,10 @@ func test_building_works_while_paused() -> void:
 func test_a_month_is_a_whole_number_of_ticks() -> void:
 	var ticks: float = GameCalendar.SecondsPerMonth / GameState.TickStepDuration
 	assert_int(GameState.TicksPerMonth).is_equal(roundi(ticks))
+
+
+func test_a_month_is_a_whole_number_of_weeks() -> void:
+	assert_int(GameState.TicksPerWeek * GameCalendar.WeeksPerMonth).is_equal(GameState.TicksPerMonth)
+	var state: GameState = GameState.new()
+	state.advanceMonths(1)
+	assert_int(state.week()).is_equal(GameCalendar.WeeksPerMonth)

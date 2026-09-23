@@ -16,6 +16,15 @@ const September: int = 8
 const StartMonth: int = September
 const SemesterStartMonths: Array[int] = [September, February]
 const FirstYear: int = 1
+# Four weeks a month: a 48-week year.
+const WeeksPerMonth: int = 4
+## How the year reads on the clock. Summer is only a label: the sim has two
+## semester starts, September and February.
+enum Period { Fall, Spring, Summer }
+const PeriodNames: Array[String] = ["Fall", "Spring", "Summer"]
+# Calendar months (0 = January) each period starts at.
+const June: int = 5
+const PeriodStartMonths: Array[int] = [September, February, June]
 
 
 ## The calendar month (0 = January) of a month index.
@@ -69,3 +78,66 @@ static func semesterStartsBetween(fromMonth: int, toMonth: int) -> int:
 		if (isSemesterStart(monthIndex)):
 			count += 1
 	return count
+
+
+static func period(monthIndex: int) -> Period:
+	var calendar: int = calendarMonth(monthIndex)
+	if (calendar >= September or calendar < February):
+		return Period.Fall
+	if (calendar < June):
+		return Period.Spring
+	return Period.Summer
+
+
+## "Fall, Year 4": the period and the academic year.
+static func periodLabel(monthIndex: int) -> String:
+	return "%s, Year %d" % [PeriodNames[period(monthIndex)], year(monthIndex)]
+
+
+## Months into its period: 0 in the period's first month.
+static func _monthsIntoPeriod(monthIndex: int) -> int:
+	var start: int = PeriodStartMonths[period(monthIndex)]
+	return (calendarMonth(monthIndex) - start + MonthsPerYear) % MonthsPerYear
+
+
+## How long a month's period lasts, in weeks.
+static func weeksInPeriod(monthIndex: int) -> int:
+	var months: int = 0
+	var probe: int = monthIndex - _monthsIntoPeriod(monthIndex)
+	var here: Period = period(monthIndex)
+	while (period(probe + months) == here):
+		months += 1
+	return months * WeeksPerMonth
+
+
+static func _monthOfWeek(weekIndex: int) -> int:
+	return floori(float(weekIndex) / float(WeeksPerMonth))
+
+
+## The week within its period, counting from 1.
+static func weekInPeriod(weekIndex: int) -> int:
+	var monthIndex: int = _monthOfWeek(weekIndex)
+	return _monthsIntoPeriod(monthIndex) * WeeksPerMonth + (weekIndex - monthIndex * WeeksPerMonth) + 1
+
+
+## Weeks until the next period's first week: 1 in a period's last week.
+static func weeksToNextPeriod(weekIndex: int) -> int:
+	return weeksInPeriod(_monthOfWeek(weekIndex)) - weekInPeriod(weekIndex) + 1
+
+
+static func nextPeriodName(monthIndex: int) -> String:
+	return PeriodNames[(period(monthIndex) + 1) % PeriodNames.size()]
+
+
+## Weeks from this week until a month's first week.
+static func weeksUntil(weekIndex: int, monthIndex: int) -> int:
+	return monthIndex * WeeksPerMonth - weekIndex
+
+
+## "Week 9 of 20 · Spring in 12 weeks".
+static func clockLine(weekIndex: int) -> String:
+	var monthIndex: int = _monthOfWeek(weekIndex)
+	var left: int = weeksToNextPeriod(weekIndex)
+	return "Week %d of %d · %s in %d %s" % [
+		weekInPeriod(weekIndex), weeksInPeriod(monthIndex), nextPeriodName(monthIndex),
+		left, "week" if (left == 1) else "weeks"]

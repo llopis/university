@@ -14,4 +14,4 @@ func showBuilding(building: Building) -> void:
 	visible = (building != null)
 	if (building != null):
 		nameLabel.text = building.info.name
-		statusLabel.text = (ConstructionText % GameCalendar.label(building.opensAtMonth)) if (building.underConstruction) else OpenText
+		statusLabel.text = (ConstructionText % GameCalendar.periodLabel(building.opensAtMonth)) if (building.underConstruction) else OpenText
