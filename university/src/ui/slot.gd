@@ -3,7 +3,7 @@ extends Button
 ## One top-bar slot: an icon and a number with a note beside it, named by its
 ## tooltip. Pressing it opens its dropdown; it reads as pressed while that is open.
 
-const ValueBase: String = "Value"
+const ValueBase: String = "Heading"
 const SubBase: String = "Caption"
 # Left and right padding together, around the content.
 const PaddingX: float = 36.0
