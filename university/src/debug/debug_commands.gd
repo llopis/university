@@ -215,6 +215,7 @@ func _state() -> void:
 		"paused" if (_gameState().paused) else "running",
 		_gameState().speedMultiplier(),
 		_finances().cash])
+	LimboConsole.print_line(GameCalendar.clockLine(_gameState().week()))
 	LimboConsole.print_line("Debt: $%d | interest $%d/month | upkeep $%d/month" % [
 		_finances().debt, _finances().interest(), _campus().upkeep()])
 	LimboConsole.print_line("Students: %d enrolled | reputation %.1f" % [

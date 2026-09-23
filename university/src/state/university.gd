@@ -67,6 +67,11 @@ func unfed() -> int:
 	return housed() - mealPlans()
 
 
+## Housed students per diner the open dining halls are meant for.
+func diningLoad() -> float:
+	return UniversityRules.diningLoad(housed(), campus.meals())
+
+
 func satisfactionNow() -> Satisfaction:
 	return UniversityRules.satisfaction(students.enrolled(), housed(), campus.meals())
 
@@ -89,19 +94,24 @@ func problems() -> Array[Problem]:
 	var share: float = offCampusShare()
 	if (share > UniversityRules.OverflowThreshold):
 		found.append(Problem.new(Problem.Kind.HousingOverflow, offCampus(), share))
-	var dining: float = UniversityRules.diningLoad(housed(), campus.meals())
+	var dining: float = diningLoad()
 	var unfedCount: int = unfed()
 	if (unfedCount > 0):
 		found.append(Problem.new(Problem.Kind.DiningUnfed, unfedCount, dining))
 	elif (dining > UniversityRules.RecommendedLoad):
 		found.append(Problem.new(Problem.Kind.DiningCrowded, 0, dining))
-	if (finances.availableCredit() == 0):
+	if (not finances.canBorrow()):
 		found.append(Problem.new(Problem.Kind.CreditMaxed, finances.debt, 0.0))
 	return found
 
 
 func nextSemesterStart() -> int:
 	return GameCalendar.nextSemesterStart(campus.month)
+
+
+## Beds the next semester start will add: those opening by then, less today's.
+func bedsOpeningNextSemester() -> int:
+	return campus.bedsBy(nextSemesterStart()) - campus.beds()
 
 
 func nextFallStart() -> int:
@@ -111,6 +121,11 @@ func nextFallStart() -> int:
 ## Students who will have graduated by the next fall start.
 func graduatingByNextFall() -> int:
 	return students.graduatingWithin(GameCalendar.semesterStartsBetween(campus.month, nextFallStart()))
+
+
+## Open seats right now: total less enrolled, never negative.
+func openSeats() -> int:
+	return maxi(campus.seats() - students.enrolled(), 0)
 
 
 ## Seats the next fall admission will have: those open by then, less the
@@ -265,7 +280,7 @@ func _startYear(report: SemesterReport) -> void:
 	var hasOffice: bool = campus.hasOpenAdmissionsOffice()
 	policy.lockYear(hasOffice)
 	report.applicants = UniversityRules.applicants(reputation, policy.current.total())
-	report.openSeats = maxi(campus.seats() - students.enrolled(), 0)
+	report.openSeats = openSeats()
 	var intake: Intake = UniversityRules.admission(report.applicants, report.openSeats, policy.minimumInUse(hasOffice))
 	students.admit(intake.admitted, intake.entryGrade)
 	report.admitted = intake.admitted

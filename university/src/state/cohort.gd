@@ -21,9 +21,14 @@ func _init(students: int, grade: float) -> void:
 ## course, which falls in the next academic year.
 func graduationYear(monthIndex: int) -> int:
 	var graduation: int = monthIndex
-	for _semester: int in range(StudentBody.SemestersToGraduate - semestersCompleted):
+	for _semester: int in range(semestersLeft()):
 		graduation = GameCalendar.nextSemesterStart(graduation)
 	return GameCalendar.year(graduation) - 1
+
+
+## Semesters left until StudentBody.SemestersToGraduate.
+func semestersLeft() -> int:
+	return StudentBody.SemestersToGraduate - semestersCompleted
 
 
 func toDict() -> Dictionary:

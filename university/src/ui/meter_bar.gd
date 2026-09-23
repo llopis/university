@@ -17,7 +17,10 @@ var _limit: float = NoLimit
 
 
 func setValue(fraction: float, tone: UiTone.Tone, marks: Array[float], limit: float) -> void:
-	_fraction = clampf(fraction, 0.0, 1.0)
+	var clamped: float = clampf(fraction, 0.0, 1.0)
+	if (clamped == _fraction and tone == _tone and marks == _marks and limit == _limit):
+		return
+	_fraction = clamped
 	_tone = tone
 	_marks = marks.duplicate()
 	_limit = limit

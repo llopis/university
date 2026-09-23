@@ -51,7 +51,7 @@ const OpenedSeparator: String = ", "
 
 
 func _ready() -> void:
-	continueButton.pressed.connect(_continue)
+	continueButton.pressed.connect(dismiss)
 	housingButton.pressed.connect(_wantHousing)
 
 
@@ -109,7 +109,9 @@ func _showChange(row: InfoRow, key: String, value: float, change: float) -> void
 	row.display(key, ChangeFormat % [value, change], "", tone)
 
 
-func _continue() -> void:
+## The Continue path: hides the popup and hands the pause it interrupted back.
+## Public so Esc, in Hud._unhandled_input, can dismiss the popup the same way.
+func dismiss() -> void:
 	visible = false
 	Continued.emit()
 

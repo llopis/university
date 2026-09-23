@@ -304,13 +304,13 @@ func test_cash_at_semester_start_is_what_the_monthly_bills_leave() -> void:
 
 func test_dorms_fill_evenly() -> void:
 	var university: University = University.new()
-	var big: Building = university.campus.place(BuildingInfo.new({"id": "big", "name": "Big", "diameter": Diameter, "beds": HallBeds}), Vector2.ZERO, 0.0)
-	var small: Building = university.campus.place(BuildingInfo.new({"id": "small", "name": "Small", "diameter": Diameter, "beds": HallBeds * 2}), Vector2(Diameter * 3.0, 0.0), 0.0)
-	university.campus.startMonth(big.opensAtMonth)
+	var small: Building = university.campus.place(BuildingInfo.new({"id": "small", "name": "Small", "diameter": Diameter, "beds": HallBeds}), Vector2.ZERO, 0.0)
+	var big: Building = university.campus.place(BuildingInfo.new({"id": "big", "name": "Big", "diameter": Diameter, "beds": HallBeds * 2}), Vector2(Diameter * 3.0, 0.0), 0.0)
+	university.campus.startMonth(small.opensAtMonth)
 	university.students.admit(HallBeds, Grade)
 	# HallBeds students in three times as many beds: each dorm a third full.
-	assert_int(university.residentsOf(big)).is_equal(floori(float(HallBeds) / 3.0))
-	assert_int(university.residentsOf(small)).is_equal(floori(float(HallBeds * 2) / 3.0))
+	assert_int(university.residentsOf(small)).is_equal(floori(float(HallBeds) / 3.0))
+	assert_int(university.residentsOf(big)).is_equal(floori(float(HallBeds * 2) / 3.0))
 
 
 func test_the_latest_fall_report_is_found() -> void:
@@ -320,3 +320,11 @@ func test_the_latest_fall_report_is_found() -> void:
 	assert_object(university.lastFallReport()).is_same(_last(university))
 	university.startMonth(university.nextSemesterStart())
 	assert_bool(university.lastFallReport().isFall).is_true()
+
+
+func test_beds_opening_next_semester_counts_until_it_opens() -> void:
+	var university: University = University.new()
+	var building: Building = university.campus.place(_hall(), Vector2.ZERO, 0.0)
+	assert_int(university.bedsOpeningNextSemester()).is_equal(building.info.beds)
+	university.startMonth(building.opensAtMonth)
+	assert_int(university.bedsOpeningNextSemester()).is_equal(0)

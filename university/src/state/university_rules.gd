@@ -101,10 +101,15 @@ static func satisfaction(enrolled: int, housedCount: int, meals: int) -> Satisfa
 	return result
 
 
+## A grade as a reputation-scale score.
+static func gradeScore(grade: float) -> float:
+	return grade * GradeToScore
+
+
 ## Where reputation heads: half the latest intake's grade (as a score), half the
 ## year's satisfaction, weighted by ReputationGradeWeight.
 static func reputationTarget(intakeGrade: float, meanSatisfaction: float) -> float:
-	return ReputationGradeWeight * intakeGrade * GradeToScore + (1.0 - ReputationGradeWeight) * meanSatisfaction
+	return ReputationGradeWeight * gradeScore(intakeGrade) + (1.0 - ReputationGradeWeight) * meanSatisfaction
 
 
 ## A fall's step: ReputationRate of the way to the target.

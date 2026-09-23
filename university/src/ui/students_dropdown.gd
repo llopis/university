@@ -71,9 +71,8 @@ func _process(_dt: float) -> void:
 	var month: int = university.campus.month
 	title.text = TitleFormat % GameCalendar.periodLabel(month)
 	var enrolledCount: int = university.students.enrolled()
-	var seatsNow: int = university.campus.seats()
 	enrolledKpi.display(NumberFormat.count(enrolledCount), EnrolledCaption)
-	openSeatsKpi.display(NumberFormat.count(maxi(seatsNow - enrolledCount, 0)), OpenSeatsCaption)
+	openSeatsKpi.display(NumberFormat.count(university.openSeats()), OpenSeatsCaption)
 	var fall: SemesterReport = university.lastFallReport()
 	admittedKpi.display(NumberFormat.count(fall.admitted) if (fall != null) else Nothing, AdmittedCaption)
 	graduatingKpi.display(NumberFormat.count(university.graduatingByNextFall()), GraduatingCaption)
@@ -91,7 +90,7 @@ func _showHousing() -> void:
 		UiTone.Tone.Warn if (over) else UiTone.Tone.Normal)
 	offCampusRow.showPill((OverThresholdPill % NumberFormat.percent(UniversityRules.OverflowThreshold)) if (over) else "", UiTone.Tone.Warn)
 	var start: int = university.nextSemesterStart()
-	var opening: int = university.campus.bedsBy(start) - university.campus.beds()
+	var opening: int = university.bedsOpeningNextSemester()
 	openingRow.visible = (opening > 0)
 	openingRow.display(OpeningKeyFormat % GameCalendar.periodLabel(start), PlusFormat % NumberFormat.count(opening))
 
@@ -127,7 +126,7 @@ func _rebuildCohorts() -> void:
 		_addCell(ClassFormat % cohort.graduationYear(month), &"RowValue")
 		_addCell(NumberFormat.count(cohort.size), &"RowKey")
 		_addCell(GradeFormat % cohort.entryGrade, &"RowKey")
-		_addCell(str(StudentBody.SemestersToGraduate - cohort.semestersCompleted), &"RowKey")
+		_addCell(str(cohort.semestersLeft()), &"RowKey")
 
 
 func _addCell(text: String, variation: StringName) -> void:

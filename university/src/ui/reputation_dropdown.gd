@@ -18,8 +18,9 @@ const CrowdedFormat: String = "Dining (%s)"
 const AfterFormat: String = "≈ %.0f"
 const ReputationCaption: String = "Reputation"
 const TargetLabel: String = "Target"
-const AfterCaption: String = "After next fall"
+const AfterCaptionFormat: String = "After %s"
 const GradeRowKey: String = "Latest intake's entry grade"
+const GradeScoreNoteFormat: String = "counts as %.0f"
 const YearSatisfactionKey: String = "Satisfaction this year"
 const BaselineKey: String = "Baseline"
 const UnfedKey: String = "Can't eat"
@@ -54,26 +55,19 @@ func _process(_dt: float) -> void:
 	var after: float = UniversityRules.nextReputation(university.reputation, target)
 	title.text = TitleFormat % university.reputation
 	reputationKpi.display(ScoreFormat % university.reputation, ReputationCaption)
-	targetKpi.display(ScoreFormat % target, TargetLabel, _trendTone(target))
-	afterKpi.display(AfterFormat % after, AfterCaption)
-	gradeRow.display(GradeRowKey, GradeFormat % university.lastIntakeGrade)
+	targetKpi.display(ScoreFormat % target, TargetLabel, UiTone.trend(university.reputation, target))
+	afterKpi.display(AfterFormat % after, AfterCaptionFormat % GameCalendar.periodLabel(university.nextFallStart()))
+	gradeRow.display(GradeRowKey, GradeFormat % university.lastIntakeGrade,
+		GradeScoreNoteFormat % UniversityRules.gradeScore(university.lastIntakeGrade))
 	yearSatisfactionRow.display(YearSatisfactionKey, ScoreFormat % university.yearSatisfaction())
 	targetRow.display(TargetLabel, ScoreFormat % target)
 	var now: Satisfaction = university.satisfactionNow()
 	satisfactionTitle.text = SatisfactionFormat % now.total()
 	baselineRow.display(BaselineKey, ScoreFormat % now.base)
 	housingPenaltyRow.display(OffCampusFormat % NumberFormat.percent(university.offCampusShare()), _penalty(now.housing), "", _penaltyTone(now.housing))
-	var dining: float = UniversityRules.diningLoad(university.housed(), university.campus.meals())
+	var dining: float = university.diningLoad()
 	crowdingPenaltyRow.display(CrowdedFormat % NumberFormat.percent(dining), _penalty(now.crowding), "", _penaltyTone(now.crowding))
 	unfedPenaltyRow.display(UnfedKey, _penalty(now.unfed), "", _penaltyTone(now.unfed))
-
-
-func _trendTone(target: float) -> UiTone.Tone:
-	if (target > university.reputation):
-		return UiTone.Tone.Good
-	if (target < university.reputation):
-		return UiTone.Tone.Bad
-	return UiTone.Tone.Normal
 
 
 static func _penalty(points: float) -> String:

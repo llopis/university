@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=44 format=3]
+[gd_resource type="Theme" load_steps=45 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Medium.ttf" id="FontFile_barlowMedium"]
@@ -291,13 +291,15 @@ corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 shadow_color = Color(0, 0, 0, 0.6)
 shadow_size = 80
-content_margin_left = 26
-content_margin_top = 22
-content_margin_right = 26
-content_margin_bottom = 22
+content_margin_left = 0
+content_margin_top = 0
+content_margin_right = 0
+content_margin_bottom = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popupBoxAccent"]
 bg_color = Color(0.851, 0.643, 0.255, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
 bg_color = Color(0.353, 0.655, 0.878, 0.18)
@@ -360,6 +362,13 @@ content_margin_left = 7
 content_margin_top = 2
 content_margin_right = 7
 content_margin_bottom = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slotBadge"]
+bg_color = Color(0.886, 0.663, 0.227, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [resource]
 default_font = ExtResource("FontFile_barlowRegular")
@@ -461,6 +470,9 @@ SlotCaption/base_type = &"Label"
 SlotCaption/fonts/font = ExtResource("FontFile_condMedium")
 SlotCaption/font_sizes/font_size = 11
 SlotCaption/colors/font_color = Color(0.604, 0.643, 0.690, 1)
+
+SlotBadge/base_type = &"Panel"
+SlotBadge/styles/panel = SubResource("StyleBoxFlat_slotBadge")
 
 CrestName/base_type = &"Label"
 CrestName/fonts/font = SubResource("FontVariation_serifBold")

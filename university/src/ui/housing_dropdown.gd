@@ -70,7 +70,7 @@ func _showKpis() -> void:
 		UiTone.Tone.Warn if (over) else UiTone.Tone.Normal)
 	thresholdKpi.display(NumberFormat.percent(UniversityRules.OverflowThreshold), ThresholdCaption)
 	var start: int = university.nextSemesterStart()
-	var opening: int = university.campus.bedsBy(start) - beds
+	var opening: int = university.bedsOpeningNextSemester()
 	openingKpi.visible = (opening > 0)
 	openingKpi.display(PlusFormat % NumberFormat.count(opening), OpeningCaptionFormat % GameCalendar.periodLabel(start))
 
@@ -88,21 +88,21 @@ func _showDining() -> void:
 	loadLine.visible = true
 	dinersRow.display(DinersKey, NumberFormat.count(university.mealPlans()),
 		DinersNoteFormat % [NumberFormat.count(meals), NumberFormat.count(UniversityRules.diningLimit(meals))])
-	var load: float = UniversityRules.diningLoad(housed, meals)
+	var diningLoad: float = university.diningLoad()
 	var unfedCount: int = university.unfed()
 	var tone: UiTone.Tone = UiTone.Tone.Normal
-	if (unfedCount > 0):
+	if (university.hasProblem(Problem.Kind.DiningUnfed)):
 		tone = UiTone.Tone.Bad
-	elif (load > UniversityRules.RecommendedLoad):
+	elif (university.hasProblem(Problem.Kind.DiningCrowded)):
 		tone = UiTone.Tone.Warn
 	var marks: Array[float] = [UniversityRules.RecommendedLoad / UniversityRules.DiningHardLimit]
-	loadBar.setValue(load / UniversityRules.DiningHardLimit, tone, marks, 1.0)
+	loadBar.setValue(diningLoad / UniversityRules.DiningHardLimit, tone, marks, 1.0)
 	var valueFormat: String = LoadNormal
 	if (unfedCount > 0):
 		valueFormat = LoadUnfed
-	elif (load > UniversityRules.RecommendedLoad):
+	elif (diningLoad > UniversityRules.RecommendedLoad):
 		valueFormat = LoadCrowded
-	loadValue.text = valueFormat % NumberFormat.percent(load)
+	loadValue.text = valueFormat % NumberFormat.percent(diningLoad)
 	loadValue.theme_type_variation = UiTone.variation(InfoRow.ValueBase, tone)
 
 

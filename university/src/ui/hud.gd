@@ -124,16 +124,22 @@ func _onContinued() -> void:
 	state.setPaused(_pausedBefore)
 
 
+## The player chose to inspect housing, so the clock stays paused rather than
+## picking back up at whatever speed was running before the popup.
 func _onHousingWanted() -> void:
-	state.setPaused(_pausedBefore)
+	state.setPaused(true)
 	openPopover(&"housing")
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if (event.is_action_pressed(&"ExitGame") and semesterPopup.visible):
-		semesterPopup.visible = false
-		_onContinued()
-		get_viewport().set_input_as_handled()
+	if (semesterPopup.visible):
+		# The popup is modal: Continue, Esc and "Look at housing" are the ways
+		# out, and Space does nothing while it is up.
+		if (event.is_action_pressed(&"ExitGame")):
+			semesterPopup.dismiss()
+			get_viewport().set_input_as_handled()
+		elif (event.is_action_pressed(&"TogglePause")):
+			get_viewport().set_input_as_handled()
 		return
 	if (event.is_action_pressed(&"ExitGame") and closePopover()):
 		get_viewport().set_input_as_handled()

@@ -23,8 +23,6 @@ const TargetUp: String = "↑ %.0f"
 const TargetDown: String = "↓ %.0f"
 const TargetHeld: String = "→ %.0f"
 const ReputationFormat: String = "%.0f"
-# How close to the target reads as "held" on the reputation slot.
-const HeldWithin: float = 0.5
 
 @onready var menuButton: Button = %MenuButton
 @onready var crestButton: Button = %CrestButton
@@ -49,6 +47,9 @@ var state: GameState
 # Transport buttons in speed order: index i runs GameState.SpeedSteps[i].
 var _speedButtons: Array[Button]
 var _toggles: Dictionary[StringName, Button]
+# Which of the three money slots was clicked last, so only it reads pressed
+# while Money is open.
+var _moneySlot: Button
 
 
 func _ready() -> void:
@@ -61,18 +62,32 @@ func _ready() -> void:
 	crestButton.pressed.connect(func() -> void: UniversityMenuPressed.emit())
 	studentsSlot.pressed.connect(func() -> void: StudentsPressed.emit())
 	bedsSlot.pressed.connect(func() -> void: HousingPressed.emit())
-	cashSlot.pressed.connect(func() -> void: MoneyPressed.emit())
-	expensesSlot.pressed.connect(func() -> void: MoneyPressed.emit())
-	feesSlot.pressed.connect(func() -> void: MoneyPressed.emit())
+	_moneySlot = cashSlot
+	cashSlot.pressed.connect(_onMoneySlotPressed.bind(cashSlot))
+	expensesSlot.pressed.connect(_onMoneySlotPressed.bind(expensesSlot))
+	feesSlot.pressed.connect(_onMoneySlotPressed.bind(feesSlot))
 	reputationSlot.pressed.connect(func() -> void: ReputationPressed.emit())
 	_toggles = {
 		&"gamemenu": menuButton, &"unimenu": crestButton, &"students": studentsSlot,
-		&"housing": bedsSlot, &"money": cashSlot, &"reputation": reputationSlot,
+		&"housing": bedsSlot, &"reputation": reputationSlot,
 	}
 
 
-## Shows a popover's trigger as pressed while the popover is open.
+func _onMoneySlotPressed(slot: Button) -> void:
+	_moneySlot = slot
+	MoneyPressed.emit()
+
+
+## Shows a popover's trigger as pressed while the popover is open. Money
+## presses whichever of its three slots was clicked last, defaulting to Cash.
 func setOpen(which: StringName, open: bool) -> void:
+	if (which == &"money"):
+		if (not open):
+			_moneySlot = cashSlot
+		cashSlot.set_pressed_no_signal(open and _moneySlot == cashSlot)
+		expensesSlot.set_pressed_no_signal(open and _moneySlot == expensesSlot)
+		feesSlot.set_pressed_no_signal(open and _moneySlot == feesSlot)
+		return
 	if (_toggles.has(which)):
 		_toggles[which].set_pressed_no_signal(open)
 
@@ -124,14 +139,12 @@ func _showMoney(university: University) -> void:
 
 func _showReputation(university: University) -> void:
 	var target: float = university.reputationTarget()
+	var tone: UiTone.Tone = UiTone.trend(university.reputation, target)
 	var trend: String = TargetHeld
-	var tone: UiTone.Tone = UiTone.Tone.Normal
-	if (target > university.reputation + HeldWithin):
+	if (tone == UiTone.Tone.Good):
 		trend = TargetUp
-		tone = UiTone.Tone.Good
-	elif (target < university.reputation - HeldWithin):
+	elif (tone == UiTone.Tone.Bad):
 		trend = TargetDown
-		tone = UiTone.Tone.Bad
 	reputationSlot.display(ReputationFormat % university.reputation, trend % target, "Reputation",
 		UiTone.Tone.Normal, tone, false)
 
