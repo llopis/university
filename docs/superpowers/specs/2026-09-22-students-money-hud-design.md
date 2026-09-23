@@ -185,8 +185,10 @@ The tuning values below are starting points, not decisions.
   `PriceHalving` is the price-elasticity knob.
 - The formula stays finite at a price of $0.
 - `Pool` is fixed, so each added seat dilutes selectivity.
-- Pool 4,000; ReputationReference 50; RepDoubling 20; ReferencePrice $18,300;
+- Pool 335; ReputationReference 50; RepDoubling 20; ReferencePrice $18,300;
   PriceHalving $6,000.
+- Pool calibrated in phase 3 so the start campus (800 seats) settles at about
+  2.5 applicants per open seat.
 
 **Admission.** With S = open seats (seats minus enrolled, after graduation)
 and m = the minimum in use:
@@ -228,6 +230,14 @@ of `ReputationGradeWeight × GradeToScore × GradeSpread × ln 2 / RepDoubling`.
 That's ≈ 0.15 with these values. The loop settles by itself while this stays
 below 1, and a test guards it. Price and satisfaction decide *where* it
 settles.
+
+**Phase 3 tuning results.** With the values above, the loop settles at a fixed
+point — entry grade 3.12, reputation 61.5, satisfaction 45 — and the start
+state is set to it, so nothing drifts (Prototype.md's Later "baseline drift"
+item is what addresses drift on top of a settled loop). Money never gets
+tight doing nothing. The start campus opens with a housing shortfall (360
+beds for 800 seats), and a pool sized to this campus can't fill much bigger
+ones.
 
 ### `University`
 
