@@ -16,6 +16,10 @@ static func encode(data: Dictionary) -> String:
 	return JSON.stringify(data, Indent, SortKeys, FullPrecision)
 
 
+static func exists(path: String) -> bool:
+	return FileAccess.file_exists(path)
+
+
 ## The dictionary the text holds, or null when it holds anything else.
 static func decode(text: String) -> Variant:
 	var parsed: Variant = JSON.parse_string(text)

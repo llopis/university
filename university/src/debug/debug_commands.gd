@@ -20,6 +20,9 @@ const Percent: float = 100.0
 # save's and load's sentinel: no path given, use the quicksave.
 const NoPath: String = ""
 
+# hud's sentinel: closes whichever popover is open.
+const HudNone: String = "none"
+
 const ToolPlace: String = "place"
 const ToolDestroy: String = "destroy"
 const ToolNone: String = "none"
@@ -73,6 +76,7 @@ func _init() -> void:
 	LimboConsole.register_command(_save, "save", "Save the game to [path] (the quicksave when none is given).")
 	LimboConsole.register_command(_load, "load", "Load the game saved at [path] (the quicksave when none is given).")
 	LimboConsole.register_command(_newGame, "newgame", "Start over from the start state.")
+	LimboConsole.register_command(_hud, "hud", "Open a HUD popover by name: gamemenu, unimenu, students, housing, money, reputation or popup; none closes it.")
 	# Lets the remote console reach the scene tree, e.g.
 	# eval get_root().find_child("CampusView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())
@@ -335,6 +339,15 @@ func _load(path: String = NoPath) -> void:
 
 func _newGame() -> void:
 	LimboConsole.print_line(("New game from %s" if (Global.newGame()) else "Could not start a new game from %s") % Global.StartStatePath)
+
+
+func _hud(which: String) -> void:
+	var hud: Hud = _campusView().hud
+	if (which == HudNone):
+		hud.closePopover()
+	else:
+		hud.openPopover(StringName(which))
+	LimboConsole.print_line("HUD: %s" % which)
 
 
 # The button a name stands for, or MOUSE_BUTTON_NONE when the name is not one.

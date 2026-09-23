@@ -97,3 +97,14 @@ func test_selecting_the_same_building_again_announces_nothing() -> void:
 	controller.SelectionChanged.connect(func(b: Building) -> void: selections.append(b))
 	controller.select(building)
 	assert_array(selections).is_empty()
+
+
+func test_esc_with_nothing_to_cancel_asks_for_the_game_menu() -> void:
+	var controller: BuildController = _controller(Campus.new(Finances.new()))
+	var asked: Array[int] = []
+	controller.NothingToCancel.connect(func() -> void: asked.append(1))
+	var esc: InputEventAction = InputEventAction.new()
+	esc.action = &"ExitGame"
+	esc.pressed = true
+	controller._unhandled_input(esc)
+	assert_int(asked.size()).is_equal(1)

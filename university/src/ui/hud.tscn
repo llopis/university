@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://src/ui/ui_theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://src/ui/top_bar.tscn" id="3_topbar"]
+[ext_resource type="PackedScene" path="res://src/ui/game_menu.tscn" id="4_gamemenu"]
+[ext_resource type="PackedScene" path="res://src/ui/university_menu.tscn" id="5_unimenu"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -16,4 +18,19 @@ theme = ExtResource("2_theme")
 script = ExtResource("1_hud")
 
 [node name="TopBar" parent="." instance=ExtResource("3_topbar")]
+unique_name_in_owner = true
+
+[node name="Popovers" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="GameMenu" parent="Popovers" instance=ExtResource("4_gamemenu")]
+unique_name_in_owner = true
+
+[node name="UniversityMenu" parent="Popovers" instance=ExtResource("5_unimenu")]
 unique_name_in_owner = true

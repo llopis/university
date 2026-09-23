@@ -3,7 +3,8 @@ extends Node3D
 ## The one place input becomes commands on the campus. Holds the current tool:
 ## None (a click selects), Place (a ghost follows the cursor, a click builds
 ## and the tool stays armed) or Destroy (a click removes the building under
-## the cursor). A right click or Esc puts the tool away. Everything arrives
+## the cursor). A right click or Esc puts the tool away; Esc with nothing to
+## cancel asks for the game menu instead of quitting. Everything arrives
 ## through _unhandled_input, so a click on the UI never reaches the world.
 ## Sits above the camera in the scene so the camera sees a right release first
 ## and swallows it when it ended a pan: what still arrives here is a click.
@@ -11,6 +12,9 @@ extends Node3D
 signal ToolChanged
 signal SelectionChanged(building: Building)
 signal HoverChanged(building: Building)
+## Esc found no tool to put away and no selection to clear: the game menu
+## opens instead of the game quitting.
+signal NothingToCancel
 
 enum Tool { None, Place, Destroy }
 
@@ -169,8 +173,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif (selected != null):
 			select(null)
 		else:
-			get_tree().quit()
-		get_viewport().set_input_as_handled()
+			NothingToCancel.emit()
+		if (is_inside_tree()):
+			get_viewport().set_input_as_handled()
 
 
 func _leftClick() -> void:
