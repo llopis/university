@@ -17,14 +17,12 @@ const UnderThresholdFormat: String = "%s → %s, under the threshold"
 const OverThresholdFormat: String = "%s → %s, still above the threshold"
 const UpkeepKey: String = "Upkeep"
 const UpkeepNote: String = "from then on"
-const RefundNoteFormat: String = "Demolishing it before it opens refunds the full %s. Once it has opened, nothing comes back."
 const HousingJumpText: String = "All housing →"
 const StudentsJumpText: String = "All students →"
 
 @onready var capacityRow: InfoRow = %CapacityRow
 @onready var offCampusRow: InfoRow = %OffCampusRow
 @onready var upkeepRow: InfoRow = %UpkeepRow
-@onready var refundNote: Label = %RefundNote
 @onready var jump: Button = %Jump
 
 var university: University
@@ -42,7 +40,6 @@ func _process(_dt: float) -> void:
 	_showCapacity(info)
 	_showOffCampus(info)
 	_showUpkeep(info)
-	refundNote.text = RefundNoteFormat % MoneyFormat.short(university.campus.refundFor(building))
 	_showJump(info.role())
 
 

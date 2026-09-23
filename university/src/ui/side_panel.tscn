@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://src/ui/side_panel.gd" id="1_panel"]
 [ext_resource type="PackedScene" path="res://src/ui/construction_pane.tscn" id="2_construction"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://src/ui/academic_pane.tscn" id="4_academic"]
 [ext_resource type="PackedScene" path="res://src/ui/dorm_pane.tscn" id="5_dorm"]
 [ext_resource type="PackedScene" path="res://src/ui/dining_pane.tscn" id="6_dining"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="7_help"]
 
 [node name="SidePanel" type="PanelContainer"]
 visible = false
@@ -118,6 +119,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Layout/Footer"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
 [node name="DemolishButton" type="Button" parent="Layout/Footer/HBoxContainer"]
 unique_name_in_owner = true
@@ -125,3 +127,7 @@ layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"GhostButton"
 text = "Demolish"
+
+[node name="DemolishHelp" parent="Layout/Footer/HBoxContainer" instance=ExtResource("7_help")]
+unique_name_in_owner = true
+layout_mode = 2

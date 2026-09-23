@@ -10,7 +10,7 @@ signal BuildWanted(category: String)
 const PlansCaption: String = "Meal plans"
 const LoadCaption: String = "Load"
 const UnfedCaption: String = "Can't eat"
-const LoadNoteFormat: String = "Up to %s diners it is comfortable. Past that it gets crowded and satisfaction drops. Past %s (%s) the rest can't eat: they buy no meal plan and satisfaction drops harder."
+const LoadNoteFormat: String = "All dining halls, housed students. Up to %s diners it is comfortable. Past that it gets crowded and satisfaction drops. Past %s (%s) the rest can't eat: they buy no meal plan and satisfaction drops harder."
 const MealFeesKey: String = "Meal plan fees per semester · all halls"
 const UpkeepKey: String = "Upkeep and staff"
 
@@ -18,7 +18,7 @@ const UpkeepKey: String = "Upkeep and staff"
 @onready var loadKpi: KpiView = %LoadKpi
 @onready var unfedKpi: KpiView = %UnfedKpi
 @onready var loadLine: DiningLoadLine = %LoadLine
-@onready var loadNote: Label = %LoadNote
+@onready var loadHelp: HelpIcon = %LoadHelp
 @onready var mealFeesRow: InfoRow = %MealFeesRow
 @onready var upkeepRow: InfoRow = %UpkeepRow
 @onready var buildJump: Button = %BuildJump
@@ -46,6 +46,6 @@ func _process(_dt: float) -> void:
 	unfedKpi.display(NumberFormat.count(unfedCount), UnfedCaption, UiTone.Tone.Bad if (unfedCount > 0) else UiTone.Tone.Normal)
 	loadLine.display(university)
 	var meals: int = campus.meals()
-	loadNote.text = LoadNoteFormat % [NumberFormat.count(meals), NumberFormat.count(UniversityRules.diningLimit(meals)), NumberFormat.percent(UniversityRules.DiningHardLimit)]
+	loadHelp.tooltip_text = LoadNoteFormat % [NumberFormat.count(meals), NumberFormat.count(UniversityRules.diningLimit(meals)), NumberFormat.percent(UniversityRules.DiningHardLimit)]
 	mealFeesRow.display(MealFeesKey, MoneyFormat.signed(university.feesNow().meals), "", UiTone.Tone.Good)
 	upkeepRow.display(UpkeepKey, BuildingText.upkeep(info), "", UiTone.Tone.Bad)

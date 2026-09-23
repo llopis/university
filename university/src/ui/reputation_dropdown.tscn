@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/reputation_dropdown.gd" id="1_reputation"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="4_help"]
 
 [node name="ReputationDropdown" type="PanelContainer"]
 visible = false
@@ -25,15 +26,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
-
-[node name="Spacer" type="Control" parent="Body/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HeaderNote" type="Label" parent="Body/Header"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
 
 [node name="Kpis" type="HBoxContainer" parent="Body"]
 layout_mode = 2
@@ -59,11 +51,19 @@ theme_override_constants/separation = 24
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Title" type="Label" parent="Body/Columns/Target"]
+[node name="TitleRow" type="HBoxContainer" parent="Body/Columns/Target"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Body/Columns/Target/TitleRow"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Target: half grades, half satisfaction"
+
+[node name="TargetHelp" parent="Body/Columns/Target/TitleRow" instance=ExtResource("4_help")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="GradeRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
 unique_name_in_owner = true
@@ -76,11 +76,6 @@ layout_mode = 2
 [node name="TargetRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Note" type="Label" parent="Body/Columns/Target"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-text = "Reputation sets how many apply. Price sets it too: see the Admissions Office."
 
 [node name="Satisfaction" type="VBoxContainer" parent="Body/Columns"]
 layout_mode = 2

@@ -15,12 +15,15 @@ const SubFormat: String = "%s · %s"
 const OpensFormat: String = "Under construction · opens %s"
 const DemolishText: String = "Demolish"
 const DemolishRefundFormat: String = "Demolish · refund %s"
+const DemolishRefundNoteFormat: String = "Demolishing it before it opens refunds the full %s. Once it has opened, nothing comes back."
+const DemolishNoRefundNote: String = "Demolishing an open building refunds nothing."
 
 @onready var titleLabel: Label = %Title
 @onready var subLabel: Label = %Sub
 @onready var statusPill: Label = %StatusPill
 @onready var closeButton: Button = %CloseButton
 @onready var demolishButton: Button = %DemolishButton
+@onready var demolishHelp: HelpIcon = %DemolishHelp
 @onready var constructionPane: ConstructionPane = %ConstructionPane
 @onready var admissionsPane: AdmissionsPane = %AdmissionsPane
 @onready var academicPane: AcademicPane = %AcademicPane
@@ -72,6 +75,7 @@ func _process(_dt: float) -> void:
 	statusPill.text = OpensFormat % GameCalendar.periodLabel(building.opensAtMonth)
 	var refund: int = university.campus.refundFor(building)
 	demolishButton.text = (DemolishRefundFormat % MoneyFormat.short(refund)) if (refund > 0) else DemolishText
+	demolishHelp.tooltip_text = (DemolishRefundNoteFormat % MoneyFormat.short(refund)) if (building.underConstruction) else DemolishNoRefundNote
 	_showPane(_paneFor(building))
 
 

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=67 format=3]
+[gd_resource type="Theme" load_steps=68 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Bold.ttf" id="FontFile_barlowBold"]
@@ -642,6 +642,22 @@ bg_color = Color(0.886, 0.353, 0.306, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alertAccentInfo"]
 bg_color = Color(0.290, 0.565, 0.886, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tooltip"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.16)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 12
+content_margin_top = 10
+content_margin_right = 12
+content_margin_bottom = 10
+
 [resource]
 default_font = ExtResource("FontFile_barlowRegular")
 default_font_size = 18
@@ -1016,3 +1032,9 @@ AlertAccentBad/styles/panel = SubResource("StyleBoxFlat_alertAccentBad")
 
 AlertAccentInfo/base_type = &"Panel"
 AlertAccentInfo/styles/panel = SubResource("StyleBoxFlat_alertAccentInfo")
+
+TooltipPanel/styles/panel = SubResource("StyleBoxFlat_tooltip")
+
+TooltipLabel/fonts/font = ExtResource("FontFile_barlowRegular")
+TooltipLabel/font_sizes/font_size = 18
+TooltipLabel/colors/font_color = Color(0.925, 0.906, 0.859, 1)

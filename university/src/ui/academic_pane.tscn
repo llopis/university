@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/academic_pane.gd" id="1_pane"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="Script" path="res://src/ui/meter_bar.gd" id="3_meter"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="4_help"]
 
 [node name="AcademicPane" type="VBoxContainer"]
 theme_override_constants/separation = 12
@@ -33,14 +34,9 @@ theme_type_variation = &"Heading"
 uppercase = true
 text = "Seats"
 
-[node name="Spacer" type="Control" parent="SeatsHeader"]
+[node name="SeatsHelp" parent="SeatsHeader" instance=ExtResource("4_help")]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SectionNote" type="Label" parent="SeatsHeader"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-text = "all academic buildings"
 
 [node name="SeatsBar" type="Control" parent="."]
 unique_name_in_owner = true
@@ -48,12 +44,6 @@ custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("3_meter")
-
-[node name="SeatsNote" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
 
 [node name="ListTitle" type="Label" parent="."]
 unique_name_in_owner = true

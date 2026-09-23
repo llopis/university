@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/money_dropdown.gd" id="1_money"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="4_help"]
 
 [node name="MoneyDropdown" type="PanelContainer"]
 visible = false
@@ -25,15 +26,6 @@ layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Finances"
-
-[node name="Spacer" type="Control" parent="Body/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SectionNote" type="Label" parent="Body/Header"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-text = "Fees arrive as a lump at the start of each semester"
 
 [node name="Columns" type="HBoxContainer" parent="Body"]
 layout_mode = 2
@@ -59,11 +51,19 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="EveryMonthTitle" type="Label" parent="Body/Columns/Left"]
+[node name="EveryMonthHeader" type="HBoxContainer" parent="Body/Columns/Left"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="EveryMonthTitle" type="Label" parent="Body/Columns/Left/EveryMonthHeader"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Every month"
+
+[node name="EveryMonthHelp" parent="Body/Columns/Left/EveryMonthHeader" instance=ExtResource("4_help")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="UpkeepRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
 unique_name_in_owner = true
@@ -76,12 +76,6 @@ layout_mode = 2
 [node name="MonthTotalRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ShortfallNote" type="Label" parent="Body/Columns/Left"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
 
 [node name="CreditLineTitle" type="Label" parent="Body/Columns/Left"]
 layout_mode = 2
@@ -117,16 +111,19 @@ theme_type_variation = &"GhostButton"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FeesTitle" type="Label" parent="Body/Columns/Right"]
+[node name="FeesHeader" type="HBoxContainer" parent="Body/Columns/Right"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FeesTitle" type="Label" parent="Body/Columns/Right/FeesHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="SectionNote" type="Label" parent="Body/Columns/Right"]
+[node name="FeesHelp" parent="Body/Columns/Right/FeesHeader" instance=ExtResource("4_help")]
 layout_mode = 2
-theme_type_variation = &"Caption"
-text = "at today's enrolment"
+tooltip_text = "Fees arrive as a lump at the start of each semester, at today's enrolment."
 
 [node name="TuitionRow" parent="Body/Columns/Right" instance=ExtResource("3_row")]
 unique_name_in_owner = true

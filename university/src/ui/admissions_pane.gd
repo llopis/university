@@ -42,7 +42,7 @@ const ChartHeight: float = 56.0
 @onready var housingNow: Label = %HousingNow
 @onready var roomStepper: Stepper = %RoomStepper
 @onready var mealStepper: Stepper = %MealStepper
-@onready var totalNote: Label = %TotalNote
+@onready var housingHelp: HelpIcon = %HousingHelp
 @onready var studentsJump: Button = %StudentsJump
 @onready var financesJump: Button = %FinancesJump
 
@@ -101,7 +101,7 @@ func _showLevers() -> void:
 	housingNow.text = HousingNowFormat % [MoneyFormat.full(policy.current.room), MoneyFormat.full(policy.current.mealPlan)]
 	roomStepper.display(RoomCaption, MoneyFormat.full(policy.next.room), false)
 	mealStepper.display(MealCaption, MoneyFormat.full(policy.next.mealPlan), false)
-	totalNote.text = TotalNoteFormat % MoneyFormat.full(university.pricesAt(university.nextFallStart()).total())
+	housingHelp.tooltip_text = TotalNoteFormat % MoneyFormat.full(university.pricesAt(university.nextFallStart()).total())
 
 
 func _rebuildChart() -> void:

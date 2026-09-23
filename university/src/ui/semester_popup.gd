@@ -32,7 +32,7 @@ const OpenedKey: String = "Opened"
 const OpenedSeparator: String = ", "
 
 @onready var title: Label = %Title
-@onready var sub: Label = %Sub
+@onready var titleHelp: HelpIcon = %Help
 @onready var applicantsRow: InfoRow = %ApplicantsRow
 @onready var admittedRow: InfoRow = %AdmittedRow
 @onready var gradeRow: InfoRow = %GradeRow
@@ -54,7 +54,7 @@ func _ready() -> void:
 
 func showReport(report: SemesterReport) -> void:
 	title.text = TitleFormat % GameCalendar.periodLabel(report.month)
-	sub.text = SubFall if (report.isFall) else SubSpring
+	titleHelp.tooltip_text = SubFall if (report.isFall) else SubSpring
 	_showAdmissions(report)
 	_showCampus(report)
 	visible = true

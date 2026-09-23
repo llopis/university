@@ -11,7 +11,7 @@ const ScoreFormat: String = "%.0f"
 const GradeFormat: String = "%.2f"
 const PenaltyFormat: String = "−%.0f"
 const NoPenalty: String = "0"
-const RateNoteFormat: String = "moves %s of the way to its target each fall"
+const RateNoteFormat: String = "Reputation moves %s of the way to its target each fall. Reputation sets how many apply; price does too: see the Admissions Office."
 const SatisfactionFormat: String = "Satisfaction · %.0f"
 const OffCampusFormat: String = "Off campus (%s)"
 const CrowdedFormat: String = "Dining (%s)"
@@ -26,7 +26,7 @@ const BaselineKey: String = "Baseline"
 const UnfedKey: String = "Can't eat"
 
 @onready var title: Label = %Title
-@onready var headerNote: Label = %HeaderNote
+@onready var targetHelp: HelpIcon = %TargetHelp
 @onready var reputationKpi: KpiView = %ReputationKpi
 @onready var targetKpi: KpiView = %TargetKpi
 @onready var afterKpi: KpiView = %AfterKpi
@@ -44,7 +44,7 @@ var university: University
 
 
 func _ready() -> void:
-	headerNote.text = RateNoteFormat % NumberFormat.percent(UniversityRules.ReputationRate)
+	targetHelp.tooltip_text = RateNoteFormat % NumberFormat.percent(UniversityRules.ReputationRate)
 	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
 
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/ui/students_dropdown.gd" id="1_students"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="4_help"]
 
 [node name="StudentsDropdown" type="PanelContainer"]
 visible = false
@@ -26,14 +27,9 @@ layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="Spacer" type="Control" parent="Body/Header"]
+[node name="TitleHelp" parent="Body/Header" instance=ExtResource("4_help")]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HeaderNote" type="Label" parent="Body/Header"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-text = "Admissions each fall · graduation before the next fall"
+tooltip_text = "Admissions each fall · graduation before the next fall"
 
 [node name="Kpis" type="HBoxContainer" parent="Body"]
 layout_mode = 2
@@ -120,16 +116,19 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NextFallTitle" type="Label" parent="Body/Lower/NextFall"]
+[node name="NextFallHeader" type="HBoxContainer" parent="Body/Lower/NextFall"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NextFallTitle" type="Label" parent="Body/Lower/NextFall/NextFallHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="Note" type="Label" parent="Body/Lower/NextFall"]
+[node name="NextFallHelp" parent="Body/Lower/NextFall/NextFallHeader" instance=ExtResource("4_help")]
 layout_mode = 2
-theme_type_variation = &"Caption"
-text = "at today's reputation and next year's prices"
+tooltip_text = "At today's reputation and next year's prices."
 
 [node name="SeatsToFillRow" parent="Body/Lower/NextFall" instance=ExtResource("3_row")]
 unique_name_in_owner = true

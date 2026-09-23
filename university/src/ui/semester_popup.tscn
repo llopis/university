@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/ui/semester_popup.gd" id="1_popup"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="2_row"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="3_help"]
 
 [node name="SemesterPopup" type="Control"]
 visible = false
@@ -55,16 +56,18 @@ theme_override_constants/margin_bottom = 22
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Title" type="Label" parent="Center/Box/Body/ContentMargin/Content"]
+[node name="TitleRow" type="HBoxContainer" parent="Center/Box/Body/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Center/Box/Body/ContentMargin/Content/TitleRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Title"
 
-[node name="Sub" type="Label" parent="Center/Box/Body/ContentMargin/Content"]
+[node name="Help" parent="Center/Box/Body/ContentMargin/Content/TitleRow" instance=ExtResource("3_help")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Caption"
-uppercase = true
 
 [node name="GridMargin" type="MarginContainer" parent="Center/Box/Body/ContentMargin/Content"]
 layout_mode = 2

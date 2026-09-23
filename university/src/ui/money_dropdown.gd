@@ -31,7 +31,7 @@ const ApproxFormat: String = "≈ %s"
 @onready var upkeepRow: InfoRow = %UpkeepRow
 @onready var interestRow: InfoRow = %InterestRow
 @onready var monthTotalRow: InfoRow = %MonthTotalRow
-@onready var shortfallNote: Label = %ShortfallNote
+@onready var everyMonthHelp: HelpIcon = %EveryMonthHelp
 @onready var owedRow: InfoRow = %OwedRow
 @onready var creditLeftRow: InfoRow = %CreditLeftRow
 @onready var borrowButton: Button = %BorrowButton
@@ -47,7 +47,7 @@ var state: GameState
 
 
 func _ready() -> void:
-	shortfallNote.text = ShortfallNoteFormat % NumberFormat.percent(Finances.ShortfallFee)
+	everyMonthHelp.tooltip_text = ShortfallNoteFormat % NumberFormat.percent(Finances.ShortfallFee)
 	borrowButton.text = BorrowFormat % MoneyFormat.short(Finances.LoanStep)
 	repayButton.text = RepayFormat % MoneyFormat.short(Finances.LoanStep)
 	borrowButton.pressed.connect(func() -> void: state.university.finances.borrow(Finances.LoanStep))

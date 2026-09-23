@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://src/ui/dining_pane.gd" id="1_pane"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="PackedScene" path="res://src/ui/dining_load_line.tscn" id="3_dining"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="4_row"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="5_help"]
 
 [node name="DiningPane" type="VBoxContainer"]
 theme_override_constants/separation = 12
@@ -38,24 +39,13 @@ theme_type_variation = &"Heading"
 uppercase = true
 text = "Load"
 
-[node name="Spacer" type="Control" parent="LoadSection/LoadHeader"]
+[node name="LoadHelp" parent="LoadSection/LoadHeader" instance=ExtResource("5_help")]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SectionNote" type="Label" parent="LoadSection/LoadHeader"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-text = "all dining halls · housed students"
 
 [node name="LoadLine" parent="LoadSection" instance=ExtResource("3_dining")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="LoadNote" type="Label" parent="LoadSection"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
 
 [node name="MoneySection" type="VBoxContainer" parent="."]
 layout_mode = 2

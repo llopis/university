@@ -23,7 +23,7 @@ const UpkeepKey: String = "Upkeep and staff"
 @onready var offCampusKpi: KpiView = %OffCampusKpi
 @onready var allDormsRow: InfoRow = %AllDormsRow
 @onready var openingRow: InfoRow = %OpeningRow
-@onready var housingNote: Label = %HousingNote
+@onready var housingHelp: HelpIcon = %HousingHelp
 @onready var roomFeesRow: InfoRow = %RoomFeesRow
 @onready var upkeepRow: InfoRow = %UpkeepRow
 @onready var housingJump: Button = %HousingJump
@@ -55,7 +55,7 @@ func _process(_dt: float) -> void:
 	var opening: int = university.bedsOpeningNextSemester()
 	openingRow.visible = (opening > 0)
 	openingRow.display(OpeningKeyFormat % GameCalendar.periodLabel(university.nextSemesterStart()), OpeningFormat % NumberFormat.count(opening))
-	housingNote.text = HousingNoteFormat % NumberFormat.percent(UniversityRules.OverflowThreshold)
+	housingHelp.tooltip_text = HousingNoteFormat % NumberFormat.percent(UniversityRules.OverflowThreshold)
 	roomFeesRow.display(RoomFeesKey, MoneyFormat.signed(university.roomFeesOf(building)),
 		RoomFeesNoteFormat % [NumberFormat.count(residents), MoneyFormat.full(university.policy.current.room)], UiTone.Tone.Good)
 	upkeepRow.display(UpkeepKey, BuildingText.upkeep(info), "", UiTone.Tone.Bad)

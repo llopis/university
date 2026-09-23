@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/ui/admissions_pane.gd" id="1_pane"]
 [ext_resource type="PackedScene" path="res://src/ui/stepper.tscn" id="2_stepper"]
+[ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="3_help"]
 
 [node name="AdmissionsPane" type="VBoxContainer"]
 theme_override_constants/separation = 14
@@ -20,14 +21,9 @@ layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="Spacer" type="Control" parent="Intake/IntakeHeader"]
+[node name="IntakeHelp" parent="Intake/IntakeHeader" instance=ExtResource("3_help")]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SectionNote" type="Label" parent="Intake/IntakeHeader"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-text = "at today's reputation and next year's prices"
+tooltip_text = "At today's reputation and next year's prices. Seats fill from the top of the applicant list; how many apply depends on reputation and on the total price. Empty seats are upkeep with no tuition."
 
 [node name="Stages" type="HBoxContainer" parent="Intake"]
 layout_mode = 2
@@ -111,12 +107,6 @@ layout_mode = 2
 theme_type_variation = &"Caption"
 autowrap_mode = 3
 
-[node name="Note" type="Label" parent="Intake"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
-text = "Seats fill from the top of the applicant list. How many apply depends on reputation and on the total price. Empty seats are upkeep with no tuition."
-
 [node name="History" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 6
@@ -170,21 +160,23 @@ theme_type_variation = &"Lever"
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="LeverTitle" type="Label" parent="Levers/MinimumLever/Layout"]
+[node name="LeverTitleRow" type="HBoxContainer" parent="Levers/MinimumLever/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LeverTitle" type="Label" parent="Levers/MinimumLever/Layout/LeverTitleRow"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Minimum entry grade"
 
+[node name="MinimumHelp" parent="Levers/MinimumLever/Layout/LeverTitleRow" instance=ExtResource("3_help")]
+layout_mode = 2
+tooltip_text = "Off: every seat that has an applicant fills, and the entry grade follows how many apply. Raise it to leave seats empty in a weak year: tuition now against reputation later."
+
 [node name="MinimumStepper" parent="Levers/MinimumLever/Layout" instance=ExtResource("2_stepper")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Note" type="Label" parent="Levers/MinimumLever/Layout"]
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
-text = "Off: every seat that has an applicant fills, and the entry grade follows how many apply. Raise it to leave seats empty in a weak year: tuition now against reputation later."
 
 [node name="TuitionLever" type="PanelContainer" parent="Levers"]
 layout_mode = 2
@@ -217,11 +209,19 @@ theme_type_variation = &"Lever"
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="LeverTitle" type="Label" parent="Levers/HousingLever/Layout"]
+[node name="LeverTitleRow" type="HBoxContainer" parent="Levers/HousingLever/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LeverTitle" type="Label" parent="Levers/HousingLever/Layout/LeverTitleRow"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Room and meal plan per semester"
+
+[node name="HousingHelp" parent="Levers/HousingLever/Layout/LeverTitleRow" instance=ExtResource("3_help")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="HousingNow" type="Label" parent="Levers/HousingLever/Layout"]
 unique_name_in_owner = true
@@ -235,12 +235,6 @@ layout_mode = 2
 [node name="MealStepper" parent="Levers/HousingLever/Layout" instance=ExtResource("2_stepper")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="TotalNote" type="Label" parent="Levers/HousingLever/Layout"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
 
 [node name="Jumps" type="HBoxContainer" parent="."]
 layout_mode = 2

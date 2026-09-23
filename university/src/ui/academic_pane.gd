@@ -16,7 +16,7 @@ const StudentsCaption: String = "Students / seats"
 const OpenSeatsCaption: String = "Open seats"
 const GradeFormat: String = "%.2f"
 const GradeCaption: String = "Entry grade"
-const SeatsNoteFormat: String = "%s students graduate before next fall, so next fall can take about %s with the buildings you have. Full classes are fine."
+const SeatsNoteFormat: String = "All academic buildings. %s students graduate before next fall, so next fall can take about %s with the buildings you have. Full classes are fine."
 const ListTitleFormat: String = "Academic buildings · %d"
 const RowFormat: String = "%s   %s · %s / mo"
 
@@ -24,7 +24,7 @@ const RowFormat: String = "%s   %s · %s / mo"
 @onready var openSeatsKpi: KpiView = %OpenSeatsKpi
 @onready var gradeKpi: KpiView = %GradeKpi
 @onready var seatsBar: MeterBar = %SeatsBar
-@onready var seatsNote: Label = %SeatsNote
+@onready var seatsHelp: HelpIcon = %SeatsHelp
 @onready var listTitle: Label = %ListTitle
 @onready var list: VBoxContainer = %List
 @onready var addButton: Button = %AddButton
@@ -59,7 +59,7 @@ func _process(_dt: float) -> void:
 	var fraction: float = (float(enrolled) / float(seats)) if (seats > 0) else 0.0
 	var noMarks: Array[float] = []
 	seatsBar.setValue(fraction, UiTone.Tone.Good, noMarks, MeterBar.NoLimit)
-	seatsNote.text = SeatsNoteFormat % [NumberFormat.count(university.graduatingByNextFall()), NumberFormat.count(university.seatsToFillNextFall())]
+	seatsHelp.tooltip_text = SeatsNoteFormat % [NumberFormat.count(university.graduatingByNextFall()), NumberFormat.count(university.seatsToFillNextFall())]
 	var academicBuildings: Array[Building] = campus.openWithRole(BuildingInfo.Role.Academic)
 	listTitle.text = ListTitleFormat % academicBuildings.size()
 	admissionsJump.visible = not campus.openWithRole(BuildingInfo.Role.Admissions).is_empty()

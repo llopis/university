@@ -25,12 +25,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RefundNote" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"Caption"
-autowrap_mode = 3
-
 [node name="Jump" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
