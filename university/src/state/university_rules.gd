@@ -6,7 +6,9 @@ class_name UniversityRules
 
 # Applicants: every ReputationDoubling points of reputation doubles them, and
 # every PriceHalving dollars of total price above ReferencePrice halves them.
-const ApplicantPool: float = 4000.0
+# The pool is sized to the start campus: at its balance point about 2.5 apply
+# for each open seat.
+const ApplicantPool: float = 335.0
 const ReputationReference: float = 50.0
 const ReputationDoubling: float = 20.0
 const ReferencePrice: float = 18300.0

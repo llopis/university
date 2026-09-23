@@ -14,7 +14,7 @@
 			"month": 0
 		},
 		"finances": { "cash": 50000000, "debt": 0 },
-		"lastIntakeGrade": 3.0,
+		"lastIntakeGrade": 3.12,
 		"name": "Pioneer Valley State",
 		"policy": {
 			"current": { "mealPlan": 4136, "room": 4542, "tuition": 9606 },
@@ -22,14 +22,14 @@
 			"next": { "mealPlan": 4136, "room": 4542, "tuition": 9606 }
 		},
 		"reports": [],
-		"reputation": 50.0,
-		"satisfactionSamples": [60.0],
+		"reputation": 61.5,
+		"satisfactionSamples": [45.0],
 		"students": {
 			"cohorts": [
-				{ "entryGrade": 3.0, "semestersCompleted": 6, "size": 180 },
-				{ "entryGrade": 3.0, "semestersCompleted": 4, "size": 180 },
-				{ "entryGrade": 3.0, "semestersCompleted": 2, "size": 180 },
-				{ "entryGrade": 3.0, "semestersCompleted": 0, "size": 180 }
+				{ "entryGrade": 3.12, "semestersCompleted": 6, "size": 200 },
+				{ "entryGrade": 3.12, "semestersCompleted": 4, "size": 200 },
+				{ "entryGrade": 3.12, "semestersCompleted": 2, "size": 200 },
+				{ "entryGrade": 3.12, "semestersCompleted": 0, "size": 200 }
 			]
 		}
 	}
