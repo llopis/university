@@ -809,6 +809,6 @@ StepValue/font_sizes/font_size = 14
 StepValue/colors/font_color = Color(0.925, 0.906, 0.859, 1)
 
 StepValueDim/base_type = &"Label"
-StepValueDim/fonts/font = ExtResource("FontFile_barlowSemiBold")
+StepValueDim/fonts/font = ExtResource("FontFile_barlowMedium")
 StepValueDim/font_sizes/font_size = 14
 StepValueDim/colors/font_color = Color(0.420, 0.459, 0.502, 1)
