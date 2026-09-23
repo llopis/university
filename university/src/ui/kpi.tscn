@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://t56pmev1uwnjg"]
+
+[ext_resource type="Script" path="res://src/ui/kpi.gd" id="1_kpi"]
+
+[node name="Kpi" type="VBoxContainer"]
+theme_override_constants/separation = 4
+script = ExtResource("1_kpi")
+
+[node name="Value" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"KpiValue"
+text = "0"
+
+[node name="Caption" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"KpiCaption"
+uppercase = true
+text = "Caption"

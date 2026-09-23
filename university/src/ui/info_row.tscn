@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://n26vj0s7f5p3r"]
+
+[ext_resource type="Script" path="res://src/ui/info_row.gd" id="1_row"]
+
+[node name="InfoRow" type="HBoxContainer"]
+theme_override_constants/separation = 10
+script = ExtResource("1_row")
+
+[node name="Key" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"RowKey"
+
+[node name="Value" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"RowValue"
+
+[node name="Note" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+
+[node name="Pill" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"PillWarn"
