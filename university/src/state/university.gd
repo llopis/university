@@ -101,6 +101,18 @@ func _yearSatisfaction() -> float:
 	return sum / float(satisfactionSamples.size())
 
 
+## What "before" means for a report's satisfactionChange: the last sample
+## taken, which is always this campus as it stood before this start's
+## buildings opened. Only a bare University, with no sample and no report
+## yet, falls back to a live read.
+func _lastSatisfaction() -> float:
+	if (not satisfactionSamples.is_empty()):
+		return satisfactionSamples[satisfactionSamples.size() - 1]
+	if (not reports.is_empty()):
+		return reports[reports.size() - 1].satisfaction
+	return satisfactionNow().total()
+
+
 ## A semester start: every cohort completes a semester and the finished ones
 ## graduate; in fall the year begins (see _startYear); then satisfaction is
 ## sampled and the fees come in. Kept as a report and announced.
@@ -109,7 +121,7 @@ func _startSemester(semesterMonth: int, opened: Array[Building]) -> void:
 	report.month = semesterMonth
 	report.isFall = GameCalendar.isFallStart(semesterMonth)
 	var reputationBefore: float = reputation
-	var satisfactionBefore: float = reports[reports.size() - 1].satisfaction if (not reports.is_empty()) else satisfactionNow().total()
+	var satisfactionBefore: float = _lastSatisfaction()
 	report.graduated = students.completeSemester()
 	if (report.isFall):
 		_startYear(report)

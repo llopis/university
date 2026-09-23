@@ -142,6 +142,28 @@ func test_reputation_steps_toward_its_target_only_at_a_fall_start() -> void:
 	assert_float(university.reputation).is_equal_approx(UniversityRules.nextReputation(before, target), Epsilon)
 
 
+func test_the_first_reports_satisfaction_change_is_measured_from_the_last_sample() -> void:
+	var university: University = University.new()
+	university.students.admit(HallBeds * 2, Grade)
+	var building: Building = university.campus.place(_hall(), Vector2.ZERO, 0.0)
+	# The dorm is still under construction: no beds yet, so this is the same
+	# "before" state a real sample would have caught at the previous start.
+	var sample: float = university.satisfactionNow().total()
+	university.satisfactionSamples.append(sample)
+	university.startMonth(building.opensAtMonth)
+	var report: SemesterReport = _last(university)
+	assert_float(report.satisfactionChange).is_equal_approx(report.satisfaction - sample, Epsilon)
+	assert_float(report.satisfactionChange).is_not_zero()
+
+
+func test_the_falls_report_measures_the_reputation_change() -> void:
+	var university: University = _running()
+	var before: float = university.reputation
+	university.startMonth(GameCalendar.nextFallStart(university.campus.month))
+	var report: SemesterReport = _last(university)
+	assert_float(report.reputationChange).is_equal_approx(report.reputation - before, Epsilon)
+
+
 func test_without_an_admissions_office_the_fall_charges_the_defaults() -> void:
 	var university: University = _running()
 	university.policy.setNextTuition(Policy.DefaultTuition * 2)
