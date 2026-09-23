@@ -7,13 +7,14 @@ const Thousand: int = 1000
 # shown. Everything is floored in whole dollars: an abbreviated balance must
 # never read higher than the balance, or a price it cannot cover looks affordable.
 const Tenths: int = 10
+@warning_ignore("integer_division")
 const MillionTenth: int = Million / Tenths
 
 
 static func short(dollars: int) -> String:
 	if (dollars >= Million):
-		var tenthsOfMillion: int = dollars / MillionTenth
-		return "$%d.%dM" % [tenthsOfMillion / Tenths, tenthsOfMillion % Tenths]
+		var tenthsOfMillion: int = floori(float(dollars) / float(MillionTenth))
+		return "$%d.%dM" % [floori(float(tenthsOfMillion) / float(Tenths)), tenthsOfMillion % Tenths]
 	if (dollars >= Thousand):
-		return "$%dK" % (dollars / Thousand)
+		return "$%dK" % floori(float(dollars) / float(Thousand))
 	return "$%d" % dollars
