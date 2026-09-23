@@ -1,9 +1,9 @@
 class_name ConstructionPane
 extends VBoxContainer
 ## What opening changes for a building still under construction: the capacity
-## it adds, the effect on who lives off campus (housing only), its upkeep from
-## then on, and the refund rule while it is still going up. Demolish itself
-## lives in SidePanel; this only jumps to the housing or students pane.
+## it adds, the effect on who lives off campus (housing only) and its upkeep
+## from then on. Demolish and its refund rule live in SidePanel's footer; this
+## only jumps to the housing or students pane.
 
 signal PopoverWanted(which: StringName)
 
