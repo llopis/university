@@ -14,6 +14,7 @@ const PaneDining: StringName = &"dining"
 const PopoverBuild: StringName = &"build"
 const PopoverHousing: StringName = &"housing"
 const PopoverMoney: StringName = &"money"
+const PopoverUniversity: StringName = &"unimenu"
 # The alerts' left/right offsets keep this clear of the side panel's edge.
 const AlertsMargin: float = 16.0
 
@@ -44,12 +45,12 @@ var _pausedBefore: bool = false
 
 func _ready() -> void:
 	_popovers = {
-		&"gamemenu": gameMenu, &"unimenu": universityMenu, &"students": studentsDropdown,
+		&"gamemenu": gameMenu, PopoverUniversity: universityMenu, &"students": studentsDropdown,
 		&"reputation": reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
 		PopoverBuild: buildPanel,
 	}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
-	topBar.UniversityMenuPressed.connect(toggle.bind(&"unimenu"))
+	topBar.UniversityMenuPressed.connect(toggle.bind(PopoverUniversity))
 	topBar.StudentsPressed.connect(toggle.bind(&"students"))
 	topBar.HousingPressed.connect(toggle.bind(PopoverHousing))
 	topBar.MoneyPressed.connect(toggle.bind(PopoverMoney))
@@ -62,7 +63,7 @@ func _ready() -> void:
 	studentsDropdown.ReputationJumped.connect(openPopover.bind(&"reputation"))
 	studentsDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
 	reputationDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
-	housingDropdown.MoneyJumped.connect(openPopover.bind(PopoverMoney))
+	housingDropdown.AdmissionsJumped.connect(func() -> void: showPane(PaneAdmissions))
 
 
 func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController, buildingDB: BuildingInfoDB) -> void:
@@ -110,6 +111,11 @@ func _process(_dt: float) -> void:
 
 func popoverOpen() -> StringName:
 	return _open
+
+
+## Whether a name is one of the popovers, for the console.
+func hasPopover(which: StringName) -> bool:
+	return _popovers.has(which)
 
 
 func toggle(which: StringName) -> void:
@@ -263,7 +269,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if (event.is_action_pressed(&"ExitGame")):
 			semesterPopup.dismiss()
 			get_viewport().set_input_as_handled()
-		elif (event.is_action_pressed(&"TogglePause") or event.is_action_pressed(&"ToggleBuild") or event.is_action_pressed(&"Demolish")):
+		elif (event.is_action_pressed(&"TogglePause") or event.is_action_pressed(&"ToggleBuild") or event.is_action_pressed(&"Demolish")
+			or event.is_action_pressed(&"UniversityMenu") or event.is_action_pressed(&"AdmissionsPane") or event.is_action_pressed(&"MoneyPanel")):
 			get_viewport().set_input_as_handled()
 		return
 	if (event.is_action_pressed(&"ExitGame") and closePopover()):
@@ -275,6 +282,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if (event.is_action_pressed(&"Demolish")):
 		_toggleDemolish()
+		get_viewport().set_input_as_handled()
+		return
+	if (event.is_action_pressed(&"UniversityMenu")):
+		toggle(PopoverUniversity)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.is_action_pressed(&"AdmissionsPane")):
+		showPane(PaneAdmissions)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.is_action_pressed(&"MoneyPanel")):
+		toggle(PopoverMoney)
 		get_viewport().set_input_as_handled()
 		return
 	var click: InputEventMouseButton = event as InputEventMouseButton

@@ -4,7 +4,7 @@ extends PanelContainer
 ## costs satisfaction, dorm by dorm with who fills them, and the dining load
 ## next to housing since only housed students eat on campus.
 
-signal MoneyJumped
+signal AdmissionsJumped
 
 const TitleFormat: String = "Housing · %s"
 const FilledFormat: String = "%s / %s"
@@ -40,7 +40,7 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = dormsGrid.get_child_count()
 	visibility_changed.connect(_rebuildDorms)
-	moneyJump.pressed.connect(func() -> void: MoneyJumped.emit())
+	moneyJump.pressed.connect(func() -> void: AdmissionsJumped.emit())
 
 
 func setUniversity(shown: University) -> void:
@@ -54,6 +54,7 @@ func _process(_dt: float) -> void:
 	title.text = TitleFormat % GameCalendar.periodLabel(university.campus.month)
 	_showKpis()
 	_showDining()
+	moneyJump.disabled = not university.campus.hasOpenAdmissionsOffice()
 
 
 func _showKpis() -> void:

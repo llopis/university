@@ -239,62 +239,84 @@ Registered debug commands:
 - `save [path]` — save the game to `<path>`, or to the quicksave (`user://quicksave.json`) when none is given. `save res://data/start_state.json` writes the start state from a running game; hand-edit it afterwards (open buildings, tick 0, campus month 0, cash and debt) — a start state re-saved from a running game also carries that game's `reports` and `satisfactionSamples`, cohorts, `lastIntakeGrade`, reputation and prices, so set those deliberately too (keep exactly one report: that start's own).
 - `load [path]` — load the game saved at `<path>`, or the quicksave. Reloads the scene, so the camera and any armed tool or selection start fresh. A save missing a key is refused, with nothing changed.
 - `newgame` — start over from the start state.
-- `hud <name>` — open a HUD popover by name (`gamemenu`, `unimenu`, `students`, `housing`, `money`, `reputation`, `build`) or a side-panel pane by name (`construction`, `admissions`, `academic`, `dorm`, `dining`, selecting its first building and moving the camera there); `popup` shows the latest semester report; `none` closes whichever popover is open.
+- `hud <name>` — open a HUD popover by name (`gamemenu`, `unimenu`, `students`, `reputation`, `housing`, `money`, `build`) or a side-panel pane by name (`construction`, `admissions`, `academic`, `dorm`, `dining`, selecting its first building and moving the camera there); `popup` shows the latest semester report; `none` closes whichever popover is open; any other name prints "Unknown HUD name: `<name>`" and changes nothing.
 
 In-game: WASD/arrows pan the camera (speed scales with the zoom distance, so it
-covers the same fraction of the screen at any zoom), Q and E turn it while held,
-`[` and `]` zoom while held and the wheel or a trackpad two-finger scroll zooms
-a step at a time; right-drag pans grab-the-world style (past
+covers the same fraction of the screen at any zoom), Q and E turn it while
+held, `[` and `]` zoom while held and the wheel or a trackpad two-finger scroll
+zooms a step at a time; right-drag pans grab-the-world style (past
 `GameCamera.DragThreshold`) and middle-drag turns. `Space` toggles pause and
 `+` and `-` (main row or keypad) step the speed through 1x, 3x and 8x; the top
 bar's transport buttons (`II` `1×` `3×` `8×`) do the same with exactly one of
-them reading as pressed, next to the clock's period and week and a progress
-bar for the semester. ☰ (the game menu) and the crest (the university menu)
-sit at the bar's left, and the six slots — students, beds, cash, monthly
-expenses, next fees and reputation — fill the rest of it. The speed buttons
-unpause as well as choose the speed, while the keys only move the speed —
-stepping while paused picks what will run once it is unpaused. `B` or the
-`Build` button in the bottom-left corner opens the build panel: categories
-(with their counts) on the left, and on the right a card per type in the
-chosen category, with its price, what it adds, its upkeep and its footprint,
-greyed out while it costs more than the cash, and a footer naming the hovered
-or armed type. Choosing a card arms it and closes the panel — a translucent
-ghost then follows the cursor, green where `Campus.canBuild` accepts it and
-red where it does not (taken ground and too high a price both read red, so an
-unaffordable type still shows a ghost, it just never builds), `,` and `.` turn
-it while held (`BuildController.RotateSpeedDegrees`), and LMB builds it. The
-tool stays armed at the same angle, so a row of dorms is one click each. A
-right click or Esc puts the tool away; closing the panel no longer does. `X`
-or the `Demolish` button toggles the destroy tool — arming it, or putting it
-away when it is already armed — reddening whichever building is under the
-cursor while it is armed, and LMB removes it. The `Build` button reads as
-pressed while the panel is open, `Demolish` while the destroy tool is armed.
-With no tool armed, LMB selects the building under the cursor — or clears
-the selection when it hits nothing — and the docked side panel on the right
-opens with it, showing the building's name, category and what it holds, and
-while it is still going up, when it opens and what opening will change; its
-own Demolish button destroys the selected building.
-A new building goes up translucent and stands under construction until the next
-semester begins — September or February, always a later month than the one it
-was placed in — then turns solid by itself. It takes up its ground and can be
-selected the whole time, and `Destroy` gives the full price back while it is
-unfinished and nothing at all once it has opened. Building and destroying work
-while paused. Every open building costs upkeep, charged at the start of each
-month with the interest on any debt; a bill bigger than the cash is borrowed
-automatically, plus a fee, and Money's Borrow and Repay draw on and pay back
-the credit line in `Finances.LoanStep` steps. Top-right, under the bar, alerts
-stack for whatever is wrong now and for what just happened — an automatic
-loan, a building opening — each dated the week it appeared; a click opens its
-place and × dismisses it, and the stack shifts left of the side panel while it
-is open. Every semester start opens the
-report popup and pauses the game; Continue or Esc resumes whatever was running
-before it, and "Look at housing" leaves the game paused and opens the Housing
-dropdown instead. Esc, while the popup is showing, does what Continue does,
-and Space does nothing while it is up; otherwise Esc closes an open popover,
-then puts the tool away, then clears the selection, and then opens the Game
-menu (☰), whose Quit quits. F5 saves the
-game to the quicksave and F9 loads it back; every launch is a new game, from
-the start state.
+them reading as pressed, next to the clock's period and week and a progress bar
+for the semester. The speed buttons unpause as well as choose the speed, while
+the keys only move the speed — stepping while paused picks what will run once
+it is unpaused. `B` or the `Build` button, in the action bar at the bottom-left
+corner, opens the build panel: categories (with their counts) on the left, and
+on the right a card per type in the chosen category, with its price, what it
+adds, its upkeep and its footprint, greyed out while it costs more than the
+cash, and a footer naming the hovered or armed type. Choosing a card arms it
+and closes the panel — a translucent ghost then follows the cursor, green where
+`Campus.canBuild` accepts it and red where it does not (taken ground and too
+high a price both read red, so an unaffordable type still shows a ghost, it
+just never builds), `,` and `.` turn it while held
+(`BuildController.RotateSpeedDegrees`), and LMB builds it. The tool stays armed
+at the same angle, so a row of dorms is one click each. A right click or Esc
+puts the tool away; closing the panel no longer does. `X` or the action bar's
+`Demolish` button toggles the destroy tool the same way — arming it, or putting
+it away when it is already armed — reddening whichever building is under the
+cursor while it is armed, and LMB removes it. `Build` reads as pressed while
+the panel is open, `Demolish` while the destroy tool is armed. ☰, the game menu
+at the bar's left, holds Save, Load, New Game and Quit. Next to it, the crest
+opens the university menu — `Tab` toggles it too — Admissions Office, Finances
+and Reputation under University, Housing and Dining (each with its building
+count) under Services; a building-backed entry selects its building and moves
+the camera there and is disabled with none open, while Finances and Reputation
+open their dropdown instead. `F2` opens the side panel on the Admissions Office
+directly, the way clicking its row does; `F3` toggles the Money dropdown
+directly, without opening the university menu. Six slots, read live off the
+university every frame, fill the rest of the bar — Students, Beds, Cash,
+Monthly expenses, Fees and Reputation — and clicking one opens its dropdown:
+Students and Reputation their own, Beds the Housing dropdown, any of Cash,
+Monthly expenses or Fees the Money dropdown (what `F3` opens too), with exactly
+the slot last clicked reading pressed while Money is open. Housing, Students
+and Reputation each carry a jump onward to what they don't already show —
+Housing's "Room & meal plan prices →" opens Admissions. With no tool armed, LMB
+selects the building under the cursor — or clears the selection when it hits
+nothing — and the docked side panel on the right opens with it: the header
+names it, its category and what it holds, with a status pill while it is still
+going up. Below, the pane depends on what stands there — while under
+construction, what opening will add and when; an open Admissions Office, next
+fall's applicants and intake with the price and minimum-grade levers; an open
+academic building, dorm or dining hall, its own numbers against the campus
+total and a jump onward. Its own Demolish button destroys the selected
+building. A new building goes up translucent and stands under construction
+until the next semester begins — September or February, always a later month
+than the one it was placed in — then turns solid by itself. It takes up its
+ground and can be selected the whole time, and Demolish, from the action bar or
+the side panel, gives the full price back while it is unfinished and nothing at
+all once it has opened. Building and destroying work while paused. Every open
+building costs upkeep, charged at the start of each month with the interest on
+any debt; a bill bigger than the cash is borrowed automatically, plus a fee,
+and Money's Borrow and Repay draw on and pay back the credit line in
+`Finances.LoanStep` steps. Top-right, under the bar, alerts stack for whatever
+is wrong now and for what just happened — an automatic loan, a building opening
+— each dated the week it appeared; a click opens its place and × dismisses it,
+and the stack shifts left of the side panel while it is open. The same
+problems, and every building still going up, also mark the campus itself: over
+the open dorms' centroid while housing is past the overflow threshold, over the
+open dining halls' centroid while dining is crowded or someone goes unfed, and
+over each building under construction at its own spot — lifted above its roof
+and hidden once it falls behind the camera; clicking a marker opens the same
+place an alert would, or selects the building going up. Every semester start
+opens the report popup and pauses the game; Continue or Esc resumes whatever
+was running before it, and "Look at housing" leaves the game paused and opens
+the Housing dropdown instead. Esc, while the popup is showing, does what
+Continue does; Space, `B`, `X`, `Tab`, `F2` and `F3` do nothing while it is up.
+`F5` saves the game to the quicksave and `F9` loads it back; every launch is a
+new game, from the start state. Otherwise Esc closes an open popover, then puts
+the tool away, then clears the selection, and then opens the Game menu (☰),
+whose Quit quits.
 
 Command-line flags (`university/src/utils/command_line.gd`, passed after `--`): `--nomusic`, `--nosound` mute the `Music` / `SFX` audio buses if they exist.
 
