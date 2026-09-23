@@ -618,3 +618,24 @@ CLAUDE.md updates.
    - Alerts and campus markers.
    - The remaining keys (B, X, Tab, F2, F3).
    - `hud <name>` extended to the panes.
+
+## UI revision (2026-09-23)
+
+After playing the finished HUD, the user revised it. These decisions override the sections above, and the mockup, wherever they differ.
+
+- **Campus markers are gone.** Alerts and the side panel carry everything the markers showed.
+- **Icons are PNGs the user supplies.** They sit in `university/assets/icons/`, one per icon, same names as before, 64×64, a white glyph on transparent (the game tints them). Never SVG.
+- **Text is larger, and there's less of it. There are five label styles:**
+  - **Title**: serif, for the crest name and the overlay, pane and popup titles.
+  - **Heading**: condensed semibold, for section headings, table headers and the clock period.
+  - **Value**: condensed semibold and big, for numbers.
+  - **Body**: Barlow Regular, for rows, menus, alerts and cards.
+  - **Caption**: smaller and muted, for the labels under numbers, subtitles and notes.
+
+  Value, Body and Caption also come in good, warn, bad and dim. Those are colour only, with the same size and font. Pills are Caption text on a coloured background. Buttons use the fonts and sizes of the same five.
+- **No keyboard-shortcut hints anywhere in the UI.** A controls menu will list them later.
+- **Explanations sit behind a (?) icon.** Text that explains how something works moves into a hover tooltip on a (?) beside the thing it explains. Text that states a number or a fact stays.
+- **Students, Housing, Money and Reputation are screen-sized overlays.** They open under the top bar, which stays visible, and are closed by their slot, ×, or Esc. The game keeps running behind them. The side panel, build panel and menus stay as they are.
+- **The accent is blue.** Gold becomes blue everywhere, and the info colour merges into it. Amber stays the warning colour.
+- **The semester popup loses "Look at housing".** Continue and Esc are its only ways out.
+- **The clock reads "Week N of M".** The Fees slot already counts down to the next semester.
