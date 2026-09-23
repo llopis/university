@@ -9,7 +9,9 @@ signal ReputationChosen
 signal HousingChosen
 signal BuildingChosen(building: Building)
 
+const DormFormat: String = "%d dorm"
 const DormsFormat: String = "%d dorms"
+const HallFormat: String = "%d hall"
 const HallsFormat: String = "%d halls"
 
 @onready var admissionsButton: Button = %AdmissionsButton
@@ -39,8 +41,8 @@ func _process(_dt: float) -> void:
 		return
 	var dorms: int = _count(func(info: BuildingInfo) -> bool: return info.beds > 0)
 	var halls: int = _count(func(info: BuildingInfo) -> bool: return info.meals > 0)
-	housingCount.text = DormsFormat % dorms
-	diningCount.text = HallsFormat % halls
+	housingCount.text = (DormFormat if (dorms == 1) else DormsFormat) % dorms
+	diningCount.text = (HallFormat if (halls == 1) else HallsFormat) % halls
 	admissionsButton.disabled = not university.campus.hasOpenAdmissionsOffice()
 	diningButton.disabled = (halls == 0)
 	_tint(admissionsDot, &"good" if (university.campus.hasOpenAdmissionsOffice()) else &"dim")

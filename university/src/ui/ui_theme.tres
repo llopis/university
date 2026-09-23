@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=41 format=3]
+[gd_resource type="Theme" load_steps=43 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Medium.ttf" id="FontFile_barlowMedium"]
@@ -189,6 +189,23 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 content_margin_left = 8
+content_margin_top = 7
+content_margin_right = 8
+content_margin_bottom = 7
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_menuItemDotted"]
+content_margin_left = 24
+content_margin_top = 7
+content_margin_right = 8
+content_margin_bottom = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menuItemDottedHover"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 24
 content_margin_top = 7
 content_margin_right = 8
 content_margin_bottom = 7
@@ -501,6 +518,16 @@ MenuItem/styles/normal = SubResource("StyleBoxEmpty_menuItem")
 MenuItem/styles/disabled = SubResource("StyleBoxEmpty_menuItem")
 MenuItem/styles/hover = SubResource("StyleBoxFlat_menuItemHover")
 MenuItem/styles/focus = SubResource("StyleBoxEmpty_focus")
+
+MenuItemDotted/base_type = &"Button"
+MenuItemDotted/fonts/font = ExtResource("FontFile_barlowRegular")
+MenuItemDotted/font_sizes/font_size = 14
+MenuItemDotted/colors/font_color = Color(0.925, 0.906, 0.859, 1)
+MenuItemDotted/colors/font_disabled_color = Color(0.420, 0.459, 0.502, 1)
+MenuItemDotted/styles/normal = SubResource("StyleBoxEmpty_menuItemDotted")
+MenuItemDotted/styles/disabled = SubResource("StyleBoxEmpty_menuItemDotted")
+MenuItemDotted/styles/hover = SubResource("StyleBoxFlat_menuItemDottedHover")
+MenuItemDotted/styles/focus = SubResource("StyleBoxEmpty_focus")
 
 MenuGroup/base_type = &"Label"
 MenuGroup/fonts/font = ExtResource("FontFile_condSemiBold")
