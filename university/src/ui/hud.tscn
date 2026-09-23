@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://src/ui/ui_theme.tres" id="2_theme"]
@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" path="res://src/ui/money_dropdown.tscn" id="9_money"]
 [ext_resource type="PackedScene" path="res://src/ui/semester_popup.tscn" id="10_semesterpopup"]
 [ext_resource type="PackedScene" path="res://src/ui/side_panel.tscn" id="11_sidepanel"]
+[ext_resource type="PackedScene" path="res://src/ui/action_bar.tscn" id="12_actionbar"]
+[ext_resource type="PackedScene" path="res://src/ui/build_panel.tscn" id="13_buildpanel"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -27,6 +29,9 @@ script = ExtResource("1_hud")
 unique_name_in_owner = true
 
 [node name="SidePanel" parent="." instance=ExtResource("11_sidepanel")]
+unique_name_in_owner = true
+
+[node name="ActionBar" parent="." instance=ExtResource("12_actionbar")]
 unique_name_in_owner = true
 
 [node name="Popovers" type="Control" parent="."]
@@ -54,6 +59,9 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="MoneyDropdown" parent="Popovers" instance=ExtResource("9_money")]
+unique_name_in_owner = true
+
+[node name="BuildPanel" parent="Popovers" instance=ExtResource("13_buildpanel")]
 unique_name_in_owner = true
 
 [node name="SemesterPopup" parent="." instance=ExtResource("10_semesterpopup")]

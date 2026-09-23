@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/build_panel.gd" id="1_panel"]
+
+[node name="BuildPanel" type="PanelContainer"]
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_right = 916.0
+offset_top = -520.0
+offset_bottom = -90.0
+grow_vertical = 0
+theme_type_variation = &"BuildPanel"
+script = ExtResource("1_panel")
+
+[node name="Split" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Categories" type="MarginContainer" parent="Split"]
+layout_mode = 2
+custom_minimum_size = Vector2(190, 0)
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 10
+
+[node name="CategoryList" type="VBoxContainer" parent="Split/Categories"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="SectionTitle" type="Label" parent="Split/Categories/CategoryList"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Build"
+
+[node name="VSeparator" type="VSeparator" parent="Split"]
+layout_mode = 2
+
+[node name="Catalog" type="MarginContainer" parent="Split"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="Body" type="VBoxContainer" parent="Split/Catalog"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Scroll" type="ScrollContainer" parent="Split/Catalog/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Cards" type="GridContainer" parent="Split/Catalog/Body/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 3
+
+[node name="HSeparator" type="HSeparator" parent="Split/Catalog/Body"]
+layout_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="Split/Catalog/Body"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="FootInfo" type="Label" parent="Split/Catalog/Body/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+
+[node name="FootWarn" type="Label" parent="Split/Catalog/Body/Footer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"NoteWarn"
+
+[node name="Spacer" type="Control" parent="Split/Catalog/Body/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FootOpens" type="Label" parent="Split/Catalog/Body/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"

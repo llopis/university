@@ -11,15 +11,18 @@ const PaneAdmissions: StringName = &"admissions"
 const PaneAcademic: StringName = &"academic"
 const PaneDorm: StringName = &"dorm"
 const PaneDining: StringName = &"dining"
+const PopoverBuild: StringName = &"build"
 
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
+@onready var actionBar: ActionBar = %ActionBar
 @onready var gameMenu: GameMenu = %GameMenu
 @onready var universityMenu: UniversityMenu = %UniversityMenu
 @onready var studentsDropdown: StudentsDropdown = %StudentsDropdown
 @onready var reputationDropdown: ReputationDropdown = %ReputationDropdown
 @onready var housingDropdown: HousingDropdown = %HousingDropdown
 @onready var moneyDropdown: MoneyDropdown = %MoneyDropdown
+@onready var buildPanel: BuildPanel = %BuildPanel
 @onready var semesterPopup: SemesterPopup = %SemesterPopup
 
 var state: GameState
@@ -37,6 +40,7 @@ func _ready() -> void:
 	_popovers = {
 		&"gamemenu": gameMenu, &"unimenu": universityMenu, &"students": studentsDropdown,
 		&"reputation": reputationDropdown, &"housing": housingDropdown, &"money": moneyDropdown,
+		PopoverBuild: buildPanel,
 	}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
 	topBar.UniversityMenuPressed.connect(toggle.bind(&"unimenu"))
@@ -55,7 +59,7 @@ func _ready() -> void:
 	housingDropdown.MoneyJumped.connect(openPopover.bind(&"money"))
 
 
-func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController) -> void:
+func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController, buildingDB: BuildingInfoDB) -> void:
 	state = gameState
 	camera = gameCamera
 	controller = buildController
@@ -70,10 +74,19 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	sidePanel.CloseRequested.connect(func() -> void: controller.select(null))
 	sidePanel.PopoverWanted.connect(openPopover)
 	sidePanel.BuildingWanted.connect(showBuilding)
+	sidePanel.BuildWanted.connect(openBuildPanel)
 	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
 	state.university.SemesterStarted.connect(showReport)
 	semesterPopup.Continued.connect(_onContinued)
 	semesterPopup.HousingWanted.connect(_onHousingWanted)
+	buildPanel.university = state.university
+	buildPanel.populate(buildingDB)
+	buildPanel.showAffordable(state.university.campus)
+	state.university.finances.MoneyChanged.connect(func() -> void: buildPanel.showAffordable(state.university.campus))
+	buildPanel.BuildingChosen.connect(_armPlace)
+	actionBar.BuildPressed.connect(toggle.bind(PopoverBuild))
+	actionBar.DemolishPressed.connect(_toggleDemolish)
+	controller.ToolChanged.connect(_onToolChanged)
 
 
 func popoverOpen() -> StringName:
@@ -94,6 +107,7 @@ func openPopover(which: StringName) -> void:
 	_popovers[which].visible = true
 	topBar.setOpen(which, true)
 	_open = which
+	actionBar.showBuildOpen(_open == PopoverBuild)
 
 
 ## Closes whichever popover is open. Answers whether one was.
@@ -103,6 +117,7 @@ func closePopover() -> bool:
 	_popovers[_open].visible = false
 	topBar.setOpen(_open, false)
 	_open = None
+	actionBar.showBuildOpen(_open == PopoverBuild)
 	return true
 
 
@@ -174,17 +189,50 @@ func _onHousingWanted() -> void:
 	openPopover(&"housing")
 
 
+## Opens the build panel on one category, as the panes' "add a building" jumps do.
+func openBuildPanel(category: String) -> void:
+	openPopover(PopoverBuild)
+	buildPanel.showCategory(category)
+
+
+# Choosing a card arms it and puts the panel away, so the ground is clear to place on.
+func _armPlace(info: BuildingInfo) -> void:
+	controller.armPlace(info)
+	closePopover()
+
+
+# Demolish, the button or X, arms the destroy tool, or puts it away when armed.
+func _toggleDemolish() -> void:
+	if (controller.activeTool == BuildController.Tool.Destroy):
+		controller.cancel()
+	else:
+		controller.armDestroy()
+
+
+func _onToolChanged() -> void:
+	buildPanel.showTool(controller.activeTool, controller.placeInfo)
+	actionBar.showTool(controller.activeTool)
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if (semesterPopup.visible):
 		# The popup is modal: Continue, Esc and "Look at housing" are the ways
-		# out, and Space does nothing while it is up.
+		# out, and Space, B and X do nothing while it is up.
 		if (event.is_action_pressed(&"ExitGame")):
 			semesterPopup.dismiss()
 			get_viewport().set_input_as_handled()
-		elif (event.is_action_pressed(&"TogglePause")):
+		elif (event.is_action_pressed(&"TogglePause") or event.is_action_pressed(&"ToggleBuild") or event.is_action_pressed(&"Demolish")):
 			get_viewport().set_input_as_handled()
 		return
 	if (event.is_action_pressed(&"ExitGame") and closePopover()):
+		get_viewport().set_input_as_handled()
+		return
+	if (event.is_action_pressed(&"ToggleBuild")):
+		toggle(PopoverBuild)
+		get_viewport().set_input_as_handled()
+		return
+	if (event.is_action_pressed(&"Demolish")):
+		_toggleDemolish()
 		get_viewport().set_input_as_handled()
 		return
 	var click: InputEventMouseButton = event as InputEventMouseButton

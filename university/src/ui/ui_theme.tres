@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=58 format=3]
+[gd_resource type="Theme" load_steps=65 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Medium.ttf" id="FontFile_barlowMedium"]
@@ -12,38 +12,6 @@
 [sub_resource type="FontVariation" id="FontVariation_serifBold"]
 base_font = ExtResource("FontFile_cormorant")
 variation_opentype = { 2003265652: 700 }
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_armed"]
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
-bg_color = Color(0.95, 0.64, 0.13, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.93, 0.76, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_armed_hover"]
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
-bg_color = Color(1, 0.75, 0.28, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.93, 0.76, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.078, 0.094, 0.118, 1)
@@ -522,6 +490,128 @@ content_margin_top = 7
 content_margin_right = 10
 content_margin_bottom = 7
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_actionButtonNormal"]
+bg_color = Color(0.078, 0.094, 0.118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.16)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_actionButtonHover"]
+bg_color = Color(0.078, 0.094, 0.118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.643, 0.255, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_actionButtonPressed"]
+bg_color = Color(0.851, 0.643, 0.255, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.643, 0.255, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_buildPanel"]
+bg_color = Color(0.078, 0.094, 0.118, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.16)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 40
+content_margin_left = 0
+content_margin_top = 0
+content_margin_right = 0
+content_margin_bottom = 0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_categoryButtonNormal"]
+content_margin_left = 10
+content_margin_top = 9
+content_margin_right = 10
+content_margin_bottom = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_categoryButtonHover"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 10
+content_margin_top = 9
+content_margin_right = 10
+content_margin_bottom = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_categoryButtonPressed"]
+bg_color = Color(0.165, 0.196, 0.239, 1)
+border_width_left = 3
+border_color = Color(0.851, 0.643, 0.255, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 10
+content_margin_top = 9
+content_margin_right = 10
+content_margin_bottom = 9
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cardNormal"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.09)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 12
+content_margin_top = 10
+content_margin_right = 12
+content_margin_bottom = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cardHover"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.643, 0.255, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 12
+content_margin_top = 10
+content_margin_right = 12
+content_margin_bottom = 10
+
 [resource]
 default_font = ExtResource("FontFile_barlowRegular")
 default_font_size = 14
@@ -530,10 +620,6 @@ Label/colors/font_color = Color(0.925, 0.906, 0.859, 1)
 
 Button/fonts/font = ExtResource("FontFile_barlowMedium")
 Button/colors/font_color = Color(0.925, 0.906, 0.859, 1)
-Button/colors/font_hover_pressed_color = Color(0.11, 0.09, 0.05, 1)
-Button/colors/font_pressed_color = Color(0.11, 0.09, 0.05, 1)
-Button/styles/hover_pressed = SubResource("StyleBoxFlat_armed_hover")
-Button/styles/pressed = SubResource("StyleBoxFlat_armed")
 
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -1008,3 +1094,65 @@ LeverTitle/base_type = &"Label"
 LeverTitle/fonts/font = ExtResource("FontFile_barlowSemiBold")
 LeverTitle/font_sizes/font_size = 14
 LeverTitle/colors/font_color = Color(0.925, 0.906, 0.859, 1)
+
+ActionButton/base_type = &"Button"
+ActionButton/fonts/font = ExtResource("FontFile_condSemiBold")
+ActionButton/font_sizes/font_size = 11
+ActionButton/colors/font_color = Color(0.604, 0.643, 0.690, 1)
+ActionButton/colors/font_pressed_color = Color(0.102, 0.078, 0.031, 1)
+ActionButton/colors/font_hover_pressed_color = Color(0.102, 0.078, 0.031, 1)
+ActionButton/styles/normal = SubResource("StyleBoxFlat_actionButtonNormal")
+ActionButton/styles/hover = SubResource("StyleBoxFlat_actionButtonHover")
+ActionButton/styles/pressed = SubResource("StyleBoxFlat_actionButtonPressed")
+ActionButton/styles/hover_pressed = SubResource("StyleBoxFlat_actionButtonPressed")
+ActionButton/styles/focus = SubResource("StyleBoxEmpty_focus")
+ActionButton/colors/icon_normal_color = Color(0.925, 0.906, 0.859, 1)
+ActionButton/colors/icon_hover_color = Color(0.925, 0.906, 0.859, 1)
+ActionButton/colors/icon_pressed_color = Color(0.102, 0.078, 0.031, 1)
+ActionButton/colors/icon_hover_pressed_color = Color(0.102, 0.078, 0.031, 1)
+
+ActionKey/base_type = &"Label"
+ActionKey/fonts/font = ExtResource("FontFile_condSemiBold")
+ActionKey/font_sizes/font_size = 10
+ActionKey/colors/font_color = Color(0.420, 0.459, 0.502, 1)
+
+BuildPanel/base_type = &"PanelContainer"
+BuildPanel/styles/panel = SubResource("StyleBoxFlat_buildPanel")
+
+CategoryButton/base_type = &"Button"
+CategoryButton/fonts/font = ExtResource("FontFile_barlowMedium")
+CategoryButton/font_sizes/font_size = 14
+CategoryButton/colors/font_color = Color(0.925, 0.906, 0.859, 1)
+CategoryButton/styles/normal = SubResource("StyleBoxEmpty_categoryButtonNormal")
+CategoryButton/styles/hover = SubResource("StyleBoxFlat_categoryButtonHover")
+CategoryButton/styles/pressed = SubResource("StyleBoxFlat_categoryButtonPressed")
+CategoryButton/styles/hover_pressed = SubResource("StyleBoxFlat_categoryButtonPressed")
+CategoryButton/styles/focus = SubResource("StyleBoxEmpty_focus")
+
+CategoryCount/base_type = &"Label"
+CategoryCount/fonts/font = ExtResource("FontFile_condMedium")
+CategoryCount/font_sizes/font_size = 11
+CategoryCount/colors/font_color = Color(0.420, 0.459, 0.502, 1)
+
+Card/base_type = &"Button"
+Card/styles/normal = SubResource("StyleBoxFlat_cardNormal")
+Card/styles/hover = SubResource("StyleBoxFlat_cardHover")
+Card/styles/pressed = SubResource("StyleBoxFlat_cardHover")
+Card/styles/hover_pressed = SubResource("StyleBoxFlat_cardHover")
+Card/styles/disabled = SubResource("StyleBoxFlat_cardNormal")
+Card/styles/focus = SubResource("StyleBoxEmpty_focus")
+
+CardTitle/base_type = &"Label"
+CardTitle/fonts/font = ExtResource("FontFile_condSemiBold")
+CardTitle/font_sizes/font_size = 14
+CardTitle/colors/font_color = Color(0.925, 0.906, 0.859, 1)
+
+CardCost/base_type = &"Label"
+CardCost/fonts/font = ExtResource("FontFile_condSemiBold")
+CardCost/font_sizes/font_size = 14
+CardCost/colors/font_color = Color(0.941, 0.788, 0.416, 1)
+
+CardFx/base_type = &"Label"
+CardFx/fonts/font = ExtResource("FontFile_barlowRegular")
+CardFx/font_sizes/font_size = 12
+CardFx/colors/font_color = Color(0.604, 0.643, 0.690, 1)

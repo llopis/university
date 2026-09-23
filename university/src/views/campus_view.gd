@@ -7,7 +7,6 @@ extends Node3D
 @onready var hud: Hud = %Hud
 @onready var buildingsRoot: Node3D = %Buildings
 @onready var controller: BuildController = %BuildController
-@onready var buildMenu: BuildMenu = %BuildMenu
 
 var gameState: GameState
 
@@ -19,7 +18,7 @@ var _hoveredView: BuildingView
 
 func _ready() -> void:
 	gameState = Global.gameState
-	hud.setup(gameState, camera, controller)
+	hud.setup(gameState, camera, controller, Global.buildingDB)
 	gameState.university.campus.BuildingAdded.connect(_onBuildingAdded)
 	gameState.university.campus.BuildingRemoved.connect(_onBuildingRemoved)
 	gameState.university.campus.BuildingOpened.connect(_onBuildingOpened)
@@ -29,13 +28,6 @@ func _ready() -> void:
 	controller.setup(gameState.university.campus, camera)
 	controller.SelectionChanged.connect(_onSelectionChanged)
 	controller.HoverChanged.connect(_onHoverChanged)
-	buildMenu.populate(Global.buildingDB.all)
-	buildMenu.showAffordable(gameState.university.campus)
-	gameState.university.finances.MoneyChanged.connect(func() -> void: buildMenu.showAffordable(gameState.university.campus))
-	buildMenu.BuildingChosen.connect(controller.armPlace)
-	buildMenu.DestroyChosen.connect(controller.armDestroy)
-	buildMenu.Closed.connect(controller.cancel)
-	controller.ToolChanged.connect(func() -> void: buildMenu.showTool(controller.activeTool, controller.placeInfo))
 
 
 func _process(dt: float) -> void:

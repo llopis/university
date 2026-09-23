@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/action_bar.gd" id="1_bar"]
+[ext_resource type="Texture2D" path="res://assets/icons/hammer.svg" id="2_hammer"]
+[ext_resource type="Texture2D" path="res://assets/icons/trash.svg" id="3_trash"]
+
+[node name="ActionBar" type="HBoxContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -80.0
+offset_bottom = -16.0
+grow_vertical = 0
+theme_override_constants/separation = 6
+script = ExtResource("1_bar")
+
+[node name="BuildButton" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"ActionButton"
+toggle_mode = true
+icon = ExtResource("2_hammer")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = false
+text = "BUILD"
+
+[node name="Key" type="Label" parent="BuildButton"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 4.0
+offset_right = -6.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"ActionKey"
+text = "B"
+
+[node name="DemolishButton" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"ActionButton"
+toggle_mode = true
+icon = ExtResource("3_trash")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = false
+text = "DEMOLISH"
+
+[node name="Key" type="Label" parent="DemolishButton"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = 4.0
+offset_right = -6.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"ActionKey"
+text = "X"
