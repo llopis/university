@@ -81,7 +81,7 @@ func test_periods_run_fall_spring_summer_and_cover_the_year() -> void:
 	assert_str(GameCalendar.periodLabel(spring)).contains(GameCalendar.PeriodNames[GameCalendar.Period.Spring])
 
 
-func test_weeks_count_up_through_a_period_and_down_to_the_next() -> void:
+func test_weeks_count_up_through_a_period_and_start_again_at_the_next() -> void:
 	var weeks: int = GameCalendar.weeksInPeriod(0)
 	assert_int(GameCalendar.weekInPeriod(0)).is_equal(1)
 	assert_int(GameCalendar.weekInPeriod(weeks - 1)).is_equal(weeks)
