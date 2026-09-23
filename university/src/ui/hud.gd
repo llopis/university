@@ -17,6 +17,7 @@ const PopoverMoney: StringName = &"money"
 # The alerts' left/right offsets keep this clear of the side panel's edge.
 const AlertsMargin: float = 16.0
 
+@onready var campusMarkers: CampusMarkers = %CampusMarkers
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
 @onready var alerts: Alerts = %Alerts
@@ -68,6 +69,9 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	state = gameState
 	camera = gameCamera
 	controller = buildController
+	campusMarkers.setup(state.university, camera)
+	campusMarkers.ProblemWanted.connect(openProblem)
+	campusMarkers.BuildingWanted.connect(showBuilding)
 	topBar.state = state
 	universityMenu.university = state.university
 	studentsDropdown.setUniversity(state.university)
