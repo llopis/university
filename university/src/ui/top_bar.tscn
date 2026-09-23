@@ -41,7 +41,7 @@ layout_mode = 2
 
 [node name="CrestButton" type="Button" parent="Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 48)
+custom_minimum_size = Vector2(440, 48)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SlotButton"
@@ -85,64 +85,6 @@ layout_mode = 2
 theme_type_variation = &"Title"
 theme_override_font_sizes/font_size = 22
 clip_text = true
-
-[node name="Slots" type="HBoxContainer" parent="Row"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="StudentsSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
-unique_name_in_owner = true
-layout_mode = 2
-slotIcon = ExtResource("4_users")
-
-[node name="StudentsSep" type="VSeparator" parent="Row/Slots"]
-layout_mode = 2
-theme_type_variation = &"SlotSeparator"
-
-[node name="BedsSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
-unique_name_in_owner = true
-layout_mode = 2
-slotIcon = ExtResource("5_bed")
-
-[node name="BedsSep" type="VSeparator" parent="Row/Slots"]
-layout_mode = 2
-theme_type_variation = &"SlotSeparator"
-
-[node name="CashSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
-unique_name_in_owner = true
-layout_mode = 2
-slotIcon = ExtResource("6_coin")
-
-[node name="CashSep" type="VSeparator" parent="Row/Slots"]
-layout_mode = 2
-theme_type_variation = &"SlotSeparator"
-
-[node name="ExpensesSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
-unique_name_in_owner = true
-layout_mode = 2
-slotIcon = ExtResource("7_flow")
-
-[node name="ExpensesSep" type="VSeparator" parent="Row/Slots"]
-layout_mode = 2
-theme_type_variation = &"SlotSeparator"
-
-[node name="FeesSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
-unique_name_in_owner = true
-layout_mode = 2
-slotIcon = ExtResource("8_cal")
-
-[node name="FeesSep" type="VSeparator" parent="Row/Slots"]
-layout_mode = 2
-theme_type_variation = &"SlotSeparator"
-
-[node name="ReputationSlot" parent="Row/Slots" instance=ExtResource("3_slot")]
-unique_name_in_owner = true
-layout_mode = 2
-slotIcon = ExtResource("9_star")
-
-[node name="ReputationSep" type="VSeparator" parent="Row/Slots"]
-layout_mode = 2
-theme_type_variation = &"SlotSeparator"
 
 [node name="Spacer" type="Control" parent="Row"]
 layout_mode = 2
@@ -221,3 +163,65 @@ layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SpeedButton"
 toggle_mode = true
+
+[node name="EndMargin" type="Control" parent="Row"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Slots" type="HBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="StudentsSlot" parent="Center/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("4_users")
+
+[node name="StudentsSep" type="VSeparator" parent="Center/Slots"]
+layout_mode = 2
+theme_type_variation = &"SlotSeparator"
+
+[node name="BedsSlot" parent="Center/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("5_bed")
+
+[node name="BedsSep" type="VSeparator" parent="Center/Slots"]
+layout_mode = 2
+theme_type_variation = &"SlotSeparator"
+
+[node name="CashSlot" parent="Center/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("6_coin")
+
+[node name="CashSep" type="VSeparator" parent="Center/Slots"]
+layout_mode = 2
+theme_type_variation = &"SlotSeparator"
+
+[node name="ExpensesSlot" parent="Center/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("7_flow")
+
+[node name="ExpensesSep" type="VSeparator" parent="Center/Slots"]
+layout_mode = 2
+theme_type_variation = &"SlotSeparator"
+
+[node name="FeesSlot" parent="Center/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("8_cal")
+
+[node name="FeesSep" type="VSeparator" parent="Center/Slots"]
+layout_mode = 2
+theme_type_variation = &"SlotSeparator"
+
+[node name="ReputationSlot" parent="Center/Slots" instance=ExtResource("3_slot")]
+unique_name_in_owner = true
+layout_mode = 2
+slotIcon = ExtResource("9_star")

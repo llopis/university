@@ -599,7 +599,7 @@ corner_radius_bottom_left = 4
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topBar"]
 content_margin_left = 0.0
 content_margin_top = 0.0
-content_margin_right = 16.0
+content_margin_right = 0.0
 content_margin_bottom = 0.0
 bg_color = Color(0.201, 0.242, 0.3, 1)
 border_width_bottom = 1
