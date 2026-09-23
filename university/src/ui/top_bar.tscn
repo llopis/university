@@ -16,7 +16,7 @@
 layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 58.0
+offset_bottom = 72.0
 grow_horizontal = 2
 theme_type_variation = &"TopBar"
 script = ExtResource("1_topbar")
@@ -27,7 +27,7 @@ theme_override_constants/separation = 0
 
 [node name="MenuButton" type="Button" parent="Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(58, 58)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SlotButton"
@@ -41,7 +41,7 @@ layout_mode = 2
 
 [node name="CrestButton" type="Button" parent="Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 58)
+custom_minimum_size = Vector2(260, 72)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SlotButton"
@@ -60,7 +60,7 @@ mouse_filter = 2
 theme_override_constants/separation = 12
 
 [node name="Shield" type="PanelContainer" parent="Row/CrestButton/Crest"]
-custom_minimum_size = Vector2(36, 40)
+custom_minimum_size = Vector2(44, 50)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -69,7 +69,7 @@ theme_type_variation = &"Shield"
 [node name="Letter" type="Label" parent="Row/CrestButton/Crest/Shield"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"ShieldLetter"
+theme_type_variation = &"Title"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -81,11 +81,11 @@ mouse_filter = 2
 [node name="UniversityName" type="Label" parent="Row/CrestButton/Crest/Names"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"CrestName"
+theme_type_variation = &"Title"
 
 [node name="UniversitySub" type="Label" parent="Row/CrestButton/Crest/Names"]
 layout_mode = 2
-theme_type_variation = &"CrestSub"
+theme_type_variation = &"Caption"
 uppercase = true
 text = "University"
 
@@ -166,14 +166,14 @@ theme_override_constants/separation = 4
 [node name="PeriodLabel" type="Label" parent="Row/Clock/Period"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"ClockValue"
+theme_type_variation = &"Heading"
 uppercase = true
 horizontal_alignment = 2
 
 [node name="WeekLabel" type="Label" parent="Row/Clock/Period"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"ClockCaption"
+theme_type_variation = &"Caption"
 horizontal_alignment = 2
 
 [node name="Progress" type="Control" parent="Row/Clock/Period"]
@@ -190,7 +190,7 @@ theme_override_constants/separation = 4
 
 [node name="PauseButton" type="Button" parent="Row/Clock/Transport"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(34, 34)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SpeedButton"
@@ -200,7 +200,7 @@ icon_alignment = 1
 
 [node name="PlayButton" type="Button" parent="Row/Clock/Transport"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(34, 34)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SpeedButton"
@@ -208,7 +208,7 @@ toggle_mode = true
 
 [node name="FastButton" type="Button" parent="Row/Clock/Transport"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(34, 34)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SpeedButton"
@@ -216,7 +216,7 @@ toggle_mode = true
 
 [node name="FasterButton" type="Button" parent="Row/Clock/Transport"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(34, 34)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SpeedButton"

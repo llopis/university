@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/ui/slot.gd" id="1_slot"]
 
 [node name="Slot" type="Button"]
-custom_minimum_size = Vector2(0, 58)
+custom_minimum_size = Vector2(0, 72)
 theme_type_variation = &"SlotButton"
 toggle_mode = true
 focus_mode = 0
@@ -45,17 +45,17 @@ theme_override_constants/separation = 4
 [node name="Value" type="Label" parent="Content/Text/Line"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SlotValue"
+theme_type_variation = &"Value"
 
 [node name="Sub" type="Label" parent="Content/Text/Line"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SlotSub"
+theme_type_variation = &"Caption"
 
 [node name="Caption" type="Label" parent="Content/Text"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SlotCaption"
+theme_type_variation = &"Caption"
 uppercase = true
 
 [node name="Badge" type="Panel" parent="."]

@@ -58,12 +58,12 @@ theme_override_constants/separation = 6
 [node name="Title" type="Label" parent="Center/Box/Body/ContentMargin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"PopupTitle"
+theme_type_variation = &"Title"
 
 [node name="Sub" type="Label" parent="Center/Box/Body/ContentMargin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"PopupSub"
+theme_type_variation = &"Caption"
 uppercase = true
 
 [node name="GridMargin" type="MarginContainer" parent="Center/Box/Body/ContentMargin/Content"]
@@ -81,7 +81,7 @@ size_flags_horizontal = 3
 
 [node name="SectionTitle" type="Label" parent="Center/Box/Body/ContentMargin/Content/GridMargin/Grid/NewStudents"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "New students"
 
@@ -105,7 +105,7 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"BodyWarn"
 text = "No admission or graduation in spring."
 
 [node name="Campus" type="VBoxContainer" parent="Center/Box/Body/ContentMargin/Content/GridMargin/Grid"]
@@ -114,7 +114,7 @@ size_flags_horizontal = 3
 
 [node name="SectionTitle" type="Label" parent="Center/Box/Body/ContentMargin/Content/GridMargin/Grid/Campus"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Campus"
 

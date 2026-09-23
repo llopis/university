@@ -29,7 +29,7 @@ layout_mode = 2
 
 [node name="SectionTitle" type="Label" parent="SeatsHeader"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Seats"
 
@@ -39,7 +39,7 @@ size_flags_horizontal = 3
 
 [node name="SectionNote" type="Label" parent="SeatsHeader"]
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 text = "all academic buildings"
 
 [node name="SeatsBar" type="Control" parent="."]
@@ -52,13 +52,13 @@ script = ExtResource("3_meter")
 [node name="SeatsNote" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="ListTitle" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 
 [node name="List" type="VBoxContainer" parent="."]

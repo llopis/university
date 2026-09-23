@@ -101,11 +101,11 @@ func _rebuildDorms() -> void:
 		var nameText: String = building.info.name
 		if (building.underConstruction):
 			nameText += OpensSuffixFormat % GameCalendar.periodLabel(building.opensAtMonth)
-		_addCell(nameText, &"RowValue")
+		_addCell(nameText, &"Body")
 		var bedsText: String = (BedsCellUnderConstruction % NumberFormat.count(building.info.beds)) if (building.underConstruction) \
 			else (BedsCellFormat % [NumberFormat.count(university.residentsOf(building)), NumberFormat.count(building.info.beds)])
-		_addCell(bedsText, &"RowKey")
-		_addCell(UpkeepUnderConstruction if (building.underConstruction) else MoneyFormat.short(building.info.upkeep), &"RowKey")
+		_addCell(bedsText, &"Caption")
+		_addCell(UpkeepUnderConstruction if (building.underConstruction) else MoneyFormat.short(building.info.upkeep), &"Caption")
 
 
 func _addCell(text: String, variation: StringName) -> void:

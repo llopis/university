@@ -92,7 +92,6 @@ func test_weeks_count_up_through_a_period_and_down_to_the_next() -> void:
 	assert_int(GameCalendar.weeksToNextPeriod(0)).is_equal(GameCalendar.weeksUntil(0, GameCalendar.nextSemesterStart(0)))
 
 
-func test_the_clock_line_names_the_week_and_the_next_period() -> void:
+func test_the_clock_line_names_the_week_and_the_periods_length() -> void:
 	var line: String = GameCalendar.clockLine(0)
 	assert_str(line).contains("Week 1 of %d" % GameCalendar.weeksInPeriod(0))
-	assert_str(line).contains(GameCalendar.nextPeriodName(0))

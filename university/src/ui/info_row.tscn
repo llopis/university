@@ -10,17 +10,17 @@ script = ExtResource("1_row")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"RowKey"
+theme_type_variation = &"Caption"
 
 [node name="Value" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"RowValue"
+theme_type_variation = &"Body"
 
 [node name="Note" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 
 [node name="Pill" type="Label" parent="."]
 unique_name_in_owner = true

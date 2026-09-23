@@ -9,7 +9,7 @@ visible = false
 custom_minimum_size = Vector2(820, 0)
 anchors_preset = 0
 offset_left = 236.0
-offset_top = 58.0
+offset_top = 72.0
 theme_type_variation = &"Dropdown"
 script = ExtResource("1_students")
 
@@ -23,7 +23,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="Body/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 
 [node name="Spacer" type="Control" parent="Body/Header"]
@@ -32,7 +32,7 @@ size_flags_horizontal = 3
 
 [node name="HeaderNote" type="Label" parent="Body/Header"]
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 text = "Admissions each fall · graduation before the next fall"
 
 [node name="Kpis" type="HBoxContainer" parent="Body"]
@@ -68,25 +68,25 @@ columns = 4
 
 [node name="Class" type="Label" parent="Body/Cohorts"]
 layout_mode = 2
-theme_type_variation = &"TableHeader"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Class"
 
 [node name="Students" type="Label" parent="Body/Cohorts"]
 layout_mode = 2
-theme_type_variation = &"TableHeader"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Students"
 
 [node name="EntryGrade" type="Label" parent="Body/Cohorts"]
 layout_mode = 2
-theme_type_variation = &"TableHeader"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Entry grade"
 
 [node name="SemestersLeft" type="Label" parent="Body/Cohorts"]
 layout_mode = 2
-theme_type_variation = &"TableHeader"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Semesters left"
 
@@ -100,7 +100,7 @@ size_flags_horizontal = 3
 
 [node name="Title" type="Label" parent="Body/Lower/Housing"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Housing"
 
@@ -123,12 +123,12 @@ size_flags_horizontal = 3
 [node name="NextFallTitle" type="Label" parent="Body/Lower/NextFall"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 
 [node name="Note" type="Label" parent="Body/Lower/NextFall"]
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 text = "at today's reputation and next year's prices"
 
 [node name="SeatsToFillRow" parent="Body/Lower/NextFall" instance=ExtResource("3_row")]

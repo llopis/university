@@ -115,10 +115,10 @@ func _rebuildCohorts() -> void:
 	ordered.assign(university.students.cohorts)
 	ordered.sort_custom(func(a: Cohort, b: Cohort) -> bool: return a.semestersCompleted > b.semestersCompleted)
 	for cohort: Cohort in ordered:
-		_addCell(ClassFormat % cohort.graduationYear(month), &"RowValue")
-		_addCell(NumberFormat.count(cohort.size), &"RowKey")
-		_addCell(GradeFormat % cohort.entryGrade, &"RowKey")
-		_addCell(str(cohort.semestersLeft()), &"RowKey")
+		_addCell(ClassFormat % cohort.graduationYear(month), &"Body")
+		_addCell(NumberFormat.count(cohort.size), &"Caption")
+		_addCell(GradeFormat % cohort.entryGrade, &"Caption")
+		_addCell(str(cohort.semestersLeft()), &"Caption")
 
 
 func _addCell(text: String, variation: StringName) -> void:

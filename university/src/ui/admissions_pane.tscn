@@ -17,7 +17,7 @@ layout_mode = 2
 [node name="IntakeTitle" type="Label" parent="Intake/IntakeHeader"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 
 [node name="Spacer" type="Control" parent="Intake/IntakeHeader"]
@@ -26,7 +26,7 @@ size_flags_horizontal = 3
 
 [node name="SectionNote" type="Label" parent="Intake/IntakeHeader"]
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 text = "at today's reputation and next year's prices"
 
 [node name="Stages" type="HBoxContainer" parent="Intake"]
@@ -45,18 +45,18 @@ theme_override_constants/separation = 2
 [node name="SeatsValue" type="Label" parent="Intake/Stages/SeatsStage/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"StageValue"
+theme_type_variation = &"Value"
 
 [node name="Caption" type="Label" parent="Intake/Stages/SeatsStage/Layout"]
 layout_mode = 2
-theme_type_variation = &"StageCaption"
+theme_type_variation = &"Caption"
 uppercase = true
 text = "Seats to fill"
 
 [node name="SeatsDetail" type="Label" parent="Intake/Stages/SeatsStage/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"StageNote"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="ApplicantsStage" type="PanelContainer" parent="Intake/Stages"]
@@ -71,18 +71,18 @@ theme_override_constants/separation = 2
 [node name="ApplicantsValue" type="Label" parent="Intake/Stages/ApplicantsStage/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"StageValue"
+theme_type_variation = &"Value"
 
 [node name="Caption" type="Label" parent="Intake/Stages/ApplicantsStage/Layout"]
 layout_mode = 2
-theme_type_variation = &"StageCaption"
+theme_type_variation = &"Caption"
 uppercase = true
 text = "Expected applicants"
 
 [node name="ApplicantsDetail" type="Label" parent="Intake/Stages/ApplicantsStage/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"StageNote"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="IntakeStage" type="PanelContainer" parent="Intake/Stages"]
@@ -97,23 +97,23 @@ theme_override_constants/separation = 2
 [node name="IntakeValue" type="Label" parent="Intake/Stages/IntakeStage/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"StageValue"
+theme_type_variation = &"Value"
 
 [node name="Caption" type="Label" parent="Intake/Stages/IntakeStage/Layout"]
 layout_mode = 2
-theme_type_variation = &"StageCaption"
+theme_type_variation = &"Caption"
 uppercase = true
 text = "Expected intake"
 
 [node name="IntakeDetail" type="Label" parent="Intake/Stages/IntakeStage/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"StageNote"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="Note" type="Label" parent="Intake"]
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 text = "Seats fill from the top of the applicant list. How many apply depends on reputation and on the total price. Empty seats are upkeep with no tuition."
 
@@ -123,7 +123,7 @@ theme_override_constants/separation = 6
 
 [node name="SectionTitle" type="Label" parent="History"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Applicants per fall"
 
@@ -137,7 +137,7 @@ custom_minimum_size = Vector2(0, 80)
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"BodyWarn"
 text = "No fall admission yet."
 
 [node name="Levers" type="VBoxContainer" parent="."]
@@ -149,7 +149,7 @@ layout_mode = 2
 
 [node name="SectionTitle" type="Label" parent="Levers/LeversHeader"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Levers"
 
@@ -160,7 +160,7 @@ size_flags_horizontal = 3
 [node name="ApplyNote" type="Label" parent="Levers/LeversHeader"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 
 [node name="MinimumLever" type="PanelContainer" parent="Levers"]
 layout_mode = 2
@@ -172,7 +172,8 @@ theme_override_constants/separation = 6
 
 [node name="LeverTitle" type="Label" parent="Levers/MinimumLever/Layout"]
 layout_mode = 2
-theme_type_variation = &"LeverTitle"
+theme_type_variation = &"Heading"
+uppercase = true
 text = "Minimum entry grade"
 
 [node name="MinimumStepper" parent="Levers/MinimumLever/Layout" instance=ExtResource("2_stepper")]
@@ -181,7 +182,7 @@ layout_mode = 2
 
 [node name="Note" type="Label" parent="Levers/MinimumLever/Layout"]
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 text = "Off: every seat that has an applicant fills, and the entry grade follows how many apply. Raise it to leave seats empty in a weak year: tuition now against reputation later."
 
@@ -195,13 +196,14 @@ theme_override_constants/separation = 6
 
 [node name="LeverTitle" type="Label" parent="Levers/TuitionLever/Layout"]
 layout_mode = 2
-theme_type_variation = &"LeverTitle"
+theme_type_variation = &"Heading"
+uppercase = true
 text = "Tuition per semester"
 
 [node name="TuitionNow" type="Label" parent="Levers/TuitionLever/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 
 [node name="TuitionStepper" parent="Levers/TuitionLever/Layout" instance=ExtResource("2_stepper")]
 unique_name_in_owner = true
@@ -217,13 +219,14 @@ theme_override_constants/separation = 6
 
 [node name="LeverTitle" type="Label" parent="Levers/HousingLever/Layout"]
 layout_mode = 2
-theme_type_variation = &"LeverTitle"
+theme_type_variation = &"Heading"
+uppercase = true
 text = "Room and meal plan per semester"
 
 [node name="HousingNow" type="Label" parent="Levers/HousingLever/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 
 [node name="RoomStepper" parent="Levers/HousingLever/Layout" instance=ExtResource("2_stepper")]
 unique_name_in_owner = true
@@ -236,7 +239,7 @@ layout_mode = 2
 [node name="TotalNote" type="Label" parent="Levers/HousingLever/Layout"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="Jumps" type="HBoxContainer" parent="."]

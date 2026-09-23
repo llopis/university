@@ -141,7 +141,7 @@ func _makeBar(report: SemesterReport, latest: bool, most: int) -> VBoxContainer:
 
 	var countLabel: Label = Label.new()
 	countLabel.text = NumberFormat.count(report.applicants)
-	countLabel.theme_type_variation = &"MiniLabel"
+	countLabel.theme_type_variation = &"Caption"
 	countLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bar.add_child(countLabel)
 
@@ -152,7 +152,7 @@ func _makeBar(report: SemesterReport, latest: bool, most: int) -> VBoxContainer:
 
 	var yearLabel: Label = Label.new()
 	yearLabel.text = YearFormat % GameCalendar.year(report.month)
-	yearLabel.theme_type_variation = &"MiniLabel"
+	yearLabel.theme_type_variation = &"Caption"
 	yearLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bar.add_child(yearLabel)
 

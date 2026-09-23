@@ -7,7 +7,7 @@ visible = false
 custom_minimum_size = Vector2(460, 0)
 anchors_preset = 0
 offset_left = 58.0
-offset_top = 58.0
+offset_top = 72.0
 theme_type_variation = &"MenuPanel"
 script = ExtResource("1_menu")
 
@@ -21,7 +21,7 @@ size_flags_horizontal = 3
 
 [node name="Title" type="Label" parent="Columns/University"]
 layout_mode = 2
-theme_type_variation = &"MenuGroup"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "University"
 
@@ -68,7 +68,7 @@ size_flags_horizontal = 3
 
 [node name="Title" type="Label" parent="Columns/Services"]
 layout_mode = 2
-theme_type_variation = &"MenuGroup"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Services"
 
@@ -105,7 +105,7 @@ offset_right = -8.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"CategoryCount"
+theme_type_variation = &"Caption"
 
 [node name="DiningButton" type="Button" parent="Columns/Services"]
 unique_name_in_owner = true
@@ -140,4 +140,4 @@ offset_right = -8.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
-theme_type_variation = &"CategoryCount"
+theme_type_variation = &"Caption"

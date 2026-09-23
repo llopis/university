@@ -3,8 +3,8 @@ extends Button
 ## One top-bar slot: an icon, a number with a note beside it, and a caption.
 ## Pressing it opens its dropdown; it reads as pressed while that is open.
 
-const ValueBase: String = "SlotValue"
-const SubBase: String = "SlotSub"
+const ValueBase: String = "Value"
+const SubBase: String = "Caption"
 # Left and right padding together, around the content.
 const PaddingX: float = 36.0
 
@@ -20,7 +20,7 @@ const PaddingX: float = 36.0
 
 func _ready() -> void:
 	iconRect.texture = slotIcon
-	iconRect.self_modulate = get_theme_color("gold", "Palette")
+	iconRect.self_modulate = get_theme_color("accent", "Palette")
 
 
 func display(value: String, sub: String, caption: String, valueTone: UiTone.Tone, subTone: UiTone.Tone, warnBadge: bool) -> void:

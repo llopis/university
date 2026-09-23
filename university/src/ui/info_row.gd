@@ -3,7 +3,7 @@ extends HBoxContainer
 ## A key, its value and a note: the mockup's .row. The value takes a tone; a
 ## pill can flag it.
 
-const ValueBase: String = "RowValue"
+const ValueBase: String = "Body"
 const PillBase: String = "Pill"
 
 @onready var keyLabel: Label = %Key

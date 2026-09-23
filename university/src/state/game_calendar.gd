@@ -125,19 +125,12 @@ static func weeksToNextPeriod(weekIndex: int) -> int:
 	return weeksInPeriod(_monthOfWeek(weekIndex)) - weekInPeriod(weekIndex) + 1
 
 
-static func nextPeriodName(monthIndex: int) -> String:
-	return PeriodNames[(period(monthIndex) + 1) % PeriodNames.size()]
-
-
 ## Weeks from this week until a month's first week.
 static func weeksUntil(weekIndex: int, monthIndex: int) -> int:
 	return monthIndex * WeeksPerMonth - weekIndex
 
 
-## "Week 9 of 20 · Spring in 12 weeks".
+## "Week 9 of 20".
 static func clockLine(weekIndex: int) -> String:
 	var monthIndex: int = _monthOfWeek(weekIndex)
-	var left: int = weeksToNextPeriod(weekIndex)
-	return "Week %d of %d · %s in %d %s" % [
-		weekInPeriod(weekIndex), weeksInPeriod(monthIndex), nextPeriodName(monthIndex),
-		left, "week" if (left == 1) else "weeks"]
+	return "Week %d of %d" % [weekInPeriod(weekIndex), weeksInPeriod(monthIndex)]

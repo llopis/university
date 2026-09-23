@@ -9,12 +9,12 @@ script = ExtResource("1_kpi")
 [node name="Value" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"KpiValue"
+theme_type_variation = &"Value"
 text = "0"
 
 [node name="Caption" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"KpiCaption"
+theme_type_variation = &"Caption"
 uppercase = true
 text = "Caption"

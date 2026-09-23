@@ -17,7 +17,7 @@ script = ExtResource("1_bar")
 
 [node name="BuildButton" type="Button" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ActionButton"
@@ -30,7 +30,7 @@ text = "BUILD"
 
 [node name="DemolishButton" type="Button" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"ActionButton"

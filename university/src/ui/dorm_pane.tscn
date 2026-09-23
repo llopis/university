@@ -26,7 +26,7 @@ theme_override_constants/separation = 8
 
 [node name="SectionTitle" type="Label" parent="HousingSection"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Housing"
 
@@ -41,7 +41,7 @@ layout_mode = 2
 [node name="HousingNote" type="Label" parent="HousingSection"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="MoneySection" type="VBoxContainer" parent="."]
@@ -50,7 +50,7 @@ theme_override_constants/separation = 8
 
 [node name="SectionTitle" type="Label" parent="MoneySection"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Money"
 
@@ -65,7 +65,7 @@ layout_mode = 2
 [node name="PriceNote" type="Label" parent="MoneySection"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 text = "The room price is set for the whole university in the Admissions Office."
 

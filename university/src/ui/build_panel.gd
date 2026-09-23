@@ -107,7 +107,7 @@ func _addCategoryButton(category: String) -> void:
 	categoryList.add_child(button)
 
 	var count: Label = Label.new()
-	count.theme_type_variation = &"CategoryCount"
+	count.theme_type_variation = &"Caption"
 	count.text = CountFormat % _db.inCategory(category).size()
 	count.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	count.anchor_left = 1.0
@@ -145,19 +145,20 @@ func _addCard(info: BuildingInfo) -> void:
 	var head: HBoxContainer = HBoxContainer.new()
 	box.add_child(head)
 	var title: Label = Label.new()
-	title.theme_type_variation = &"CardTitle"
+	title.theme_type_variation = &"Heading"
+	title.uppercase = true
 	title.text = info.name
 	head.add_child(title)
 	var spacer: Control = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(spacer)
 	var cost: Label = Label.new()
-	cost.theme_type_variation = &"CardCost"
+	cost.theme_type_variation = &"Body"
 	cost.text = MoneyFormat.short(info.cost)
 	head.add_child(cost)
 
 	var fx: Label = Label.new()
-	fx.theme_type_variation = &"CardFx"
+	fx.theme_type_variation = &"Caption"
 	fx.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var adds: String = BuildingText.adds(info)

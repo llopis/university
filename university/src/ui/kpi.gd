@@ -2,7 +2,7 @@ class_name KpiView
 extends VBoxContainer
 ## One headline number and what it is, as in the mockup's dropdowns.
 
-const ValueBase: String = "KpiValue"
+const ValueBase: String = "Value"
 
 @onready var valueLabel: Label = %Value
 @onready var captionLabel: Label = %Caption

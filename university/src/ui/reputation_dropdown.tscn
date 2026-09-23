@@ -9,7 +9,7 @@ visible = false
 custom_minimum_size = Vector2(680, 0)
 anchors_preset = 0
 offset_left = 1020.0
-offset_top = 58.0
+offset_top = 72.0
 theme_type_variation = &"Dropdown"
 script = ExtResource("1_reputation")
 
@@ -23,7 +23,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="Body/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 
 [node name="Spacer" type="Control" parent="Body/Header"]
@@ -33,7 +33,7 @@ size_flags_horizontal = 3
 [node name="HeaderNote" type="Label" parent="Body/Header"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 
 [node name="Kpis" type="HBoxContainer" parent="Body"]
 layout_mode = 2
@@ -61,7 +61,7 @@ size_flags_horizontal = 3
 
 [node name="Title" type="Label" parent="Body/Columns/Target"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Target: half grades, half satisfaction"
 
@@ -79,7 +79,7 @@ layout_mode = 2
 
 [node name="Note" type="Label" parent="Body/Columns/Target"]
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 text = "Reputation sets how many apply. Price sets it too: see the Admissions Office."
 
 [node name="Satisfaction" type="VBoxContainer" parent="Body/Columns"]
@@ -89,7 +89,7 @@ size_flags_horizontal = 3
 [node name="SatisfactionTitle" type="Label" parent="Body/Columns/Satisfaction"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 
 [node name="BaselineRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]

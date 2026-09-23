@@ -5,7 +5,7 @@ extends HBoxContainer
 
 signal Stepped(direction: int)
 
-const ValueBase: String = "StepValue"
+const ValueBase: String = "Body"
 
 @onready var captionLabel: Label = %Caption
 @onready var downButton: Button = %Down

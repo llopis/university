@@ -34,7 +34,7 @@ layout_mode = 2
 
 [node name="SectionTitle" type="Label" parent="LoadSection/LoadHeader"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Load"
 
@@ -44,7 +44,7 @@ size_flags_horizontal = 3
 
 [node name="SectionNote" type="Label" parent="LoadSection/LoadHeader"]
 layout_mode = 2
-theme_type_variation = &"SectionNote"
+theme_type_variation = &"Caption"
 text = "all dining halls · housed students"
 
 [node name="LoadLine" parent="LoadSection" instance=ExtResource("3_dining")]
@@ -54,7 +54,7 @@ layout_mode = 2
 [node name="LoadNote" type="Label" parent="LoadSection"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"Note"
+theme_type_variation = &"Caption"
 autowrap_mode = 3
 
 [node name="MoneySection" type="VBoxContainer" parent="."]
@@ -63,7 +63,7 @@ theme_override_constants/separation = 8
 
 [node name="SectionTitle" type="Label" parent="MoneySection"]
 layout_mode = 2
-theme_type_variation = &"SectionTitle"
+theme_type_variation = &"Heading"
 uppercase = true
 text = "Money"
 
