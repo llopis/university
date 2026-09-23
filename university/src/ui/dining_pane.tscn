@@ -1,0 +1,87 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/ui/dining_pane.gd" id="1_pane"]
+[ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
+[ext_resource type="PackedScene" path="res://src/ui/dining_load_line.tscn" id="3_dining"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="4_row"]
+
+[node name="DiningPane" type="VBoxContainer"]
+theme_override_constants/separation = 12
+script = ExtResource("1_pane")
+
+[node name="Kpis" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="PlansKpi" parent="Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LoadKpi" parent="Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UnfedKpi" parent="Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LoadSection" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LoadHeader" type="HBoxContainer" parent="LoadSection"]
+layout_mode = 2
+
+[node name="SectionTitle" type="Label" parent="LoadSection/LoadHeader"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Load"
+
+[node name="Spacer" type="Control" parent="LoadSection/LoadHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SectionNote" type="Label" parent="LoadSection/LoadHeader"]
+layout_mode = 2
+theme_type_variation = &"SectionNote"
+text = "all dining halls · housed students"
+
+[node name="LoadLine" parent="LoadSection" instance=ExtResource("3_dining")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LoadNote" type="Label" parent="LoadSection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+
+[node name="MoneySection" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SectionTitle" type="Label" parent="MoneySection"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Money"
+
+[node name="MealFeesRow" parent="MoneySection" instance=ExtResource("4_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UpkeepRow" parent="MoneySection" instance=ExtResource("4_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Jumps" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BuildJump" type="Button" parent="Jumps"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Build a dining hall →"

@@ -23,6 +23,9 @@ const DemolishRefundFormat: String = "Demolish · refund %s"
 @onready var demolishButton: Button = %DemolishButton
 @onready var constructionPane: ConstructionPane = %ConstructionPane
 @onready var admissionsPane: AdmissionsPane = %AdmissionsPane
+@onready var academicPane: AcademicPane = %AcademicPane
+@onready var dormPane: DormPane = %DormPane
+@onready var diningPane: DiningPane = %DiningPane
 
 var university: University
 var building: Building
@@ -33,12 +36,20 @@ func _ready() -> void:
 	demolishButton.pressed.connect(_demolish)
 	constructionPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
 	admissionsPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
+	academicPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
+	academicPane.BuildWanted.connect(func(category: String) -> void: BuildWanted.emit(category))
+	academicPane.BuildingWanted.connect(func(selected: Building) -> void: BuildingWanted.emit(selected))
+	dormPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
+	diningPane.BuildWanted.connect(func(category: String) -> void: BuildWanted.emit(category))
 
 
 func setUniversity(shown: University) -> void:
 	university = shown
 	constructionPane.university = shown
 	admissionsPane.setUniversity(shown)
+	academicPane.setUniversity(shown)
+	dormPane.setUniversity(shown)
+	diningPane.setUniversity(shown)
 
 
 ## The selected building, or null to close.
@@ -66,17 +77,27 @@ func _process(_dt: float) -> void:
 func _paneFor(shown: Building) -> Control:
 	if (shown.underConstruction):
 		return constructionPane
-	if (shown.info.role() == BuildingInfo.Role.Admissions):
-		return admissionsPane
+	match shown.info.role():
+		BuildingInfo.Role.Academic:
+			return academicPane
+		BuildingInfo.Role.Housing:
+			return dormPane
+		BuildingInfo.Role.Dining:
+			return diningPane
+		BuildingInfo.Role.Admissions:
+			return admissionsPane
 	return null
 
 
 func _showPane(pane: Control) -> void:
-	var panes: Array[Control] = [constructionPane, admissionsPane]
+	var panes: Array[Control] = [constructionPane, admissionsPane, academicPane, dormPane, diningPane]
 	for candidate: Control in panes:
 		candidate.visible = (candidate == pane)
 	constructionPane.building = building
 	admissionsPane.building = building
+	academicPane.building = building
+	dormPane.building = building
+	diningPane.building = building
 
 
 func _demolish() -> void:

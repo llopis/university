@@ -1,0 +1,81 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/dorm_pane.gd" id="1_pane"]
+[ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+
+[node name="DormPane" type="VBoxContainer"]
+theme_override_constants/separation = 12
+script = ExtResource("1_pane")
+
+[node name="Kpis" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="FilledKpi" parent="Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OffCampusKpi" parent="Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HousingSection" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SectionTitle" type="Label" parent="HousingSection"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Housing"
+
+[node name="AllDormsRow" parent="HousingSection" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OpeningRow" parent="HousingSection" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HousingNote" type="Label" parent="HousingSection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+
+[node name="MoneySection" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SectionTitle" type="Label" parent="MoneySection"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Money"
+
+[node name="RoomFeesRow" parent="MoneySection" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UpkeepRow" parent="MoneySection" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PriceNote" type="Label" parent="MoneySection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+text = "The room price is set for the whole university in the Admissions Office."
+
+[node name="Jumps" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HousingJump" type="Button" parent="Jumps"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "All housing →"

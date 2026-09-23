@@ -8,6 +8,9 @@ extends Control
 const None: StringName = &""
 const PaneConstruction: StringName = &"construction"
 const PaneAdmissions: StringName = &"admissions"
+const PaneAcademic: StringName = &"academic"
+const PaneDorm: StringName = &"dorm"
+const PaneDining: StringName = &"dining"
 
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
@@ -126,10 +129,19 @@ func _firstFor(which: StringName) -> Building:
 			if (building.underConstruction):
 				return building
 	elif (which == PaneAdmissions):
-		var found: Array[Building] = state.university.campus.openWithRole(BuildingInfo.Role.Admissions)
-		if (not found.is_empty()):
-			return found[0]
+		return _firstOpen(BuildingInfo.Role.Admissions)
+	elif (which == PaneAcademic):
+		return _firstOpen(BuildingInfo.Role.Academic)
+	elif (which == PaneDorm):
+		return _firstOpen(BuildingInfo.Role.Housing)
+	elif (which == PaneDining):
+		return _firstOpen(BuildingInfo.Role.Dining)
 	return null
+
+
+func _firstOpen(role: BuildingInfo.Role) -> Building:
+	var found: Array[Building] = state.university.campus.openWithRole(role)
+	return found[0] if (not found.is_empty()) else null
 
 
 ## Shows a semester's report, pausing the game. Several in a row show the
