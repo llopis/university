@@ -32,15 +32,15 @@ func _ready() -> void:
 	financesButton.pressed.connect(func() -> void: FinancesChosen.emit())
 	reputationButton.pressed.connect(func() -> void: ReputationChosen.emit())
 	housingButton.pressed.connect(func() -> void: HousingChosen.emit())
-	admissionsButton.pressed.connect(func() -> void: _chooseFirst(func(info: BuildingInfo) -> bool: return info.admissionsOffice))
-	diningButton.pressed.connect(func() -> void: _chooseFirst(func(info: BuildingInfo) -> bool: return info.meals > 0))
+	admissionsButton.pressed.connect(func() -> void: _chooseFirst(university.campus.openWithRole(BuildingInfo.Role.Admissions)))
+	diningButton.pressed.connect(func() -> void: _chooseFirst(university.campus.openWithRole(BuildingInfo.Role.Dining)))
 
 
 func _process(_dt: float) -> void:
 	if (university == null or not visible):
 		return
-	var dorms: int = _count(func(info: BuildingInfo) -> bool: return info.beds > 0)
-	var halls: int = _count(func(info: BuildingInfo) -> bool: return info.meals > 0)
+	var dorms: int = university.campus.openWithRole(BuildingInfo.Role.Housing).size()
+	var halls: int = university.campus.openWithRole(BuildingInfo.Role.Dining).size()
 	housingCount.text = (DormFormat if (dorms == 1) else DormsFormat) % dorms
 	diningCount.text = (HallFormat if (halls == 1) else HallsFormat) % halls
 	admissionsButton.disabled = not university.campus.hasOpenAdmissionsOffice()
@@ -50,19 +50,9 @@ func _process(_dt: float) -> void:
 	_tint(diningDot, &"bad" if (university.hasProblem(Problem.Kind.DiningUnfed)) else (&"warn" if (university.hasProblem(Problem.Kind.DiningCrowded)) else &"dim"))
 
 
-func _count(isKind: Callable) -> int:
-	var total: int = 0
-	for building: Building in university.campus.openBuildings():
-		if (Variants.toBool(isKind.call(building.info))):
-			total += 1
-	return total
-
-
-func _chooseFirst(isKind: Callable) -> void:
-	for building: Building in university.campus.openBuildings():
-		if (Variants.toBool(isKind.call(building.info))):
-			BuildingChosen.emit(building)
-			return
+func _chooseFirst(buildings: Array[Building]) -> void:
+	if (not buildings.is_empty()):
+		BuildingChosen.emit(buildings[0])
 
 
 func _tint(dot: Panel, colorName: StringName) -> void:

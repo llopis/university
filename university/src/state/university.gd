@@ -55,7 +55,13 @@ func housed() -> int:
 
 ## Enrolled students without a bed on campus.
 func offCampus() -> int:
-	return students.enrolled() - housed()
+	return offCampusWith(campus.beds())
+
+
+## Students who would live off campus with that many beds, at today's
+## enrolment: what a dorm opening would change.
+func offCampusWith(bedCount: int) -> int:
+	return students.enrolled() - UniversityRules.housed(students.enrolled(), bedCount)
 
 
 func mealPlans() -> int:
@@ -172,6 +178,17 @@ func projectedFees() -> Fees:
 	return UniversityRules.fees(pricesAt(start), students.enrolled(), housedAt(start), mealPlansAt(start))
 
 
+## This semester's fees at today's numbers and this year's prices: what a
+## semester start collects.
+func feesNow() -> Fees:
+	return UniversityRules.fees(policy.current, students.enrolled(), housed(), mealPlans())
+
+
+## One dorm's room fees a semester: its residents at this year's room price.
+func roomFeesOf(building: Building) -> int:
+	return residentsOf(building) * policy.current.room
+
+
 ## Cash just before the next semester start's fees: today's, after every monthly
 ## bill until then. Charged on a copy, so an automatic draw and its fee come
 ## out exactly as the real bills would. Nothing opens between semester starts,
@@ -201,9 +218,22 @@ func lastFallReport() -> SemesterReport:
 	return null
 
 
+## Every fall start's report, oldest first: the applicants-per-fall chart.
+func fallReports() -> Array[SemesterReport]:
+	var falls: Array[SemesterReport] = []
+	for report: SemesterReport in reports:
+		if (report.isFall):
+			falls.append(report)
+	return falls
+
+
 ## The fraction of enrolled students living off campus.
 func offCampusShare() -> float:
-	return UniversityRules.offCampusShare(students.enrolled(), housed())
+	return offCampusShareWith(campus.beds())
+
+
+func offCampusShareWith(bedCount: int) -> float:
+	return UniversityRules.offCampusShare(students.enrolled(), UniversityRules.housed(students.enrolled(), bedCount))
 
 
 ## Whether that kind of problem is on the list right now: the one test views
@@ -250,7 +280,7 @@ func _startSemester(semesterMonth: int, opened: Array[Building]) -> void:
 		_startYear(report)
 	var sampled: float = satisfactionNow().total()
 	satisfactionSamples.append(sampled)
-	var fees: Fees = UniversityRules.fees(policy.current, students.enrolled(), housed(), mealPlans())
+	var fees: Fees = feesNow()
 	finances.receive(fees.total())
 	report.enrolled = students.enrolled()
 	report.housed = housed()

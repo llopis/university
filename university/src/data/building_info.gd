@@ -30,6 +30,10 @@ var buildTime: float
 # Metres: the footprint's longest side (see Building.rectFor).
 var diameter: float
 
+## What a type is for, which decides its side-panel pane and how it is counted.
+## A type with several capacities is the first that applies, in this order.
+enum Role { Admissions, Academic, Housing, Dining, Other }
+
 
 func _init(data: Dictionary) -> void:
 	id = str(data["id"])
@@ -43,6 +47,30 @@ func _init(data: Dictionary) -> void:
 	admissionsOffice = Variants.toBool(data.get("admissionsOffice", false))
 	buildTime = Variants.toFloat(data.get("buildTime", 0.0))
 	diameter = Variants.toFloat(data.get("diameter", 0.0))
+
+
+func role() -> Role:
+	if (admissionsOffice):
+		return Role.Admissions
+	if (seats > 0):
+		return Role.Academic
+	if (beds > 0):
+		return Role.Housing
+	if (meals > 0):
+		return Role.Dining
+	return Role.Other
+
+
+## What this type holds of its role: seats, beds or meals; 0 for the others.
+func capacity() -> int:
+	match role():
+		Role.Academic:
+			return seats
+		Role.Housing:
+			return beds
+		Role.Dining:
+			return meals
+	return 0
 
 
 # A Sheet money column, scaled and possibly fractional: non-negative, scaled

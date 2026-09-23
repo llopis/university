@@ -288,3 +288,35 @@ func test_open_buildings_leave_out_those_under_construction() -> void:
 	campus.startMonth(first.opensAtMonth)
 	campus.place(_info(), Vector2(Diameter * 2.0, 0.0), 0.0)
 	assert_array(campus.openBuildings()).contains_exactly([first])
+
+
+const CentroidEpsilon: float = 0.0001
+
+
+func test_the_refund_is_the_cost_until_the_building_opens() -> void:
+	var campus: Campus = _campus()
+	var building: Building = campus.place(_priced(), Vector2.ZERO, 0.0)
+	assert_int(campus.refundFor(building)).is_equal(building.info.cost)
+	campus.startMonth(building.opensAtMonth)
+	assert_int(campus.refundFor(building)).is_equal(0)
+
+
+func test_the_centroid_is_the_middle_of_the_buildings() -> void:
+	var campus: Campus = _campus()
+	var left: Building = campus.place(_info(), Vector2(-Diameter * 2.0, 0.0), 0.0)
+	var right: Building = campus.place(_info(), Vector2(Diameter * 2.0, Diameter * 2.0), 0.0)
+	var pair: Array[Building] = [left, right]
+	assert_vector(Campus.centroid(pair)).is_equal_approx((left.pos + right.pos) / 2.0, Vector2(CentroidEpsilon, CentroidEpsilon))
+	var none: Array[Building] = []
+	assert_vector(Campus.centroid(none)).is_equal(Vector2.ZERO)
+
+
+func test_open_buildings_are_found_and_counted_by_role() -> void:
+	var campus: Campus = _campus()
+	var dorm: BuildingInfo = BuildingInfo.new({"id": "dorm", "name": "Dorm", "diameter": Diameter, "beds": Beds})
+	var open: Building = campus.place(dorm, Vector2.ZERO, 0.0)
+	campus.startMonth(open.opensAtMonth)
+	campus.place(dorm, Vector2(Diameter * 2.0, 0.0), 0.0)
+	assert_array(campus.openWithRole(BuildingInfo.Role.Housing)).contains_exactly([open])
+	assert_array(campus.openWithRole(BuildingInfo.Role.Dining)).is_empty()
+	assert_int(campus.capacityFor(BuildingInfo.Role.Housing)).is_equal(campus.beds())

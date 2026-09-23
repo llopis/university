@@ -74,3 +74,41 @@ func test_the_prices_for_next_fall_follow_the_office() -> void:
 	policy.setNextTuition(Tuition)
 	assert_int(policy.pricesFor(true).tuition).is_equal(Tuition)
 	assert_int(policy.pricesFor(false).total()).is_equal(Policy.defaultPrices().total())
+
+
+const GradeEpsilon: float = 0.0001
+
+
+func test_price_steppers_move_next_years_prices_and_stop_at_zero() -> void:
+	var policy: Policy = Policy.new()
+	var tuition: int = policy.next.tuition
+	var room: int = policy.next.room
+	policy.stepNextTuition(1)
+	policy.stepNextRoom(-1)
+	assert_int(policy.next.tuition).is_equal(tuition + Policy.PriceStep)
+	assert_int(policy.next.room).is_equal(room - Policy.PriceStep)
+	policy.setNextMealPlan(0)
+	policy.stepNextMealPlan(-1)
+	assert_int(policy.next.mealPlan).is_equal(0)
+	# Only next year moves; this year's prices are locked.
+	assert_int(policy.current.total()).is_equal(Policy.defaultPrices().total())
+
+
+func test_the_minimum_starts_at_the_base_cutoff_and_turns_off_below_it() -> void:
+	var policy: Policy = Policy.new()
+	policy.stepMinimum(-1)
+	assert_float(policy.minimumGrade).is_equal(0.0)
+	policy.stepMinimum(1)
+	assert_float(policy.minimumGrade).is_equal_approx(UniversityRules.GradeBase, GradeEpsilon)
+	policy.stepMinimum(1)
+	assert_float(policy.minimumGrade).is_equal_approx(UniversityRules.GradeBase + Policy.GradeStep, GradeEpsilon)
+	policy.stepMinimum(-1)
+	policy.stepMinimum(-1)
+	assert_float(policy.minimumGrade).is_equal(0.0)
+
+
+func test_the_minimum_never_passes_the_top_grade() -> void:
+	var policy: Policy = Policy.new()
+	policy.setMinimumGrade(UniversityRules.MaxGrade)
+	policy.stepMinimum(1)
+	assert_float(policy.minimumGrade).is_equal_approx(UniversityRules.MaxGrade, GradeEpsilon)

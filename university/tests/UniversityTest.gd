@@ -328,3 +328,37 @@ func test_beds_opening_next_semester_counts_until_it_opens() -> void:
 	assert_int(university.bedsOpeningNextSemester()).is_equal(building.info.beds)
 	university.startMonth(building.opensAtMonth)
 	assert_int(university.bedsOpeningNextSemester()).is_equal(0)
+
+
+func test_more_beds_move_students_back_on_campus() -> void:
+	var university: University = _running()
+	university.students.admit(HallBeds * 2, Grade)
+	var beds: int = university.campus.beds()
+	assert_int(university.offCampusWith(beds)).is_equal(university.offCampus())
+	assert_int(university.offCampusWith(beds + HallBeds)).is_equal(maxi(university.offCampus() - HallBeds, 0))
+	assert_float(university.offCampusShareWith(beds)).is_equal_approx(university.offCampusShare(), Epsilon)
+
+
+func test_the_fees_now_are_what_the_last_semester_start_collected() -> void:
+	# _running() stands just after a spring start: nothing has changed since.
+	var university: University = _running()
+	assert_int(university.feesNow().total()).is_equal(_last(university).totalFees())
+
+
+func test_a_lone_dorms_room_fees_are_the_semesters() -> void:
+	var university: University = _running()
+	var hall: Building = university.campus.buildings[0]
+	assert_int(university.roomFeesOf(hall)).is_equal(university.feesNow().room)
+
+
+func test_fall_reports_are_the_fall_starts_oldest_first() -> void:
+	var university: University = _running()
+	assert_array(university.fallReports()).is_empty()
+	university.startMonth(university.nextFallStart())
+	var first: SemesterReport = _last(university)
+	university.startMonth(university.nextSemesterStart())
+	university.startMonth(university.nextFallStart())
+	var falls: Array[SemesterReport] = university.fallReports()
+	assert_int(falls.size()).is_equal(2)
+	assert_object(falls[0]).is_same(first)
+	assert_object(falls[1]).is_same(university.lastFallReport())

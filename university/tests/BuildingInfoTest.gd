@@ -94,3 +94,29 @@ func test_capacities_read_as_whole_numbers_and_blanks_as_none() -> void:
 	assert_int(info.meals).is_equal(650)
 	assert_bool(info.admissionsOffice).is_true()
 	assert_bool(BuildingInfo.new({"id": "y", "name": "Y"}).admissionsOffice).is_false()
+
+
+const FixtureDiameter: float = 10.0
+const FixtureCapacity: int = 10
+
+
+func test_a_type_counts_as_its_first_role_and_holds_that_capacity() -> void:
+	var both: BuildingInfo = BuildingInfo.new({"id": "both", "name": "Both", "seats": FixtureCapacity, "beds": FixtureCapacity * 2})
+	assert_int(both.role()).is_equal(BuildingInfo.Role.Academic)
+	assert_int(both.capacity()).is_equal(both.seats)
+	var office: BuildingInfo = BuildingInfo.new({"id": "office", "name": "Office", "seats": FixtureCapacity, "admissionsOffice": true})
+	assert_int(office.role()).is_equal(BuildingInfo.Role.Admissions)
+	assert_int(office.capacity()).is_equal(0)
+	assert_int(BuildingInfo.new({"id": "bare", "name": "Bare"}).role()).is_equal(BuildingInfo.Role.Other)
+
+
+func test_categories_keep_the_order_the_sheet_first_uses_them() -> void:
+	var records: Array[Dictionary] = [
+		{"id": "a", "name": "A", "category": "Second", "diameter": FixtureDiameter},
+		{"id": "b", "name": "B", "category": "First", "diameter": FixtureDiameter},
+		{"id": "c", "name": "C", "category": "Second", "diameter": FixtureDiameter},
+	]
+	var db: BuildingInfoDB = BuildingInfoDB.new(records)
+	assert_array(db.categories()).contains_exactly(["Second", "First"])
+	assert_int(db.inCategory("Second").size()).is_equal(2)
+	assert_object(db.inCategory("Second")[0]).is_same(db.info("a"))

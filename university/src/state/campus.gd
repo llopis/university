@@ -70,8 +70,9 @@ func destroy(building: Building) -> void:
 	if (not buildings.has(building)):
 		return
 	buildings.erase(building)
-	if (building.underConstruction):
-		finances.refund(building.info.cost)
+	var refunded: int = refundFor(building)
+	if (refunded > 0):
+		finances.refund(refunded)
 	BuildingRemoved.emit(building)
 
 
@@ -150,6 +151,45 @@ func openBuildings() -> Array[Building]:
 		if (not building.underConstruction):
 			open.append(building)
 	return open
+
+
+## The open buildings of one role, in placement order.
+func openWithRole(role: BuildingInfo.Role) -> Array[Building]:
+	var found: Array[Building] = []
+	for building: Building in openBuildings():
+		if (building.info.role() == role):
+			found.append(building)
+	return found
+
+
+## What the open buildings hold of one role: seats, beds or meals.
+func capacityFor(role: BuildingInfo.Role) -> int:
+	match role:
+		BuildingInfo.Role.Academic:
+			return seats()
+		BuildingInfo.Role.Housing:
+			return beds()
+		BuildingInfo.Role.Dining:
+			return meals()
+	return 0
+
+
+## What destroying a building gives back: its full cost while it is still under
+## construction, nothing once it has opened. The one rule destroy and the
+## Demolish button both read.
+func refundFor(building: Building) -> int:
+	return building.info.cost if (building.underConstruction) else 0
+
+
+## The middle of some buildings on the ground, where a marker about them
+## stands; the origin for none.
+static func centroid(group: Array[Building]) -> Vector2:
+	if (group.is_empty()):
+		return Vector2.ZERO
+	var sum: Vector2 = Vector2.ZERO
+	for building: Building in group:
+		sum += building.pos
+	return sum / float(group.size())
 
 
 # Open now, or due to open by that month. At the campus's own month this is
