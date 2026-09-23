@@ -104,3 +104,16 @@ func test_receiving_adds_to_the_cash() -> void:
 	finances.receive(Bill)
 	assert_int(finances.cash).is_equal(Cash + Bill)
 	assert_int(finances.debt).is_equal(Borrowed)
+
+
+func test_borrowing_is_possible_until_the_line_is_full() -> void:
+	var finances: Finances = _finances(0, 0)
+	assert_bool(finances.canBorrow()).is_true()
+	finances.borrow(Finances.CreditLimit)
+	assert_bool(finances.canBorrow()).is_false()
+
+
+func test_repaying_needs_both_debt_and_cash() -> void:
+	assert_bool(_finances(Cash, 0).canRepay()).is_false()
+	assert_bool(_finances(0, Borrowed).canRepay()).is_false()
+	assert_bool(_finances(Cash, Borrowed).canRepay()).is_true()

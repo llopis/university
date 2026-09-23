@@ -1,0 +1,130 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/ui/housing_dropdown.gd" id="1_housing"]
+[ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+[ext_resource type="Script" path="res://src/ui/meter_bar.gd" id="4_meter"]
+
+[node name="HousingDropdown" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(640, 0)
+anchors_preset = 0
+offset_left = 420.0
+offset_top = 58.0
+theme_type_variation = &"Dropdown"
+script = ExtResource("1_housing")
+
+[node name="Body" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+
+[node name="Kpis" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="FilledKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OffCampusKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ThresholdKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OpeningKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OverflowNote" type="Label" parent="Body"]
+layout_mode = 2
+theme_type_variation = &"NoteWarn"
+autowrap_mode = 3
+text = "Off-campus students pay tuition only: no room fee and no meal plan. Past the threshold, satisfaction drops for the whole university."
+
+[node name="Dorms" type="GridContainer" parent="Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 6
+columns = 3
+
+[node name="Dorm" type="Label" parent="Body/Dorms"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Dorm"
+
+[node name="Beds" type="Label" parent="Body/Dorms"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Beds"
+
+[node name="Upkeep" type="Label" parent="Body/Dorms"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Upkeep / mo"
+
+[node name="Dining" type="VBoxContainer" parent="Body"]
+layout_mode = 2
+
+[node name="SectionTitle" type="Label" parent="Body/Dining"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Dining"
+
+[node name="DinersRow" parent="Body/Dining" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LoadLine" type="HBoxContainer" parent="Body/Dining"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Key" type="Label" parent="Body/Dining/LoadLine"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"RowKey"
+text = "Load"
+
+[node name="LoadBar" type="Control" parent="Body/Dining/LoadLine"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 8)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("4_meter")
+
+[node name="LoadValue" type="Label" parent="Body/Dining/LoadLine"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"RowValue"
+
+[node name="NoDiningNote" type="Label" parent="Body/Dining"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"NoteWarn"
+text = "No dining hall: housed students can't eat."
+
+[node name="Foot" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MoneyJump" type="Button" parent="Body/Foot"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Room & meal plan prices →"

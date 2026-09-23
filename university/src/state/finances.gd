@@ -52,6 +52,16 @@ func availableCredit() -> int:
 	return maxi(CreditLimit - debt, 0)
 
 
+## Whether a borrow would take anything: the line is not full.
+func canBorrow() -> bool:
+	return availableCredit() > 0
+
+
+## Whether a repay would pay anything: there is debt and cash to pay it with.
+func canRepay() -> bool:
+	return mini(debt, cash) > 0
+
+
 ## Draws up to amount on the credit line, never past the limit. Returns what it took.
 func borrow(amount: int) -> int:
 	var taken: int = clampi(amount, 0, availableCredit())

@@ -12,6 +12,8 @@ const None: StringName = &""
 @onready var universityMenu: UniversityMenu = %UniversityMenu
 @onready var studentsDropdown: StudentsDropdown = %StudentsDropdown
 @onready var reputationDropdown: ReputationDropdown = %ReputationDropdown
+@onready var housingDropdown: HousingDropdown = %HousingDropdown
+@onready var moneyDropdown: MoneyDropdown = %MoneyDropdown
 
 var state: GameState
 var camera: GameCamera
@@ -22,15 +24,25 @@ var _open: StringName = None
 
 
 func _ready() -> void:
-	_popovers = {&"gamemenu": gameMenu, &"unimenu": universityMenu, &"students": studentsDropdown, &"reputation": reputationDropdown}
+	_popovers = {
+		&"gamemenu": gameMenu, &"unimenu": universityMenu, &"students": studentsDropdown,
+		&"reputation": reputationDropdown, &"housing": housingDropdown, &"money": moneyDropdown,
+	}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
 	topBar.UniversityMenuPressed.connect(toggle.bind(&"unimenu"))
 	topBar.StudentsPressed.connect(toggle.bind(&"students"))
+	topBar.HousingPressed.connect(toggle.bind(&"housing"))
+	topBar.MoneyPressed.connect(toggle.bind(&"money"))
 	topBar.ReputationPressed.connect(toggle.bind(&"reputation"))
 	gameMenu.Chosen.connect(closePopover)
 	universityMenu.BuildingChosen.connect(_showBuilding)
 	universityMenu.ReputationChosen.connect(openPopover.bind(&"reputation"))
+	universityMenu.HousingChosen.connect(openPopover.bind(&"housing"))
+	universityMenu.FinancesChosen.connect(openPopover.bind(&"money"))
 	studentsDropdown.ReputationJumped.connect(openPopover.bind(&"reputation"))
+	studentsDropdown.HousingJumped.connect(openPopover.bind(&"housing"))
+	reputationDropdown.HousingJumped.connect(openPopover.bind(&"housing"))
+	housingDropdown.MoneyJumped.connect(openPopover.bind(&"money"))
 
 
 func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController) -> void:
@@ -41,6 +53,8 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	universityMenu.university = state.university
 	studentsDropdown.setUniversity(state.university)
 	reputationDropdown.university = state.university
+	housingDropdown.setUniversity(state.university)
+	moneyDropdown.setState(state)
 	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
 
 

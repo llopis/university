@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://src/ui/ui_theme.tres" id="2_theme"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" path="res://src/ui/university_menu.tscn" id="5_unimenu"]
 [ext_resource type="PackedScene" path="res://src/ui/students_dropdown.tscn" id="6_students"]
 [ext_resource type="PackedScene" path="res://src/ui/reputation_dropdown.tscn" id="7_reputation"]
+[ext_resource type="PackedScene" path="res://src/ui/housing_dropdown.tscn" id="8_housing"]
+[ext_resource type="PackedScene" path="res://src/ui/money_dropdown.tscn" id="9_money"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -41,4 +43,10 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="ReputationDropdown" parent="Popovers" instance=ExtResource("7_reputation")]
+unique_name_in_owner = true
+
+[node name="HousingDropdown" parent="Popovers" instance=ExtResource("8_housing")]
+unique_name_in_owner = true
+
+[node name="MoneyDropdown" parent="Popovers" instance=ExtResource("9_money")]
 unique_name_in_owner = true
