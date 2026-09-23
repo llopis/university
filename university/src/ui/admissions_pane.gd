@@ -112,16 +112,26 @@ func _rebuildChart() -> void:
 		chart.remove_child(child)
 		child.queue_free()
 	var falls: Array[SemesterReport] = university.fallReports()
-	var start: int = maxi(falls.size() - ChartFalls, 0)
-	noFallsNote.visible = (start >= falls.size())
+	noFallsNote.visible = falls.is_empty()
 	chart.visible = not noFallsNote.visible
 	if (noFallsNote.visible):
 		return
+	var start: int = maxi(falls.size() - ChartFalls, 0)
 	var most: int = 0
 	for i: int in range(start, falls.size()):
 		most = maxi(most, falls[i].applicants)
+	# Fixed slots: empty columns lead so the shown reports sit in the rightmost
+	# columns, oldest to latest, and the latest (gold) bar is always on the right.
+	for i: int in range(ChartFalls - (falls.size() - start)):
+		chart.add_child(_makeEmptySlot())
 	for i: int in range(start, falls.size()):
 		chart.add_child(_makeBar(falls[i], i == falls.size() - 1, most))
+
+
+func _makeEmptySlot() -> VBoxContainer:
+	var slot: VBoxContainer = VBoxContainer.new()
+	slot.size_flags_horizontal = SIZE_EXPAND_FILL
+	return slot
 
 
 func _makeBar(report: SemesterReport, latest: bool, most: int) -> VBoxContainer:
@@ -137,7 +147,7 @@ func _makeBar(report: SemesterReport, latest: bool, most: int) -> VBoxContainer:
 
 	var fill: Panel = Panel.new()
 	fill.theme_type_variation = &"MiniBarOn" if (latest) else &"MiniBar"
-	fill.custom_minimum_size.y = ChartHeight * float(report.applicants) / float(most)
+	fill.custom_minimum_size.y = ChartHeight * float(report.applicants) / float(maxi(most, 1))
 	bar.add_child(fill)
 
 	var yearLabel: Label = Label.new()
