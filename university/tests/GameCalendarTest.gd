@@ -49,3 +49,10 @@ func test_only_september_starts_a_fall() -> void:
 	assert_bool(GameCalendar.isFallStart(0)).is_true()
 	assert_bool(GameCalendar.isFallStart(GameCalendar.MonthsPerYear)).is_true()
 	assert_bool(GameCalendar.isFallStart(GameCalendar.nextSemesterStart(0))).is_false()
+
+
+func test_next_fall_is_strictly_after_the_given_month() -> void:
+	# From a month that itself starts a fall, the next one is a year later.
+	assert_int(GameCalendar.nextFallStart(0)).is_equal(GameCalendar.MonthsPerYear)
+	var february: int = GameCalendar.nextSemesterStart(0)
+	assert_int(GameCalendar.nextFallStart(february)).is_equal(GameCalendar.MonthsPerYear)

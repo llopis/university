@@ -51,3 +51,12 @@ static func nextSemesterStart(monthIndex: int) -> int:
 	while (not isSemesterStart(next)):
 		next += 1
 	return next
+
+
+## The first fall start strictly after a month: a month that itself starts a
+## fall looks ahead to the following one.
+static func nextFallStart(monthIndex: int) -> int:
+	var next: int = monthIndex + 1
+	while (not isFallStart(next)):
+		next += 1
+	return next
