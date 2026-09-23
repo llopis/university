@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://src/views/game_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://src/views/build_controller.gd" id="6_controller"]
 [ext_resource type="PackedScene" path="res://src/ui/build_menu.tscn" id="7_menu"]
-[ext_resource type="PackedScene" path="res://src/ui/info_panel.tscn" id="8_info"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="9_hud"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
@@ -51,9 +50,6 @@ environment = SubResource("Environment_main")
 [node name="UI root" type="CanvasLayer" parent="."]
 
 [node name="BuildMenu" parent="UI root" instance=ExtResource("7_menu")]
-unique_name_in_owner = true
-
-[node name="InfoPanel" parent="UI root" instance=ExtResource("8_info")]
 unique_name_in_owner = true
 
 [node name="Hud" parent="UI root" instance=ExtResource("9_hud")]

@@ -6,8 +6,10 @@ extends Control
 ## popover and still reaches the world; Esc closes it first of all.
 
 const None: StringName = &""
+const PaneConstruction: StringName = &"construction"
 
 @onready var topBar: TopBar = %TopBar
+@onready var sidePanel: SidePanel = %SidePanel
 @onready var gameMenu: GameMenu = %GameMenu
 @onready var universityMenu: UniversityMenu = %UniversityMenu
 @onready var studentsDropdown: StudentsDropdown = %StudentsDropdown
@@ -39,7 +41,7 @@ func _ready() -> void:
 	topBar.MoneyPressed.connect(toggle.bind(&"money"))
 	topBar.ReputationPressed.connect(toggle.bind(&"reputation"))
 	gameMenu.Chosen.connect(closePopover)
-	universityMenu.BuildingChosen.connect(_showBuilding)
+	universityMenu.BuildingChosen.connect(showBuilding)
 	universityMenu.ReputationChosen.connect(openPopover.bind(&"reputation"))
 	universityMenu.HousingChosen.connect(openPopover.bind(&"housing"))
 	universityMenu.FinancesChosen.connect(openPopover.bind(&"money"))
@@ -59,6 +61,11 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	reputationDropdown.university = state.university
 	housingDropdown.setUniversity(state.university)
 	moneyDropdown.setState(state)
+	sidePanel.setUniversity(state.university)
+	controller.SelectionChanged.connect(sidePanel.showBuilding)
+	sidePanel.CloseRequested.connect(func() -> void: controller.select(null))
+	sidePanel.PopoverWanted.connect(openPopover)
+	sidePanel.BuildingWanted.connect(showBuilding)
 	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
 	state.university.SemesterStarted.connect(showReport)
 	semesterPopup.Continued.connect(_onContinued)
@@ -95,10 +102,29 @@ func closePopover() -> bool:
 	return true
 
 
-func _showBuilding(building: Building) -> void:
+func showBuilding(building: Building) -> void:
 	closePopover()
 	controller.select(building)
 	camera.setTarget(building.pos)
+
+
+## Shows the pane a name stands for, by selecting its first building and
+## moving the camera to it; does nothing when there is no such building.
+## Answers whether there was one. For the console and the keys.
+func showPane(which: StringName) -> bool:
+	var found: Building = _firstFor(which)
+	if (found == null):
+		return false
+	showBuilding(found)
+	return true
+
+
+func _firstFor(which: StringName) -> Building:
+	if (which == PaneConstruction):
+		for building: Building in state.university.campus.buildings:
+			if (building.underConstruction):
+				return building
+	return null
 
 
 ## Shows a semester's report, pausing the game. Several in a row show the

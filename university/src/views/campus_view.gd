@@ -8,7 +8,6 @@ extends Node3D
 @onready var buildingsRoot: Node3D = %Buildings
 @onready var controller: BuildController = %BuildController
 @onready var buildMenu: BuildMenu = %BuildMenu
-@onready var infoPanel: InfoPanel = %InfoPanel
 
 var gameState: GameState
 
@@ -37,7 +36,6 @@ func _ready() -> void:
 	buildMenu.DestroyChosen.connect(controller.armDestroy)
 	buildMenu.Closed.connect(controller.cancel)
 	controller.ToolChanged.connect(func() -> void: buildMenu.showTool(controller.activeTool, controller.placeInfo))
-	controller.SelectionChanged.connect(infoPanel.showBuilding)
 
 
 func _process(dt: float) -> void:
@@ -95,5 +93,3 @@ func _onBuildingRemoved(building: Building) -> void:
 
 func _onBuildingOpened(building: Building) -> void:
 	viewFor(building).setUnderConstruction(false)
-	if (building == controller.selected):
-		infoPanel.showBuilding(building)

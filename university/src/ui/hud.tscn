@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://src/ui/ui_theme.tres" id="2_theme"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://src/ui/housing_dropdown.tscn" id="8_housing"]
 [ext_resource type="PackedScene" path="res://src/ui/money_dropdown.tscn" id="9_money"]
 [ext_resource type="PackedScene" path="res://src/ui/semester_popup.tscn" id="10_semesterpopup"]
+[ext_resource type="PackedScene" path="res://src/ui/side_panel.tscn" id="11_sidepanel"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -23,6 +24,9 @@ theme = ExtResource("2_theme")
 script = ExtResource("1_hud")
 
 [node name="TopBar" parent="." instance=ExtResource("3_topbar")]
+unique_name_in_owner = true
+
+[node name="SidePanel" parent="." instance=ExtResource("11_sidepanel")]
 unique_name_in_owner = true
 
 [node name="Popovers" type="Control" parent="."]

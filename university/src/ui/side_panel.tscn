@@ -1,0 +1,103 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/side_panel.gd" id="1_panel"]
+[ext_resource type="PackedScene" path="res://src/ui/construction_pane.tscn" id="2_construction"]
+
+[node name="SidePanel" type="PanelContainer"]
+visible = false
+anchors_preset = 11
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -420.0
+offset_top = 58.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+theme_type_variation = &"SidePanel"
+script = ExtResource("1_panel")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Layout"]
+layout_mode = 2
+theme_type_variation = &"PaneHeader"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Layout/Header"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Titles" type="VBoxContainer" parent="Layout/Header/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="Layout/Header/HBoxContainer/Titles"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PaneTitle"
+text = "Building"
+
+[node name="Sub" type="Label" parent="Layout/Header/HBoxContainer/Titles"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"PaneSub"
+uppercase = true
+
+[node name="StatusPill" type="Label" parent="Layout/Header/HBoxContainer/Titles"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"Pill"
+
+[node name="CloseButton" type="Button" parent="Layout/Header/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+theme_type_variation = &"CloseButton"
+text = "×"
+
+[node name="Scroll" type="ScrollContainer" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Body" type="MarginContainer" parent="Layout/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="Panes" type="VBoxContainer" parent="Layout/Scroll/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ConstructionPane" parent="Layout/Scroll/Body/Panes" instance=ExtResource("2_construction")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Footer" type="MarginContainer" parent="Layout"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Layout/Footer"]
+layout_mode = 2
+
+[node name="DemolishButton" type="Button" parent="Layout/Footer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"GhostButton"
+text = "Demolish"

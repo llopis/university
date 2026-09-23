@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/construction_pane.gd" id="1_pane"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="2_row"]
+
+[node name="ConstructionPane" type="VBoxContainer"]
+theme_override_constants/separation = 10
+script = ExtResource("1_pane")
+
+[node name="OpensTitle" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "When it opens"
+
+[node name="CapacityRow" parent="." instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OffCampusRow" parent="." instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UpkeepRow" parent="." instance=ExtResource("2_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RefundNote" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+
+[node name="Jump" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "All housing →"
