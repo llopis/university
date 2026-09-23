@@ -1,0 +1,162 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/students_dropdown.gd" id="1_students"]
+[ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+
+[node name="StudentsDropdown" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(820, 0)
+anchors_preset = 0
+offset_left = 236.0
+offset_top = 58.0
+theme_type_variation = &"Dropdown"
+script = ExtResource("1_students")
+
+[node name="Body" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Body/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+
+[node name="Spacer" type="Control" parent="Body/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeaderNote" type="Label" parent="Body/Header"]
+layout_mode = 2
+theme_type_variation = &"SectionNote"
+text = "Admissions each fall · graduation before the next fall"
+
+[node name="Kpis" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="EnrolledKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OpenSeatsKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AdmittedKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GraduatingKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GradeKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cohorts" type="GridContainer" parent="Body"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 6
+columns = 4
+
+[node name="Class" type="Label" parent="Body/Cohorts"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Class"
+
+[node name="Students" type="Label" parent="Body/Cohorts"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Students"
+
+[node name="EntryGrade" type="Label" parent="Body/Cohorts"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Entry grade"
+
+[node name="SemestersLeft" type="Label" parent="Body/Cohorts"]
+layout_mode = 2
+theme_type_variation = &"TableHeader"
+uppercase = true
+text = "Semesters left"
+
+[node name="Lower" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Housing" type="VBoxContainer" parent="Body/Lower"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="Body/Lower/Housing"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Housing"
+
+[node name="OnCampusRow" parent="Body/Lower/Housing" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OffCampusRow" parent="Body/Lower/Housing" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OpeningRow" parent="Body/Lower/Housing" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="NextFall" type="VBoxContainer" parent="Body/Lower"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NextFallTitle" type="Label" parent="Body/Lower/NextFall"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+
+[node name="Note" type="Label" parent="Body/Lower/NextFall"]
+layout_mode = 2
+theme_type_variation = &"SectionNote"
+text = "at today's reputation and next year's prices"
+
+[node name="SeatsToFillRow" parent="Body/Lower/NextFall" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ApplicantsRow" parent="Body/Lower/NextFall" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="IntakeRow" parent="Body/Lower/NextFall" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Foot" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HousingJump" type="Button" parent="Body/Foot"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Housing →"
+
+[node name="ReputationJump" type="Button" parent="Body/Foot"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Reputation →"

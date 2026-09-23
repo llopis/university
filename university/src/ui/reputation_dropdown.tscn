@@ -1,0 +1,120 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://src/ui/reputation_dropdown.gd" id="1_reputation"]
+[ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
+[ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
+
+[node name="ReputationDropdown" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(680, 0)
+anchors_preset = 0
+offset_left = 1020.0
+offset_top = 58.0
+theme_type_variation = &"Dropdown"
+script = ExtResource("1_reputation")
+
+[node name="Body" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Body/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+
+[node name="Spacer" type="Control" parent="Body/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeaderNote" type="Label" parent="Body/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionNote"
+
+[node name="Kpis" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="ReputationKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TargetKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AfterKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Columns" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Target" type="VBoxContainer" parent="Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="Body/Columns/Target"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Target: half grades, half satisfaction"
+
+[node name="GradeRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="YearSatisfactionRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TargetRow" parent="Body/Columns/Target" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Note" type="Label" parent="Body/Columns/Target"]
+layout_mode = 2
+theme_type_variation = &"Note"
+text = "Reputation sets how many apply. Price sets it too: see the Admissions Office."
+
+[node name="Satisfaction" type="VBoxContainer" parent="Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SatisfactionTitle" type="Label" parent="Body/Columns/Satisfaction"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+
+[node name="BaselineRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HousingPenaltyRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CrowdingPenaltyRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UnfedPenaltyRow" parent="Body/Columns/Satisfaction" instance=ExtResource("3_row")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Foot" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HousingJump" type="Button" parent="Body/Foot"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Housing →"

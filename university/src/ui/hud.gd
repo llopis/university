@@ -10,6 +10,8 @@ const None: StringName = &""
 @onready var topBar: TopBar = %TopBar
 @onready var gameMenu: GameMenu = %GameMenu
 @onready var universityMenu: UniversityMenu = %UniversityMenu
+@onready var studentsDropdown: StudentsDropdown = %StudentsDropdown
+@onready var reputationDropdown: ReputationDropdown = %ReputationDropdown
 
 var state: GameState
 var camera: GameCamera
@@ -20,11 +22,15 @@ var _open: StringName = None
 
 
 func _ready() -> void:
-	_popovers = {&"gamemenu": gameMenu, &"unimenu": universityMenu}
+	_popovers = {&"gamemenu": gameMenu, &"unimenu": universityMenu, &"students": studentsDropdown, &"reputation": reputationDropdown}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
 	topBar.UniversityMenuPressed.connect(toggle.bind(&"unimenu"))
+	topBar.StudentsPressed.connect(toggle.bind(&"students"))
+	topBar.ReputationPressed.connect(toggle.bind(&"reputation"))
 	gameMenu.Chosen.connect(closePopover)
 	universityMenu.BuildingChosen.connect(_showBuilding)
+	universityMenu.ReputationChosen.connect(openPopover.bind(&"reputation"))
+	studentsDropdown.ReputationJumped.connect(openPopover.bind(&"reputation"))
 
 
 func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController) -> void:
@@ -33,6 +39,8 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	controller = buildController
 	topBar.state = state
 	universityMenu.university = state.university
+	studentsDropdown.setUniversity(state.university)
+	reputationDropdown.university = state.university
 	controller.NothingToCancel.connect(openPopover.bind(&"gamemenu"))
 
 
