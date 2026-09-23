@@ -21,6 +21,10 @@ enum Tool { None, Place, Destroy }
 # Degrees per second the ghost turns while a rotate key is held.
 const RotateSpeedDegrees: float = 90.0
 
+## The Hud turns this off while an overlay covers the view, so its rotate keys
+## stop turning the ghost underneath it.
+var keysEnabled: bool = true
+
 var activeTool: Tool = Tool.None
 # The type being placed; null unless the tool is Place.
 var placeInfo: BuildingInfo
@@ -117,9 +121,10 @@ func _onBuildingRemoved(building: Building) -> void:
 # still cursor, and the rotate keys are held.
 func _process(dt: float) -> void:
 	if (activeTool == Tool.Place):
-		var turn: float = Input.get_axis("RotateLeft", "RotateRight")
-		if (turn != 0.0):
-			setAngle(_angle + turn * deg_to_rad(RotateSpeedDegrees) * dt)
+		if (keysEnabled):
+			var turn: float = Input.get_axis("RotateLeft", "RotateRight")
+			if (turn != 0.0):
+				setAngle(_angle + turn * deg_to_rad(RotateSpeedDegrees) * dt)
 		_updateGhost()
 	elif (activeTool == Tool.Destroy):
 		_setHovered(_pick(_mouse) if (_hasMouse) else null)

@@ -35,6 +35,10 @@ const TurnSpeed: float = 90.0
 const ZoomSpeed: float = 4.0
 const Ground: Plane = Plane(Vector3.UP, 0.0)
 
+## The Hud turns this off while an overlay covers the view, so its keys stop
+## panning, turning or zooming the camera underneath it.
+var keysEnabled: bool = true
+
 var _target: Vector3 = Vector3.ZERO
 var _distance: float = StartZoom
 # Degrees about the vertical axis, in [0, FullTurn).
@@ -177,6 +181,8 @@ func groundPoint(screen: Vector2) -> Variant:
 
 
 func _process(dt: float) -> void:
+	if (not keysEnabled):
+		return
 	_keyboardTurn(dt)
 	_keyboardZoom(dt)
 	var dir: Vector2 = Input.get_vector("MoveLeft", "MoveRight", "MoveUp", "MoveDown")

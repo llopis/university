@@ -1,5 +1,5 @@
 class_name StudentsDropdown
-extends PanelContainer
+extends Control
 ## Who is enrolled: the headline numbers, the classes, where they live, and
 ## what next fall looks like at today's reputation and next year's prices.
 
@@ -29,8 +29,8 @@ const SeatsToFillKey: String = "Seats to fill"
 const ApplicantsKey: String = "Expected applicants"
 const IntakeKey: String = "Expected intake"
 
+@onready var dim: Panel = %Dim
 @onready var title: Label = %Title
-@onready var closeButton: Button = %CloseButton
 @onready var enrolledKpi: KpiView = %EnrolledKpi
 @onready var openSeatsKpi: KpiView = %OpenSeatsKpi
 @onready var admittedKpi: KpiView = %AdmittedKpi
@@ -55,9 +55,16 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = cohortsGrid.get_child_count()
 	visibility_changed.connect(_rebuildCohorts)
-	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
+	dim.gui_input.connect(_onDimInput)
 	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
 	reputationJump.pressed.connect(func() -> void: ReputationJumped.emit())
+
+
+func _onDimInput(event: InputEvent) -> void:
+	var click: InputEventMouseButton = event as InputEventMouseButton
+	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
+		CloseRequested.emit()
+		accept_event()
 
 
 func setUniversity(shown: University) -> void:

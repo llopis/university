@@ -1,5 +1,5 @@
 class_name HousingDropdown
-extends PanelContainer
+extends Control
 ## Where students live: beds filled, who is off campus and the threshold that
 ## costs satisfaction, dorm by dorm with who fills them, and the dining load
 ## next to housing since only housed students eat on campus.
@@ -21,8 +21,8 @@ const UpkeepUnderConstruction: String = "—"
 const DinersKey: String = "Housed students eating"
 const DinersNoteFormat: String = "recommended %s · limit %s"
 
+@onready var dim: Panel = %Dim
 @onready var title: Label = %Title
-@onready var closeButton: Button = %CloseButton
 @onready var filledKpi: KpiView = %FilledKpi
 @onready var offCampusKpi: KpiView = %OffCampusKpi
 @onready var thresholdKpi: KpiView = %ThresholdKpi
@@ -42,8 +42,15 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = dormsGrid.get_child_count()
 	visibility_changed.connect(_rebuildDorms)
-	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
+	dim.gui_input.connect(_onDimInput)
 	admissionsJump.pressed.connect(func() -> void: AdmissionsJumped.emit())
+
+
+func _onDimInput(event: InputEvent) -> void:
+	var click: InputEventMouseButton = event as InputEventMouseButton
+	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
+		CloseRequested.emit()
+		accept_event()
 
 
 func setUniversity(shown: University) -> void:

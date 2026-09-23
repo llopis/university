@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://src/ui/dining_load_line.tscn" id="4_dining"]
 [ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="5_help"]
 
-[node name="HousingDropdown" type="PanelContainer"]
+[node name="HousingDropdown" type="Control"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,143 +14,153 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 offset_top = 72.0
-theme_type_variation = &"Overlay"
 script = ExtResource("1_housing")
 
-[node name="Scroll" type="ScrollContainer" parent="."]
+[node name="Dim" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+theme_type_variation = &"PopupDim"
+
+[node name="Frame" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_type_variation = &"Overlay"
+
+[node name="Scroll" type="ScrollContainer" parent="Frame"]
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="Center" type="CenterContainer" parent="Scroll"]
+[node name="Center" type="CenterContainer" parent="Frame/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Content" type="VBoxContainer" parent="Scroll/Center"]
+[node name="Content" type="VBoxContainer" parent="Frame/Scroll/Center"]
 layout_mode = 2
-custom_minimum_size = Vector2(1440, 0)
+custom_minimum_size = Vector2(1360, 0)
 theme_override_constants/separation = 12
 
-[node name="Header" type="HBoxContainer" parent="Scroll/Center/Content"]
+[node name="Header" type="HBoxContainer" parent="Frame/Scroll/Center/Content"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Scroll/Center/Content/Header"]
+[node name="Title" type="Label" parent="Frame/Scroll/Center/Content/Header"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Title"
 
-[node name="Spacer" type="Control" parent="Scroll/Center/Content/Header"]
+[node name="Spacer" type="Control" parent="Frame/Scroll/Center/Content/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CloseButton" type="Button" parent="Scroll/Center/Content/Header"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 0
-focus_mode = 0
-theme_type_variation = &"CloseButton"
-text = "×"
-
-[node name="Kpis" type="HBoxContainer" parent="Scroll/Center/Content"]
+[node name="Kpis" type="HBoxContainer" parent="Frame/Scroll/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 26
 
-[node name="FilledKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="FilledKpi" parent="Frame/Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OffCampusKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="OffCampusKpi" parent="Frame/Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OffCampusHelp" parent="Scroll/Center/Content/Kpis" instance=ExtResource("5_help")]
+[node name="OffCampusHelp" parent="Frame/Scroll/Center/Content/Kpis" instance=ExtResource("5_help")]
 layout_mode = 2
 tooltip_text = "Off-campus students pay tuition only: no room fee and no meal plan. Past the threshold, satisfaction drops for the whole university."
 
-[node name="ThresholdKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="ThresholdKpi" parent="Frame/Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OpeningKpi" parent="Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
+[node name="OpeningKpi" parent="Frame/Scroll/Center/Content/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Columns" type="HBoxContainer" parent="Scroll/Center/Content"]
+[node name="Columns" type="HBoxContainer" parent="Frame/Scroll/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 48
 
-[node name="Left" type="VBoxContainer" parent="Scroll/Center/Content/Columns"]
+[node name="Left" type="VBoxContainer" parent="Frame/Scroll/Center/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Dorms" type="GridContainer" parent="Scroll/Center/Content/Columns/Left"]
+[node name="Dorms" type="GridContainer" parent="Frame/Scroll/Center/Content/Columns/Left"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 6
 columns = 3
 
-[node name="Dorm" type="Label" parent="Scroll/Center/Content/Columns/Left/Dorms"]
+[node name="Dorm" type="Label" parent="Frame/Scroll/Center/Content/Columns/Left/Dorms"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Dorm"
 
-[node name="Beds" type="Label" parent="Scroll/Center/Content/Columns/Left/Dorms"]
+[node name="Beds" type="Label" parent="Frame/Scroll/Center/Content/Columns/Left/Dorms"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Beds"
 
-[node name="Upkeep" type="Label" parent="Scroll/Center/Content/Columns/Left/Dorms"]
+[node name="Upkeep" type="Label" parent="Frame/Scroll/Center/Content/Columns/Left/Dorms"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Upkeep / mo"
 
-[node name="Right" type="VBoxContainer" parent="Scroll/Center/Content/Columns"]
+[node name="Right" type="VBoxContainer" parent="Frame/Scroll/Center/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Dining" type="VBoxContainer" parent="Scroll/Center/Content/Columns/Right"]
+[node name="Dining" type="VBoxContainer" parent="Frame/Scroll/Center/Content/Columns/Right"]
 layout_mode = 2
 
-[node name="SectionTitle" type="Label" parent="Scroll/Center/Content/Columns/Right/Dining"]
+[node name="SectionTitle" type="Label" parent="Frame/Scroll/Center/Content/Columns/Right/Dining"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Dining"
 
-[node name="DinersRow" parent="Scroll/Center/Content/Columns/Right/Dining" instance=ExtResource("3_row")]
+[node name="DinersRow" parent="Frame/Scroll/Center/Content/Columns/Right/Dining" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LoadLine" type="HBoxContainer" parent="Scroll/Center/Content/Columns/Right/Dining"]
+[node name="LoadLine" type="HBoxContainer" parent="Frame/Scroll/Center/Content/Columns/Right/Dining"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Key" type="Label" parent="Scroll/Center/Content/Columns/Right/Dining/LoadLine"]
+[node name="Key" type="Label" parent="Frame/Scroll/Center/Content/Columns/Right/Dining/LoadLine"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"Body"
 text = "Load"
 
-[node name="DiningLoadLine" parent="Scroll/Center/Content/Columns/Right/Dining/LoadLine" instance=ExtResource("4_dining")]
+[node name="DiningLoadLine" parent="Frame/Scroll/Center/Content/Columns/Right/Dining/LoadLine" instance=ExtResource("4_dining")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="NoDiningNote" type="Label" parent="Scroll/Center/Content/Columns/Right/Dining"]
+[node name="NoDiningNote" type="Label" parent="Frame/Scroll/Center/Content/Columns/Right/Dining"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_type_variation = &"BodyWarn"
 text = "No dining hall: housed students can't eat."
 
-[node name="Foot" type="HBoxContainer" parent="Scroll/Center/Content"]
+[node name="Foot" type="HBoxContainer" parent="Frame/Scroll/Center/Content"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="AdmissionsJump" type="Button" parent="Scroll/Center/Content/Foot"]
+[node name="AdmissionsJump" type="Button" parent="Frame/Scroll/Center/Content/Foot"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0

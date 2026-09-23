@@ -20,6 +20,9 @@ const PopoverMoney: StringName = &"money"
 const PopoverStudents: StringName = &"students"
 const PopoverReputation: StringName = &"reputation"
 const PopoverUniversity: StringName = &"unimenu"
+# The four popovers that cover the play area as a centred overlay: while one
+# of these is open the world's keys are blocked, bar Esc, Space and +/-.
+const Overlays: Array[StringName] = [PopoverStudents, PopoverHousing, PopoverMoney, PopoverReputation]
 # The alerts' left/right offsets keep this clear of the side panel's edge.
 const AlertsMargin: float = 16.0
 
@@ -142,6 +145,8 @@ func openPopover(which: StringName) -> void:
 	topBar.setOpen(which, true)
 	_open = which
 	actionBar.showBuildOpen(_open == PopoverBuild)
+	camera.keysEnabled = not _overlayOpen()
+	controller.keysEnabled = not _overlayOpen()
 
 
 ## Closes whichever popover is open. Answers whether one was.
@@ -152,7 +157,14 @@ func closePopover() -> bool:
 	topBar.setOpen(_open, false)
 	_open = None
 	actionBar.showBuildOpen(_open == PopoverBuild)
+	camera.keysEnabled = not _overlayOpen()
+	controller.keysEnabled = not _overlayOpen()
 	return true
+
+
+## Whether the open popover is one of the four full overlays.
+func _overlayOpen() -> bool:
+	return Overlays.has(_open)
 
 
 func showBuilding(building: Building) -> void:
@@ -279,6 +291,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		return
 	if (event.is_action_pressed(&"ExitGame") and closePopover()):
+		get_viewport().set_input_as_handled()
+		return
+	if (_overlayOpen() and (event is InputEventKey or event is InputEventAction)
+		and not (event.is_action(&"TogglePause") or event.is_action(&"SpeedUp") or event.is_action(&"SpeedDown"))):
 		get_viewport().set_input_as_handled()
 		return
 	if (event.is_action_pressed(&"ToggleBuild")):

@@ -639,3 +639,20 @@ After playing the finished HUD, the user revised it. These decisions override th
 - **The accent is blue.** Gold becomes blue everywhere, and the info colour merges into it. Amber stays the warning colour.
 - **The semester popup loses "Look at housing".** Continue and Esc are its only ways out.
 - **The clock reads "Week N of M".** The Fees slot already counts down to the next semester.
+
+## UI feedback 2 (2026-09-24)
+
+After more use, the user gave a second round of feedback. These decisions override the sections above wherever they differ.
+
+- **Overlays.** Students, Housing, Money and Reputation become dimmed, click-away panels at 80% of the play area, and they block the world's keys.
+- **Money slots.** All three light up together.
+- **Notifications.** A top-left bell with a count badge and a small panel replaces the top-right alerts.
+- **Building panel.** It is anchored at the bottom, taking 3/4 of the screen.
+- **Links.** The building panels lose their links to top-level screens, and a few other links and inline texts go.
+- **Semester popup.** It closes on any click and has no (?).
+
+Four decisions this round settles:
+- Notifications show current problems only, not a history.
+- Clicking a notification opens its place, as an alert used to.
+- While an overlay is open, only Esc, Space and +/− still work.
+- The building panel takes 3/4 of the screen.

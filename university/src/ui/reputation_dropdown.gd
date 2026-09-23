@@ -1,5 +1,5 @@
 class_name ReputationDropdown
-extends PanelContainer
+extends Control
 ## Why reputation is where it is and where it is heading: its target, half the
 ## latest intake's grade and half this year's satisfaction, and satisfaction's
 ## penalties.
@@ -26,8 +26,8 @@ const YearSatisfactionKey: String = "Satisfaction this year"
 const BaselineKey: String = "Baseline"
 const UnfedKey: String = "Can't eat"
 
+@onready var dim: Panel = %Dim
 @onready var title: Label = %Title
-@onready var closeButton: Button = %CloseButton
 @onready var targetHelp: HelpIcon = %TargetHelp
 @onready var reputationKpi: KpiView = %ReputationKpi
 @onready var targetKpi: KpiView = %TargetKpi
@@ -46,9 +46,16 @@ var university: University
 
 
 func _ready() -> void:
-	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
+	dim.gui_input.connect(_onDimInput)
 	targetHelp.tooltip_text = RateNoteFormat % NumberFormat.percent(UniversityRules.ReputationRate)
 	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
+
+
+func _onDimInput(event: InputEvent) -> void:
+	var click: InputEventMouseButton = event as InputEventMouseButton
+	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
+		CloseRequested.emit()
+		accept_event()
 
 
 func _process(_dt: float) -> void:

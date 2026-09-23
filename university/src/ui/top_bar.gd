@@ -47,9 +47,6 @@ var state: GameState
 # Transport buttons in speed order: index i runs GameState.SpeedSteps[i].
 var _speedButtons: Array[Button]
 var _toggles: Dictionary[StringName, Button]
-# Which of the three money slots was clicked last, so only it reads pressed
-# while Money is open.
-var _moneySlot: Button
 
 
 func _ready() -> void:
@@ -62,10 +59,9 @@ func _ready() -> void:
 	crestButton.pressed.connect(func() -> void: UniversityMenuPressed.emit())
 	studentsSlot.pressed.connect(func() -> void: StudentsPressed.emit())
 	bedsSlot.pressed.connect(func() -> void: HousingPressed.emit())
-	_moneySlot = cashSlot
-	cashSlot.pressed.connect(_onMoneySlotPressed.bind(cashSlot))
-	expensesSlot.pressed.connect(_onMoneySlotPressed.bind(expensesSlot))
-	feesSlot.pressed.connect(_onMoneySlotPressed.bind(feesSlot))
+	cashSlot.pressed.connect(func() -> void: MoneyPressed.emit())
+	expensesSlot.pressed.connect(func() -> void: MoneyPressed.emit())
+	feesSlot.pressed.connect(func() -> void: MoneyPressed.emit())
 	reputationSlot.pressed.connect(func() -> void: ReputationPressed.emit())
 	_toggles = {
 		&"gamemenu": menuButton, &"unimenu": crestButton, &"students": studentsSlot,
@@ -73,20 +69,13 @@ func _ready() -> void:
 	}
 
 
-func _onMoneySlotPressed(slot: Button) -> void:
-	_moneySlot = slot
-	MoneyPressed.emit()
-
-
 ## Shows a popover's trigger as pressed while the popover is open. Money
-## presses whichever of its three slots was clicked last, defaulting to Cash.
+## presses all three of its slots together.
 func setOpen(which: StringName, open: bool) -> void:
 	if (which == &"money"):
-		if (not open):
-			_moneySlot = cashSlot
-		cashSlot.set_pressed_no_signal(open and _moneySlot == cashSlot)
-		expensesSlot.set_pressed_no_signal(open and _moneySlot == expensesSlot)
-		feesSlot.set_pressed_no_signal(open and _moneySlot == feesSlot)
+		cashSlot.set_pressed_no_signal(open)
+		expensesSlot.set_pressed_no_signal(open)
+		feesSlot.set_pressed_no_signal(open)
 		return
 	if (_toggles.has(which)):
 		_toggles[which].set_pressed_no_signal(open)
