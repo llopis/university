@@ -30,15 +30,15 @@ Global="*uid://b027h2hcetqn5"
 [debug]
 
 gdscript/warnings/unused_signal=0
+gdscript/warnings/shadowed_variable=2
+gdscript/warnings/shadowed_global_identifier=2
 gdscript/warnings/unsafe_property_access=2
 gdscript/warnings/unsafe_method_access=2
 gdscript/warnings/unsafe_call_argument=2
 gdscript/warnings/static_called_on_instance=2
 gdscript/warnings/assert_always_false=0
-gdscript/warnings/int_as_enum_without_match=2
-gdscript/warnings/shadowed_variable=2
 gdscript/warnings/integer_division=2
-gdscript/warnings/shadowed_global_identifier=2
+gdscript/warnings/int_as_enum_without_match=2
 
 [display]
 

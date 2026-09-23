@@ -1,14 +1,21 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://qir7d6ghpial"]
 
-[ext_resource type="Script" path="res://src/views/campus_view.gd" id="1_view"]
-[ext_resource type="Script" path="res://src/views/ground_view.gd" id="2_ground"]
-[ext_resource type="Shader" path="res://src/views/ground.gdshader" id="3_shader"]
-[ext_resource type="Script" path="res://src/views/game_camera.gd" id="4_camera"]
-[ext_resource type="Script" path="res://src/views/build_controller.gd" id="6_controller"]
+[ext_resource type="Script" uid="uid://bmn8rxb5lj7rq" path="res://src/views/campus_view.gd" id="1_view"]
+[ext_resource type="Script" uid="uid://bgxy8muy66qoy" path="res://src/views/ground_view.gd" id="2_ground"]
+[ext_resource type="Shader" uid="uid://0f04ei7lm28e" path="res://src/views/ground.gdshader" id="3_shader"]
+[ext_resource type="Script" uid="uid://n42bursi2y78" path="res://src/views/game_camera.gd" id="4_camera"]
+[ext_resource type="Script" uid="uid://bwlmyvaqaxxuy" path="res://src/views/build_controller.gd" id="6_controller"]
 [ext_resource type="PackedScene" path="res://src/ui/hud.tscn" id="9_hud"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+render_priority = 0
 shader = ExtResource("3_shader")
+shader_parameter/grass_color = Color(0.36, 0.55, 0.29, 1)
+shader_parameter/line_color = Color(0.29, 0.46, 0.24, 1)
+shader_parameter/grid_spacing = 10.0
+shader_parameter/line_width = 0.2
+shader_parameter/fade_start = 400.0
+shader_parameter/fade_end = 1200.0
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 material = SubResource("ShaderMaterial_ground")
@@ -19,34 +26,34 @@ background_color = Color(0.62, 0.78, 0.9, 1)
 ambient_light_source = 2
 ambient_light_color = Color(0.75, 0.78, 0.8, 1)
 
-[node name="CampusView" type="Node3D"]
+[node name="CampusView" type="Node3D" unique_id=343088514]
 script = ExtResource("1_view")
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=2080939576]
 unique_name_in_owner = true
 mesh = SubResource("PlaneMesh_ground")
 script = ExtResource("2_ground")
 
-[node name="Buildings" type="Node3D" parent="."]
+[node name="Buildings" type="Node3D" parent="." unique_id=1545574871]
 unique_name_in_owner = true
 
-[node name="BuildController" type="Node3D" parent="."]
+[node name="BuildController" type="Node3D" parent="." unique_id=1205590158]
 unique_name_in_owner = true
 script = ExtResource("6_controller")
 
-[node name="Camera" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="." unique_id=485059285]
 unique_name_in_owner = true
 script = ExtResource("4_camera")
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=817223218]
 transform = Transform3D(0.93967193, -0.26200005, 0.21984288, 0, 0.6427813, 0.76603246, -0.3420126, -0.7198392, 0.6040134, 0, 10, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 800.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1899942760]
 environment = SubResource("Environment_main")
 
-[node name="UI root" type="CanvasLayer" parent="."]
+[node name="UI root" type="CanvasLayer" parent="." unique_id=1881447580]
 
-[node name="Hud" parent="UI root" instance=ExtResource("9_hud")]
+[node name="Hud" parent="UI root" unique_id=790135938 instance=ExtResource("9_hud")]
 unique_name_in_owner = true
