@@ -25,7 +25,6 @@ var university: University
 
 var _kinds: Array[Problem.Kind] = []
 var _rowButtons: Array[Button] = []
-var _dots: Array[Panel] = []
 
 
 func _process(_dt: float) -> void:
@@ -38,7 +37,6 @@ func _process(_dt: float) -> void:
 		_rebuild(problems)
 	for i: int in problems.size():
 		_rowButtons[i].text = _textFor(problems[i])
-		_dots[i].self_modulate = get_theme_color(_dotColor(problems[i].kind), &"Palette")
 
 
 func _changed(problems: Array[Problem]) -> bool:
@@ -55,7 +53,6 @@ func _rebuild(problems: Array[Problem]) -> void:
 		rows.remove_child(row)
 		row.queue_free()
 	_rowButtons.clear()
-	_dots.clear()
 	_kinds.clear()
 	for problem: Problem in problems:
 		var row: Button = _buildRow(problem)
@@ -81,8 +78,8 @@ func _buildRow(problem: Problem) -> Button:
 	dot.offset_right = DotMarginLeft + DotSize
 	dot.offset_top = -DotSize / 2.0
 	dot.offset_bottom = DotSize / 2.0
+	dot.self_modulate = get_theme_color(_dotColor(kind), &"Palette")
 	row.add_child(dot)
-	_dots.append(dot)
 
 	return row
 
@@ -101,4 +98,4 @@ func _textFor(problem: Problem) -> String:
 
 
 func _dotColor(kind: Problem.Kind) -> StringName:
-	return &"warn" if (kind == Problem.Kind.DiningCrowded) else &"bad"
+	return &"warn" if (kind == Problem.Kind.HousingOverflow or kind == Problem.Kind.DiningCrowded) else &"bad"

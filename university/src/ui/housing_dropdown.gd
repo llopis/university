@@ -21,7 +21,7 @@ const UpkeepUnderConstruction: String = "—"
 const DinersKey: String = "Housed students eating"
 const DinersNoteFormat: String = "recommended %s · limit %s"
 
-@onready var dim: Panel = %Dim
+@onready var dim: ClickAway = %Dim
 @onready var title: Label = %Title
 @onready var filledKpi: KpiView = %FilledKpi
 @onready var offCampusKpi: KpiView = %OffCampusKpi
@@ -42,15 +42,8 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = dormsGrid.get_child_count()
 	visibility_changed.connect(_rebuildDorms)
-	dim.gui_input.connect(_onDimInput)
+	dim.Clicked.connect(func() -> void: CloseRequested.emit())
 	admissionsJump.pressed.connect(func() -> void: AdmissionsJumped.emit())
-
-
-func _onDimInput(event: InputEvent) -> void:
-	var click: InputEventMouseButton = event as InputEventMouseButton
-	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
-		CloseRequested.emit()
-		accept_event()
 
 
 func setUniversity(shown: University) -> void:

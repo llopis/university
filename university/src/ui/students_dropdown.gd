@@ -29,7 +29,7 @@ const SeatsToFillKey: String = "Seats to fill"
 const ApplicantsKey: String = "Expected applicants"
 const IntakeKey: String = "Expected intake"
 
-@onready var dim: Panel = %Dim
+@onready var dim: ClickAway = %Dim
 @onready var title: Label = %Title
 @onready var enrolledKpi: KpiView = %EnrolledKpi
 @onready var openSeatsKpi: KpiView = %OpenSeatsKpi
@@ -55,16 +55,9 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = cohortsGrid.get_child_count()
 	visibility_changed.connect(_rebuildCohorts)
-	dim.gui_input.connect(_onDimInput)
+	dim.Clicked.connect(func() -> void: CloseRequested.emit())
 	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
 	reputationJump.pressed.connect(func() -> void: ReputationJumped.emit())
-
-
-func _onDimInput(event: InputEvent) -> void:
-	var click: InputEventMouseButton = event as InputEventMouseButton
-	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
-		CloseRequested.emit()
-		accept_event()
 
 
 func setUniversity(shown: University) -> void:

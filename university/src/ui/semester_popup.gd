@@ -4,7 +4,7 @@ extends Control
 ## campus's fees, housing, dining, reputation and satisfaction, and what
 ## opened. Shown by Hud.showReport, which pauses the game around it.
 
-signal Continued
+signal Dismissed
 
 const TitleFormat: String = "%s begins"
 const ApplicantsKey: String = "Applicants"
@@ -112,4 +112,4 @@ func _showChange(row: InfoRow, key: String, value: float, change: float) -> void
 ## Hud._unhandled_input, can dismiss the popup the same way as a click does.
 func dismiss() -> void:
 	visible = false
-	Continued.emit()
+	Dismissed.emit()

@@ -44,6 +44,7 @@ theme_override_constants/separation = 0
 [node name="Accent" type="Panel" parent="Center/Box/Body"]
 custom_minimum_size = Vector2(0, 4)
 layout_mode = 2
+mouse_filter = 1
 theme_type_variation = &"PopupBoxAccent"
 
 [node name="ContentMargin" type="MarginContainer" parent="Center/Box/Body"]

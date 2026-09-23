@@ -650,6 +650,7 @@ After more use, the user gave a second round of feedback. These decisions overri
 - **Building panel.** It is anchored at the bottom, taking 3/4 of the screen.
 - **Links.** The building panels lose their links to top-level screens, and a few other links and inline texts go.
 - **Semester popup.** It closes on any click and has no (?).
+- **Close controls.** The semester popup's Continue button and the overlays' × are gone; a click away, or Esc, is now the only way out of each.
 
 Four decisions this round settles:
 - Notifications show current problems only, not a history.

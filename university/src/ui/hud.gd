@@ -5,7 +5,9 @@ extends Control
 ## panel; one open at a time) and the semester popup. It carries the shared
 ## theme, routes keys, panes and places, and everything it shows is read from
 ## the game state it is set up with. A click on the world closes the open
-## popover and still reaches the world; Esc closes it first of all.
+## popover; a plain popover's click still reaches the world underneath, but
+## an overlay's dim or the semester popup takes it instead. Esc closes
+## whatever is open first of all.
 
 const None: StringName = &""
 const PaneConstruction: StringName = &"construction"
@@ -57,7 +59,7 @@ func _ready() -> void:
 		PopoverBuild: buildPanel, PopoverNotifications: notificationsPanel,
 	}
 	notificationsButton.pressed.connect(toggle.bind(PopoverNotifications))
-	notificationsPanel.ProblemWanted.connect(_onProblemWanted)
+	notificationsPanel.ProblemWanted.connect(openProblem)
 	topBar.GameMenuPressed.connect(toggle.bind(PopoverGame))
 	topBar.UniversityMenuPressed.connect(toggle.bind(PopoverUniversity))
 	topBar.StudentsPressed.connect(toggle.bind(PopoverStudents))
@@ -95,7 +97,7 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	sidePanel.BuildingWanted.connect(showBuilding)
 	controller.NothingToCancel.connect(openPopover.bind(PopoverGame))
 	state.university.SemesterStarted.connect(showReport)
-	semesterPopup.Continued.connect(_onContinued)
+	semesterPopup.Dismissed.connect(_onPopupDismissed)
 	buildPanel.university = state.university
 	buildPanel.populate(buildingDB)
 	buildPanel.showAffordable(state.university.campus)
@@ -214,11 +216,6 @@ func openProblem(kind: Problem.Kind) -> void:
 			openPopover(PopoverMoney)
 
 
-func _onProblemWanted(kind: Problem.Kind) -> void:
-	closePopover()
-	openProblem(kind)
-
-
 ## Shows a semester's report, pausing the game. Several in a row show the
 ## latest; the pause remembered is the one from before the first of them.
 ## Runs mid-tick (University.SemesterStarted fires before the month's bill),
@@ -238,7 +235,7 @@ func showLatestReport() -> void:
 		showReport(reports[reports.size() - 1])
 
 
-func _onContinued() -> void:
+func _onPopupDismissed() -> void:
 	state.setPaused(_pausedBefore)
 
 

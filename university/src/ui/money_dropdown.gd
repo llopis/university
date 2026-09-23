@@ -27,7 +27,7 @@ const EachFormat: String = "%s each"
 const AfterFeesKey: String = "Cash after fees"
 const ApproxFormat: String = "≈ %s"
 
-@onready var dim: Panel = %Dim
+@onready var dim: ClickAway = %Dim
 @onready var cashKpi: KpiView = %CashKpi
 @onready var perMonthKpi: KpiView = %PerMonthKpi
 @onready var atStartKpi: KpiView = %AtStartKpi
@@ -50,19 +50,12 @@ var state: GameState
 
 
 func _ready() -> void:
-	dim.gui_input.connect(_onDimInput)
+	dim.Clicked.connect(func() -> void: CloseRequested.emit())
 	everyMonthHelp.tooltip_text = ShortfallNoteFormat % NumberFormat.percent(Finances.ShortfallFee)
 	borrowButton.text = BorrowFormat % MoneyFormat.short(Finances.LoanStep)
 	repayButton.text = RepayFormat % MoneyFormat.short(Finances.LoanStep)
 	borrowButton.pressed.connect(func() -> void: state.university.finances.borrow(Finances.LoanStep))
 	repayButton.pressed.connect(func() -> void: state.university.finances.repay(Finances.LoanStep))
-
-
-func _onDimInput(event: InputEvent) -> void:
-	var click: InputEventMouseButton = event as InputEventMouseButton
-	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
-		CloseRequested.emit()
-		accept_event()
 
 
 func setState(gameState: GameState) -> void:

@@ -5,6 +5,8 @@ const Epsilon: float = 0.001
 # Pixels of cursor travel, well past GameCamera.DragThreshold.
 const LongMove: float = GameCamera.DragThreshold * 4.0
 const ScreenCenter: Vector2 = Vector2(500.0, 500.0)
+# One frame's worth of a held key, fed straight to _process.
+const FrameDt: float = 0.1
 
 
 func _camera() -> GameCamera:
@@ -96,3 +98,15 @@ func test_a_drag_swallows_its_own_release_even_after_a_chord() -> void:
 	camera._unhandled_input(_button(MOUSE_BUTTON_MIDDLE, false))
 	camera._unhandled_input(_button(MOUSE_BUTTON_RIGHT, false))
 	assert_bool(camera.get_viewport().is_input_handled()).is_true()
+
+
+func test_a_held_pan_key_only_moves_the_target_while_keys_are_enabled() -> void:
+	var camera: GameCamera = _camera()
+	camera.keysEnabled = false
+	Input.action_press(&"MoveRight")
+	camera._process(FrameDt)
+	assert_that(camera.target()).is_equal(Vector3.ZERO)
+	camera.keysEnabled = true
+	camera._process(FrameDt)
+	Input.action_release(&"MoveRight")
+	assert_that(camera.target()).is_not_equal(Vector3.ZERO)

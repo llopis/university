@@ -8,19 +8,26 @@ custom_minimum_size = Vector2(480, 0)
 anchors_preset = 0
 offset_left = 16.0
 offset_top = 148.0
-theme_type_variation = &"MenuPanel"
+theme_type_variation = &"BuildPanel"
 script = ExtResource("1_panel")
 
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="ContentMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Content" type="VBoxContainer" parent="ContentMargin"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Rows" type="VBoxContainer" parent="Content"]
+[node name="Rows" type="VBoxContainer" parent="ContentMargin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="EmptyNote" type="Label" parent="Content"]
+[node name="EmptyNote" type="Label" parent="ContentMargin/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Caption"

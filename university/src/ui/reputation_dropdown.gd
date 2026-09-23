@@ -25,7 +25,7 @@ const YearSatisfactionKey: String = "Satisfaction this year"
 const BaselineKey: String = "Baseline"
 const UnfedKey: String = "Can't eat"
 
-@onready var dim: Panel = %Dim
+@onready var dim: ClickAway = %Dim
 @onready var title: Label = %Title
 @onready var targetHelp: HelpIcon = %TargetHelp
 @onready var reputationKpi: KpiView = %ReputationKpi
@@ -44,15 +44,8 @@ var university: University
 
 
 func _ready() -> void:
-	dim.gui_input.connect(_onDimInput)
+	dim.Clicked.connect(func() -> void: CloseRequested.emit())
 	targetHelp.tooltip_text = RateNoteFormat % NumberFormat.percent(UniversityRules.ReputationRate)
-
-
-func _onDimInput(event: InputEvent) -> void:
-	var click: InputEventMouseButton = event as InputEventMouseButton
-	if (click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT):
-		CloseRequested.emit()
-		accept_event()
 
 
 func _process(_dt: float) -> void:

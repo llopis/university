@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://src/ui/housing_dropdown.gd" id="1_housing"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
 [ext_resource type="PackedScene" path="res://src/ui/dining_load_line.tscn" id="4_dining"]
 [ext_resource type="PackedScene" path="res://src/ui/help_icon.tscn" id="5_help"]
+[ext_resource type="Script" path="res://src/ui/click_away.gd" id="6_clickaway"]
 
 [node name="HousingDropdown" type="Control"]
 visible = false
@@ -26,6 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 theme_type_variation = &"PopupDim"
+script = ExtResource("6_clickaway")
 
 [node name="Frame" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -55,10 +57,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Title"
-
-[node name="Spacer" type="Control" parent="Frame/Scroll/Center/Content/Header"]
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="Kpis" type="HBoxContainer" parent="Frame/Scroll/Center/Content"]
 layout_mode = 2

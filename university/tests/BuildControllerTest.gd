@@ -3,6 +3,8 @@ extends GdUnitTestSuite
 ## scene: the parts that decide what a click means, not where the cursor is.
 
 const Diameter: float = 20.0
+# One frame's worth of a held key, fed straight to _process.
+const FrameDt: float = 0.1
 
 
 func _info() -> BuildingInfo:
@@ -108,3 +110,16 @@ func test_esc_with_nothing_to_cancel_asks_for_the_game_menu() -> void:
 	esc.pressed = true
 	controller._unhandled_input(esc)
 	assert_int(asked.size()).is_equal(1)
+
+
+func test_a_held_rotate_key_only_turns_the_ghost_while_keys_are_enabled() -> void:
+	var controller: BuildController = _controller(Campus.new(Finances.new()))
+	controller.armPlace(_info())
+	controller.keysEnabled = false
+	Input.action_press(&"RotateRight")
+	controller._process(FrameDt)
+	assert_float(controller.angle()).is_equal(0.0)
+	controller.keysEnabled = true
+	controller._process(FrameDt)
+	Input.action_release(&"RotateRight")
+	assert_float(controller.angle()).is_not_equal(0.0)
