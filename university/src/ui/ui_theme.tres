@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=62 format=3]
+[gd_resource type="Theme" load_steps=61 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/BarlowSemiCondensed-Medium.ttf" id="FontFile_condMedium"]
@@ -310,13 +310,6 @@ content_margin_left = 7
 content_margin_top = 2
 content_margin_right = 7
 content_margin_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slotBadge"]
-bg_color = Color(0.886, 0.663, 0.227, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stepButtonNormal"]
 bg_color = Color(0.078, 0.094, 0.118, 1)
@@ -744,9 +737,6 @@ CaptionDim/base_type = &"Label"
 CaptionDim/fonts/font = ExtResource("FontFile_condMedium")
 CaptionDim/font_sizes/font_size = 16
 CaptionDim/colors/font_color = Color(0.420, 0.459, 0.502, 1)
-
-SlotBadge/base_type = &"Panel"
-SlotBadge/styles/panel = SubResource("StyleBoxFlat_slotBadge")
 
 Shield/base_type = &"PanelContainer"
 Shield/styles/panel = SubResource("StyleBoxFlat_shield")

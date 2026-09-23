@@ -657,3 +657,4 @@ Four decisions this round settles:
 - Clicking a notification opens its place, as an alert used to.
 - While an overlay is open, only Esc, Space and +/− still work.
 - The building panel takes 3/4 of the screen.
+- The Beds slot has no warning badge. The amber "+N off campus" and the notifications bell already say it.

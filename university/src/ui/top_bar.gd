@@ -101,7 +101,7 @@ func _showCrest(university: University) -> void:
 func _showStudents(university: University) -> void:
 	studentsSlot.display(NumberFormat.count(university.students.enrolled()),
 		SeatsFormat % NumberFormat.count(university.campus.seats()), "Students",
-		UiTone.Tone.Normal, UiTone.Tone.Normal, false)
+		UiTone.Tone.Normal, UiTone.Tone.Normal)
 
 
 func _showBeds(university: University) -> void:
@@ -109,21 +109,21 @@ func _showBeds(university: University) -> void:
 	var offCampus: int = university.offCampus()
 	bedsSlot.display(NumberFormat.count(university.housed()),
 		(OffCampusFormat % NumberFormat.count(offCampus)) if (offCampus > 0) else "", "Beds",
-		UiTone.Tone.Normal, UiTone.Tone.Warn if (overflowing) else UiTone.Tone.Normal, overflowing)
+		UiTone.Tone.Normal, UiTone.Tone.Warn if (overflowing) else UiTone.Tone.Normal)
 
 
 func _showMoney(university: University) -> void:
 	var finances: Finances = university.finances
 	cashSlot.display(MoneyFormat.short(finances.cash),
 		(OwedFormat % MoneyFormat.short(finances.debt)) if (finances.debt > 0) else "", "Cash",
-		UiTone.Tone.Normal, UiTone.Tone.Normal, false)
+		UiTone.Tone.Normal, UiTone.Tone.Normal)
 	expensesSlot.display(MoneyFormat.signed(-university.monthlyExpenses()), PerMonth, "Monthly expenses",
-		UiTone.Tone.Bad, UiTone.Tone.Normal, false)
+		UiTone.Tone.Bad, UiTone.Tone.Normal)
 	var start: int = university.nextSemesterStart()
 	feesSlot.display(MoneyFormat.signed(university.projectedFees().total()),
 		InWeeksFormat % GameCalendar.weeksUntil(state.week(), start),
 		FeesCaptionFormat % GameCalendar.PeriodNames[GameCalendar.period(start)],
-		UiTone.Tone.Good, UiTone.Tone.Normal, false)
+		UiTone.Tone.Good, UiTone.Tone.Normal)
 
 
 func _showReputation(university: University) -> void:
@@ -135,7 +135,7 @@ func _showReputation(university: University) -> void:
 	elif (tone == UiTone.Tone.Bad):
 		trend = TargetDown
 	reputationSlot.display(ReputationFormat % university.reputation, trend % target, "Reputation",
-		UiTone.Tone.Normal, tone, false)
+		UiTone.Tone.Normal, tone)
 
 
 func _showClock() -> void:

@@ -15,7 +15,6 @@ const PaddingX: float = 36.0
 @onready var valueLabel: Label = %Value
 @onready var subLabel: Label = %Sub
 @onready var captionLabel: Label = %Caption
-@onready var badge: Panel = %Badge
 
 
 func _ready() -> void:
@@ -23,12 +22,11 @@ func _ready() -> void:
 	iconRect.self_modulate = get_theme_color("accent", "Palette")
 
 
-func display(value: String, sub: String, caption: String, valueTone: UiTone.Tone, subTone: UiTone.Tone, warnBadge: bool) -> void:
+func display(value: String, sub: String, caption: String, valueTone: UiTone.Tone, subTone: UiTone.Tone) -> void:
 	valueLabel.text = value
 	valueLabel.theme_type_variation = UiTone.variation(ValueBase, valueTone)
 	subLabel.text = sub
 	subLabel.visible = (sub != "")
 	subLabel.theme_type_variation = UiTone.variation(SubBase, subTone)
 	captionLabel.text = caption
-	badge.visible = warnBadge
 	custom_minimum_size.x = content.get_combined_minimum_size().x + PaddingX
