@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=51 format=3]
+[gd_resource type="Theme" load_steps=56 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Medium.ttf" id="FontFile_barlowMedium"]
@@ -436,6 +436,60 @@ content_margin_top = 4.0
 content_margin_right = 4.0
 content_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stage"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.09)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 10
+content_margin_top = 8
+content_margin_right = 10
+content_margin_bottom = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stageOn"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.851, 0.643, 0.255, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 10
+content_margin_top = 8
+content_margin_right = 10
+content_margin_bottom = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_miniBar"]
+bg_color = Color(0.165, 0.196, 0.239, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_miniBarOn"]
+bg_color = Color(0.851, 0.643, 0.255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lever"]
+bg_color = Color(0.125, 0.149, 0.184, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.09)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+content_margin_left = 12
+content_margin_top = 10
+content_margin_right = 12
+content_margin_bottom = 10
+
 [resource]
 default_font = ExtResource("FontFile_barlowRegular")
 default_font_size = 14
@@ -864,3 +918,43 @@ CloseButton/styles/normal = SubResource("StyleBoxEmpty_closeButton")
 CloseButton/styles/hover = SubResource("StyleBoxEmpty_closeButton")
 CloseButton/styles/pressed = SubResource("StyleBoxEmpty_closeButton")
 CloseButton/styles/focus = SubResource("StyleBoxEmpty_closeButton")
+
+Stage/base_type = &"PanelContainer"
+Stage/styles/panel = SubResource("StyleBoxFlat_stage")
+
+StageOn/base_type = &"PanelContainer"
+StageOn/styles/panel = SubResource("StyleBoxFlat_stageOn")
+
+StageValue/base_type = &"Label"
+StageValue/fonts/font = ExtResource("FontFile_condSemiBold")
+StageValue/font_sizes/font_size = 20
+StageValue/colors/font_color = Color(0.925, 0.906, 0.859, 1)
+
+StageCaption/base_type = &"Label"
+StageCaption/fonts/font = ExtResource("FontFile_condMedium")
+StageCaption/font_sizes/font_size = 11
+StageCaption/colors/font_color = Color(0.604, 0.643, 0.690, 1)
+
+StageNote/base_type = &"Label"
+StageNote/fonts/font = ExtResource("FontFile_condMedium")
+StageNote/font_sizes/font_size = 11
+StageNote/colors/font_color = Color(0.420, 0.459, 0.502, 1)
+
+MiniBar/base_type = &"Panel"
+MiniBar/styles/panel = SubResource("StyleBoxFlat_miniBar")
+
+MiniBarOn/base_type = &"Panel"
+MiniBarOn/styles/panel = SubResource("StyleBoxFlat_miniBarOn")
+
+MiniLabel/base_type = &"Label"
+MiniLabel/fonts/font = ExtResource("FontFile_condMedium")
+MiniLabel/font_sizes/font_size = 10
+MiniLabel/colors/font_color = Color(0.604, 0.643, 0.690, 1)
+
+Lever/base_type = &"PanelContainer"
+Lever/styles/panel = SubResource("StyleBoxFlat_lever")
+
+LeverTitle/base_type = &"Label"
+LeverTitle/fonts/font = ExtResource("FontFile_barlowSemiBold")
+LeverTitle/font_sizes/font_size = 14
+LeverTitle/colors/font_color = Color(0.925, 0.906, 0.859, 1)

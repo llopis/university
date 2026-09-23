@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://src/ui/side_panel.gd" id="1_panel"]
 [ext_resource type="PackedScene" path="res://src/ui/construction_pane.tscn" id="2_construction"]
+[ext_resource type="PackedScene" path="res://src/ui/admissions_pane.tscn" id="3_admissions"]
 
 [node name="SidePanel" type="PanelContainer"]
 visible = false
@@ -81,6 +82,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ConstructionPane" parent="Layout/Scroll/Body/Panes" instance=ExtResource("2_construction")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="AdmissionsPane" parent="Layout/Scroll/Body/Panes" instance=ExtResource("3_admissions")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

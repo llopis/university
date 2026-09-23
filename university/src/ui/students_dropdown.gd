@@ -14,9 +14,6 @@ const OutOfFormat: String = "%s / %s beds"
 const ShareFormat: String = "%s · %s"
 const PlusFormat: String = "+%s beds"
 const ApproxFormat: String = "≈ %s"
-const OpenPlusGraduating: String = "%s open + %s graduating"
-const GraduatingFormat: String = "%s graduating"
-const IntakeNote: String = "entry grade ≈ %.2f"
 const Nothing: String = "—"
 const OverThresholdPill: String = "above %s threshold"
 const EnrolledCaption: String = "Enrolled"
@@ -99,15 +96,10 @@ func _showNextFall() -> void:
 	var fall: int = university.nextFallStart()
 	nextFallTitle.text = NextFallFormat % GameCalendar.year(fall)
 	var toFill: int = university.seatsToFillNextFall()
-	var graduating: int = university.graduatingByNextFall()
-	# toFill is seatsBy(nextFall) less today's enrolment after graduation, clamped at 0; only above
-	# graduating does toFill - graduating still mean open seats beyond the graduating class.
-	var seatsNote: String = (OpenPlusGraduating % [NumberFormat.count(toFill - graduating), NumberFormat.count(graduating)]) if (toFill > graduating) else (GraduatingFormat % NumberFormat.count(graduating))
-	seatsToFillRow.display(SeatsToFillKey, ApproxFormat % NumberFormat.count(toFill), seatsNote)
+	seatsToFillRow.display(SeatsToFillKey, ApproxFormat % NumberFormat.count(toFill), ProjectionText.seatsNote(university))
 	applicantsRow.display(ApplicantsKey, ApproxFormat % NumberFormat.count(university.expectedApplicants()))
 	var intake: Intake = university.expectedIntake()
-	intakeRow.display(IntakeKey, ApproxFormat % NumberFormat.count(intake.admitted),
-		(IntakeNote % intake.entryGrade) if (intake.admitted > 0) else "")
+	intakeRow.display(IntakeKey, ApproxFormat % NumberFormat.count(intake.admitted), ProjectionText.intakeNote(intake))
 
 
 func _rebuildCohorts() -> void:

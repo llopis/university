@@ -1,0 +1,258 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/admissions_pane.gd" id="1_pane"]
+[ext_resource type="PackedScene" path="res://src/ui/stepper.tscn" id="2_stepper"]
+
+[node name="AdmissionsPane" type="VBoxContainer"]
+theme_override_constants/separation = 14
+script = ExtResource("1_pane")
+
+[node name="Intake" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="IntakeHeader" type="HBoxContainer" parent="Intake"]
+layout_mode = 2
+
+[node name="IntakeTitle" type="Label" parent="Intake/IntakeHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+
+[node name="Spacer" type="Control" parent="Intake/IntakeHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SectionNote" type="Label" parent="Intake/IntakeHeader"]
+layout_mode = 2
+theme_type_variation = &"SectionNote"
+text = "at today's reputation and next year's prices"
+
+[node name="Stages" type="HBoxContainer" parent="Intake"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SeatsStage" type="PanelContainer" parent="Intake/Stages"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"StageOn"
+
+[node name="Layout" type="VBoxContainer" parent="Intake/Stages/SeatsStage"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="SeatsValue" type="Label" parent="Intake/Stages/SeatsStage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StageValue"
+
+[node name="Caption" type="Label" parent="Intake/Stages/SeatsStage/Layout"]
+layout_mode = 2
+theme_type_variation = &"StageCaption"
+uppercase = true
+text = "Seats to fill"
+
+[node name="SeatsDetail" type="Label" parent="Intake/Stages/SeatsStage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StageNote"
+autowrap_mode = 3
+
+[node name="ApplicantsStage" type="PanelContainer" parent="Intake/Stages"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Stage"
+
+[node name="Layout" type="VBoxContainer" parent="Intake/Stages/ApplicantsStage"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="ApplicantsValue" type="Label" parent="Intake/Stages/ApplicantsStage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StageValue"
+
+[node name="Caption" type="Label" parent="Intake/Stages/ApplicantsStage/Layout"]
+layout_mode = 2
+theme_type_variation = &"StageCaption"
+uppercase = true
+text = "Expected applicants"
+
+[node name="ApplicantsDetail" type="Label" parent="Intake/Stages/ApplicantsStage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StageNote"
+autowrap_mode = 3
+
+[node name="IntakeStage" type="PanelContainer" parent="Intake/Stages"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Stage"
+
+[node name="Layout" type="VBoxContainer" parent="Intake/Stages/IntakeStage"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="IntakeValue" type="Label" parent="Intake/Stages/IntakeStage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StageValue"
+
+[node name="Caption" type="Label" parent="Intake/Stages/IntakeStage/Layout"]
+layout_mode = 2
+theme_type_variation = &"StageCaption"
+uppercase = true
+text = "Expected intake"
+
+[node name="IntakeDetail" type="Label" parent="Intake/Stages/IntakeStage/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StageNote"
+autowrap_mode = 3
+
+[node name="Note" type="Label" parent="Intake"]
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+text = "Seats fill from the top of the applicant list. How many apply depends on reputation and on the total price. Empty seats are upkeep with no tuition."
+
+[node name="History" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SectionTitle" type="Label" parent="History"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Applicants per fall"
+
+[node name="Chart" type="HBoxContainer" parent="History"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 5
+custom_minimum_size = Vector2(0, 80)
+
+[node name="NoFallsNote" type="Label" parent="History"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"Note"
+text = "No fall admission yet."
+
+[node name="Levers" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LeversHeader" type="HBoxContainer" parent="Levers"]
+layout_mode = 2
+
+[node name="SectionTitle" type="Label" parent="Levers/LeversHeader"]
+layout_mode = 2
+theme_type_variation = &"SectionTitle"
+uppercase = true
+text = "Levers"
+
+[node name="Spacer" type="Control" parent="Levers/LeversHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ApplyNote" type="Label" parent="Levers/LeversHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SectionNote"
+
+[node name="MinimumLever" type="PanelContainer" parent="Levers"]
+layout_mode = 2
+theme_type_variation = &"Lever"
+
+[node name="Layout" type="VBoxContainer" parent="Levers/MinimumLever"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LeverTitle" type="Label" parent="Levers/MinimumLever/Layout"]
+layout_mode = 2
+theme_type_variation = &"LeverTitle"
+text = "Minimum entry grade"
+
+[node name="MinimumStepper" parent="Levers/MinimumLever/Layout" instance=ExtResource("2_stepper")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Note" type="Label" parent="Levers/MinimumLever/Layout"]
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+text = "Off: every seat that has an applicant fills, and the entry grade follows how many apply. Raise it to leave seats empty in a weak year: tuition now against reputation later."
+
+[node name="TuitionLever" type="PanelContainer" parent="Levers"]
+layout_mode = 2
+theme_type_variation = &"Lever"
+
+[node name="Layout" type="VBoxContainer" parent="Levers/TuitionLever"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LeverTitle" type="Label" parent="Levers/TuitionLever/Layout"]
+layout_mode = 2
+theme_type_variation = &"LeverTitle"
+text = "Tuition per semester"
+
+[node name="TuitionNow" type="Label" parent="Levers/TuitionLever/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+
+[node name="TuitionStepper" parent="Levers/TuitionLever/Layout" instance=ExtResource("2_stepper")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HousingLever" type="PanelContainer" parent="Levers"]
+layout_mode = 2
+theme_type_variation = &"Lever"
+
+[node name="Layout" type="VBoxContainer" parent="Levers/HousingLever"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="LeverTitle" type="Label" parent="Levers/HousingLever/Layout"]
+layout_mode = 2
+theme_type_variation = &"LeverTitle"
+text = "Room and meal plan per semester"
+
+[node name="HousingNow" type="Label" parent="Levers/HousingLever/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+
+[node name="RoomStepper" parent="Levers/HousingLever/Layout" instance=ExtResource("2_stepper")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MealStepper" parent="Levers/HousingLever/Layout" instance=ExtResource("2_stepper")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TotalNote" type="Label" parent="Levers/HousingLever/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Note"
+autowrap_mode = 3
+
+[node name="Jumps" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StudentsJump" type="Button" parent="Jumps"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Students →"
+
+[node name="FinancesJump" type="Button" parent="Jumps"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"JumpButton"
+text = "Finances →"

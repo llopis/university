@@ -7,6 +7,7 @@ extends Control
 
 const None: StringName = &""
 const PaneConstruction: StringName = &"construction"
+const PaneAdmissions: StringName = &"admissions"
 
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
@@ -124,6 +125,10 @@ func _firstFor(which: StringName) -> Building:
 		for building: Building in state.university.campus.buildings:
 			if (building.underConstruction):
 				return building
+	elif (which == PaneAdmissions):
+		var found: Array[Building] = state.university.campus.openWithRole(BuildingInfo.Role.Admissions)
+		if (not found.is_empty()):
+			return found[0]
 	return null
 
 

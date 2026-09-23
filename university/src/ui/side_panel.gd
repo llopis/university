@@ -22,6 +22,7 @@ const DemolishRefundFormat: String = "Demolish · refund %s"
 @onready var closeButton: Button = %CloseButton
 @onready var demolishButton: Button = %DemolishButton
 @onready var constructionPane: ConstructionPane = %ConstructionPane
+@onready var admissionsPane: AdmissionsPane = %AdmissionsPane
 
 var university: University
 var building: Building
@@ -31,11 +32,13 @@ func _ready() -> void:
 	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
 	demolishButton.pressed.connect(_demolish)
 	constructionPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
+	admissionsPane.PopoverWanted.connect(func(which: StringName) -> void: PopoverWanted.emit(which))
 
 
 func setUniversity(shown: University) -> void:
 	university = shown
 	constructionPane.university = shown
+	admissionsPane.setUniversity(shown)
 
 
 ## The selected building, or null to close.
@@ -63,12 +66,17 @@ func _process(_dt: float) -> void:
 func _paneFor(shown: Building) -> Control:
 	if (shown.underConstruction):
 		return constructionPane
+	if (shown.info.role() == BuildingInfo.Role.Admissions):
+		return admissionsPane
 	return null
 
 
 func _showPane(pane: Control) -> void:
-	constructionPane.visible = (pane == constructionPane)
+	var panes: Array[Control] = [constructionPane, admissionsPane]
+	for candidate: Control in panes:
+		candidate.visible = (candidate == pane)
 	constructionPane.building = building
+	admissionsPane.building = building
 
 
 func _demolish() -> void:
