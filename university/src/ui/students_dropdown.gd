@@ -3,6 +3,7 @@ extends PanelContainer
 ## Who is enrolled: the headline numbers, the classes, where they live, and
 ## what next fall looks like at today's reputation and next year's prices.
 
+signal CloseRequested
 signal HousingJumped
 signal ReputationJumped
 
@@ -29,6 +30,7 @@ const ApplicantsKey: String = "Expected applicants"
 const IntakeKey: String = "Expected intake"
 
 @onready var title: Label = %Title
+@onready var closeButton: Button = %CloseButton
 @onready var enrolledKpi: KpiView = %EnrolledKpi
 @onready var openSeatsKpi: KpiView = %OpenSeatsKpi
 @onready var admittedKpi: KpiView = %AdmittedKpi
@@ -53,6 +55,7 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = cohortsGrid.get_child_count()
 	visibility_changed.connect(_rebuildCohorts)
+	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
 	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
 	reputationJump.pressed.connect(func() -> void: ReputationJumped.emit())
 

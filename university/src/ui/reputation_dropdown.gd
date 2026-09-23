@@ -4,6 +4,7 @@ extends PanelContainer
 ## latest intake's grade and half this year's satisfaction, and satisfaction's
 ## penalties.
 
+signal CloseRequested
 signal HousingJumped
 
 const TitleFormat: String = "Reputation · %.0f"
@@ -26,6 +27,7 @@ const BaselineKey: String = "Baseline"
 const UnfedKey: String = "Can't eat"
 
 @onready var title: Label = %Title
+@onready var closeButton: Button = %CloseButton
 @onready var targetHelp: HelpIcon = %TargetHelp
 @onready var reputationKpi: KpiView = %ReputationKpi
 @onready var targetKpi: KpiView = %TargetKpi
@@ -44,6 +46,7 @@ var university: University
 
 
 func _ready() -> void:
+	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
 	targetHelp.tooltip_text = RateNoteFormat % NumberFormat.percent(UniversityRules.ReputationRate)
 	housingJump.pressed.connect(func() -> void: HousingJumped.emit())
 

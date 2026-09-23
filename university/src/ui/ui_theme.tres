@@ -111,20 +111,12 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dropdown"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
 bg_color = Color(0.078, 0.094, 0.118, 1)
-border_width_left = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 0.16)
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-shadow_color = Color(0, 0, 0, 0.5)
-shadow_size = 40
-content_margin_left = 18
-content_margin_top = 16
-content_margin_right = 18
-content_margin_bottom = 14
+content_margin_left = 48
+content_margin_top = 32
+content_margin_right = 48
+content_margin_bottom = 32
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_menuPanel"]
 bg_color = Color(0.078, 0.094, 0.118, 1)
@@ -805,8 +797,8 @@ SpeedButton/colors/icon_hover_color = Color(0.925, 0.906, 0.859, 1)
 SpeedButton/colors/icon_pressed_color = Color(0.043, 0.078, 0.133, 1)
 SpeedButton/colors/icon_hover_pressed_color = Color(0.043, 0.078, 0.133, 1)
 
-Dropdown/base_type = &"PanelContainer"
-Dropdown/styles/panel = SubResource("StyleBoxFlat_dropdown")
+Overlay/base_type = &"PanelContainer"
+Overlay/styles/panel = SubResource("StyleBoxFlat_overlay")
 
 MenuPanel/base_type = &"PanelContainer"
 MenuPanel/styles/panel = SubResource("StyleBoxFlat_menuPanel")

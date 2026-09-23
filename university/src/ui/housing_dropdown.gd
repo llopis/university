@@ -4,6 +4,7 @@ extends PanelContainer
 ## costs satisfaction, dorm by dorm with who fills them, and the dining load
 ## next to housing since only housed students eat on campus.
 
+signal CloseRequested
 signal AdmissionsJumped
 
 const TitleFormat: String = "Housing · %s"
@@ -21,6 +22,7 @@ const DinersKey: String = "Housed students eating"
 const DinersNoteFormat: String = "recommended %s · limit %s"
 
 @onready var title: Label = %Title
+@onready var closeButton: Button = %CloseButton
 @onready var filledKpi: KpiView = %FilledKpi
 @onready var offCampusKpi: KpiView = %OffCampusKpi
 @onready var thresholdKpi: KpiView = %ThresholdKpi
@@ -40,6 +42,7 @@ var _headerCount: int = 0
 func _ready() -> void:
 	_headerCount = dormsGrid.get_child_count()
 	visibility_changed.connect(_rebuildDorms)
+	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
 	admissionsJump.pressed.connect(func() -> void: AdmissionsJumped.emit())
 
 

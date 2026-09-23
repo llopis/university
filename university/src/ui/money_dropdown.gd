@@ -4,6 +4,8 @@ extends PanelContainer
 ## its Borrow/Repay buttons, and the coming semester's fees at today's
 ## enrolment.
 
+signal CloseRequested
+
 const CashCaption: String = "Cash"
 const PerMonthCaption: String = "Per month"
 const AtStartCaption: String = "Cash at semester start"
@@ -25,6 +27,7 @@ const EachFormat: String = "%s each"
 const AfterFeesKey: String = "Cash after fees"
 const ApproxFormat: String = "≈ %s"
 
+@onready var closeButton: Button = %CloseButton
 @onready var cashKpi: KpiView = %CashKpi
 @onready var perMonthKpi: KpiView = %PerMonthKpi
 @onready var atStartKpi: KpiView = %AtStartKpi
@@ -47,6 +50,7 @@ var state: GameState
 
 
 func _ready() -> void:
+	closeButton.pressed.connect(func() -> void: CloseRequested.emit())
 	everyMonthHelp.tooltip_text = ShortfallNoteFormat % NumberFormat.percent(Finances.ShortfallFee)
 	borrowButton.text = BorrowFormat % MoneyFormat.short(Finances.LoanStep)
 	repayButton.text = RepayFormat % MoneyFormat.short(Finances.LoanStep)

@@ -7,11 +7,13 @@
 
 [node name="MoneyDropdown" type="PanelContainer"]
 visible = false
-custom_minimum_size = Vector2(760, 0)
-anchors_preset = 0
-offset_left = 640.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 offset_top = 72.0
-theme_type_variation = &"Dropdown"
+theme_type_variation = &"Overlay"
 script = ExtResource("1_money")
 
 [node name="Body" type="VBoxContainer" parent="."]
@@ -27,120 +29,136 @@ theme_type_variation = &"Heading"
 uppercase = true
 text = "Finances"
 
-[node name="Columns" type="HBoxContainer" parent="Body"]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="Left" type="VBoxContainer" parent="Body/Columns"]
+[node name="Spacer" type="Control" parent="Body/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Kpis" type="HBoxContainer" parent="Body/Columns/Left"]
+[node name="CloseButton" type="Button" parent="Body/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+focus_mode = 0
+theme_type_variation = &"CloseButton"
+text = "×"
+
+[node name="Kpis" type="HBoxContainer" parent="Body"]
 layout_mode = 2
 theme_override_constants/separation = 26
 
-[node name="CashKpi" parent="Body/Columns/Left/Kpis" instance=ExtResource("2_kpi")]
+[node name="CashKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PerMonthKpi" parent="Body/Columns/Left/Kpis" instance=ExtResource("2_kpi")]
+[node name="PerMonthKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AtStartKpi" parent="Body/Columns/Left/Kpis" instance=ExtResource("2_kpi")]
+[node name="AtStartKpi" parent="Body/Kpis" instance=ExtResource("2_kpi")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="EveryMonthHeader" type="HBoxContainer" parent="Body/Columns/Left"]
+[node name="Columns" type="HBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="EveryMonth" type="VBoxContainer" parent="Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EveryMonthHeader" type="HBoxContainer" parent="Body/Columns/EveryMonth"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="EveryMonthTitle" type="Label" parent="Body/Columns/Left/EveryMonthHeader"]
+[node name="EveryMonthTitle" type="Label" parent="Body/Columns/EveryMonth/EveryMonthHeader"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Every month"
 
-[node name="EveryMonthHelp" parent="Body/Columns/Left/EveryMonthHeader" instance=ExtResource("4_help")]
+[node name="EveryMonthHelp" parent="Body/Columns/EveryMonth/EveryMonthHeader" instance=ExtResource("4_help")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="UpkeepRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
+[node name="UpkeepRow" parent="Body/Columns/EveryMonth" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="InterestRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
+[node name="InterestRow" parent="Body/Columns/EveryMonth" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MonthTotalRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
+[node name="MonthTotalRow" parent="Body/Columns/EveryMonth" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CreditLineTitle" type="Label" parent="Body/Columns/Left"]
+[node name="CreditLine" type="VBoxContainer" parent="Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CreditLineTitle" type="Label" parent="Body/Columns/CreditLine"]
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 text = "Credit line"
 
-[node name="OwedRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
+[node name="OwedRow" parent="Body/Columns/CreditLine" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CreditLeftRow" parent="Body/Columns/Left" instance=ExtResource("3_row")]
+[node name="CreditLeftRow" parent="Body/Columns/CreditLine" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LoanButtons" type="HBoxContainer" parent="Body/Columns/Left"]
+[node name="LoanButtons" type="HBoxContainer" parent="Body/Columns/CreditLine"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="BorrowButton" type="Button" parent="Body/Columns/Left/LoanButtons"]
+[node name="BorrowButton" type="Button" parent="Body/Columns/CreditLine/LoanButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"GhostButton"
 
-[node name="RepayButton" type="Button" parent="Body/Columns/Left/LoanButtons"]
+[node name="RepayButton" type="Button" parent="Body/Columns/CreditLine/LoanButtons"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"GhostButton"
 
-[node name="Right" type="VBoxContainer" parent="Body/Columns"]
+[node name="Fees" type="VBoxContainer" parent="Body/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FeesHeader" type="HBoxContainer" parent="Body/Columns/Right"]
+[node name="FeesHeader" type="HBoxContainer" parent="Body/Columns/Fees"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="FeesTitle" type="Label" parent="Body/Columns/Right/FeesHeader"]
+[node name="FeesTitle" type="Label" parent="Body/Columns/Fees/FeesHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Heading"
 uppercase = true
 
-[node name="FeesHelp" parent="Body/Columns/Right/FeesHeader" instance=ExtResource("4_help")]
+[node name="FeesHelp" parent="Body/Columns/Fees/FeesHeader" instance=ExtResource("4_help")]
 layout_mode = 2
 tooltip_text = "Fees arrive as a lump at the start of each semester, at today's enrolment."
 
-[node name="TuitionRow" parent="Body/Columns/Right" instance=ExtResource("3_row")]
+[node name="TuitionRow" parent="Body/Columns/Fees" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RoomRow" parent="Body/Columns/Right" instance=ExtResource("3_row")]
+[node name="RoomRow" parent="Body/Columns/Fees" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MealsRow" parent="Body/Columns/Right" instance=ExtResource("3_row")]
+[node name="MealsRow" parent="Body/Columns/Fees" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FeesTotalRow" parent="Body/Columns/Right" instance=ExtResource("3_row")]
+[node name="FeesTotalRow" parent="Body/Columns/Fees" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AfterFeesRow" parent="Body/Columns/Right" instance=ExtResource("3_row")]
+[node name="AfterFeesRow" parent="Body/Columns/Fees" instance=ExtResource("3_row")]
 unique_name_in_owner = true
 layout_mode = 2

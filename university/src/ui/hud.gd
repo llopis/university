@@ -17,6 +17,7 @@ const PopoverBuild: StringName = &"build"
 const PopoverHousing: StringName = &"housing"
 const PopoverMoney: StringName = &"money"
 const PopoverStudents: StringName = &"students"
+const PopoverReputation: StringName = &"reputation"
 const PopoverUniversity: StringName = &"unimenu"
 # The alerts' left/right offsets keep this clear of the side panel's edge.
 const AlertsMargin: float = 16.0
@@ -48,7 +49,7 @@ var _pausedBefore: bool = false
 func _ready() -> void:
 	_popovers = {
 		&"gamemenu": gameMenu, PopoverUniversity: universityMenu, PopoverStudents: studentsDropdown,
-		&"reputation": reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
+		PopoverReputation: reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
 		PopoverBuild: buildPanel,
 	}
 	topBar.GameMenuPressed.connect(toggle.bind(&"gamemenu"))
@@ -56,16 +57,20 @@ func _ready() -> void:
 	topBar.StudentsPressed.connect(toggle.bind(PopoverStudents))
 	topBar.HousingPressed.connect(toggle.bind(PopoverHousing))
 	topBar.MoneyPressed.connect(toggle.bind(PopoverMoney))
-	topBar.ReputationPressed.connect(toggle.bind(&"reputation"))
+	topBar.ReputationPressed.connect(toggle.bind(PopoverReputation))
 	gameMenu.Chosen.connect(closePopover)
 	universityMenu.BuildingChosen.connect(showBuilding)
-	universityMenu.ReputationChosen.connect(openPopover.bind(&"reputation"))
+	universityMenu.ReputationChosen.connect(openPopover.bind(PopoverReputation))
 	universityMenu.HousingChosen.connect(openPopover.bind(PopoverHousing))
 	universityMenu.FinancesChosen.connect(openPopover.bind(PopoverMoney))
-	studentsDropdown.ReputationJumped.connect(openPopover.bind(&"reputation"))
+	studentsDropdown.CloseRequested.connect(closePopover)
+	studentsDropdown.ReputationJumped.connect(openPopover.bind(PopoverReputation))
 	studentsDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
+	reputationDropdown.CloseRequested.connect(closePopover)
 	reputationDropdown.HousingJumped.connect(openPopover.bind(PopoverHousing))
+	housingDropdown.CloseRequested.connect(closePopover)
 	housingDropdown.AdmissionsJumped.connect(func() -> void: showPane(PaneAdmissions))
+	moneyDropdown.CloseRequested.connect(closePopover)
 
 
 func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildController, buildingDB: BuildingInfoDB) -> void:
