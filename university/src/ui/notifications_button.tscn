@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/ui/notifications_button.gd" id="1_button"]
+[ext_resource type="Texture2D" path="res://assets/icons/bell.png" id="2_bell"]
+
+[node name="NotificationsButton" type="Button"]
+custom_minimum_size = Vector2(56, 56)
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 84.0
+offset_right = 72.0
+offset_bottom = 140.0
+focus_mode = 0
+theme_type_variation = &"SlotButton"
+toggle_mode = true
+icon = ExtResource("2_bell")
+icon_alignment = 1
+expand_icon = false
+script = ExtResource("1_button")
+
+[node name="Badge" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_top = -8.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_type_variation = &"NotificationBadge"
+
+[node name="Count" type="Label" parent="Badge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"Body"
+horizontal_alignment = 1
+vertical_alignment = 1

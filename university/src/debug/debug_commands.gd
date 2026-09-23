@@ -82,7 +82,7 @@ func _init() -> void:
 	LimboConsole.register_command(_save, "save", "Save the game to [path] (the quicksave when none is given).")
 	LimboConsole.register_command(_load, "load", "Load the game saved at [path] (the quicksave when none is given).")
 	LimboConsole.register_command(_newGame, "newgame", "Start over from the start state.")
-	LimboConsole.register_command(_hud, "hud", "Open a HUD popover by name (gamemenu, unimenu, students, reputation, housing, money, build) or a pane (construction, admissions, academic, dorm, dining); popup shows the latest report; none closes it.")
+	LimboConsole.register_command(_hud, "hud", "Open a HUD popover by name (gamemenu, unimenu, students, reputation, housing, money, build, notifications) or a pane (construction, admissions, academic, dorm, dining); popup shows the latest report; none closes it.")
 	# Lets the remote console reach the scene tree, e.g.
 	# eval get_root().find_child("CampusView", true, false).
 	LimboConsole.set_eval_base_instance(Engine.get_main_loop())

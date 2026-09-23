@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://src/ui/hud.gd" id="1_hud"]
 [ext_resource type="Theme" path="res://src/ui/ui_theme.tres" id="2_theme"]
@@ -13,7 +13,8 @@
 [ext_resource type="PackedScene" path="res://src/ui/side_panel.tscn" id="11_sidepanel"]
 [ext_resource type="PackedScene" path="res://src/ui/action_bar.tscn" id="12_actionbar"]
 [ext_resource type="PackedScene" path="res://src/ui/build_panel.tscn" id="13_buildpanel"]
-[ext_resource type="PackedScene" path="res://src/ui/alerts.tscn" id="14_alerts"]
+[ext_resource type="PackedScene" path="res://src/ui/notifications_button.tscn" id="14_notifbutton"]
+[ext_resource type="PackedScene" path="res://src/ui/notifications_panel.tscn" id="15_notifpanel"]
 
 [node name="Hud" type="Control"]
 layout_mode = 3
@@ -32,7 +33,7 @@ unique_name_in_owner = true
 [node name="SidePanel" parent="." instance=ExtResource("11_sidepanel")]
 unique_name_in_owner = true
 
-[node name="Alerts" parent="." instance=ExtResource("14_alerts")]
+[node name="NotificationsButton" parent="." instance=ExtResource("14_notifbutton")]
 unique_name_in_owner = true
 
 [node name="ActionBar" parent="." instance=ExtResource("12_actionbar")]
@@ -66,6 +67,9 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="BuildPanel" parent="Popovers" instance=ExtResource("13_buildpanel")]
+unique_name_in_owner = true
+
+[node name="NotificationsPanel" parent="Popovers" instance=ExtResource("15_notifpanel")]
 unique_name_in_owner = true
 
 [node name="SemesterPopup" parent="." instance=ExtResource("10_semesterpopup")]

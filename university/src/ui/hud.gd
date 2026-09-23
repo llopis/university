@@ -1,11 +1,11 @@
 class_name Hud
 extends Control
-## The HUD's root: the top bar, the side panel, the alerts, the action bar,
-## its popovers (including the build panel; one open at a time) and the
-## semester popup. It carries the shared theme, routes
-## keys, panes and places, and everything it shows is read from the game
-## state it is set up with. A click on the world closes the open popover and
-## still reaches the world; Esc closes it first of all.
+## The HUD's root: the top bar, the side panel, the notifications bell, the
+## action bar, its popovers (including the build panel and the notifications
+## panel; one open at a time) and the semester popup. It carries the shared
+## theme, routes keys, panes and places, and everything it shows is read from
+## the game state it is set up with. A click on the world closes the open
+## popover and still reaches the world; Esc closes it first of all.
 
 const None: StringName = &""
 const PaneConstruction: StringName = &"construction"
@@ -20,15 +20,15 @@ const PopoverMoney: StringName = &"money"
 const PopoverStudents: StringName = &"students"
 const PopoverReputation: StringName = &"reputation"
 const PopoverUniversity: StringName = &"unimenu"
+const PopoverNotifications: StringName = &"notifications"
 # The four popovers that cover the play area as a centred overlay: while one
 # of these is open the world's keys are blocked, bar Esc, Space and +/-.
 const Overlays: Array[StringName] = [PopoverStudents, PopoverHousing, PopoverMoney, PopoverReputation]
-# The alerts' left/right offsets keep this clear of the side panel's edge.
-const AlertsMargin: float = 16.0
 
 @onready var topBar: TopBar = %TopBar
 @onready var sidePanel: SidePanel = %SidePanel
-@onready var alerts: Alerts = %Alerts
+@onready var notificationsButton: NotificationsButton = %NotificationsButton
+@onready var notificationsPanel: NotificationsPanel = %NotificationsPanel
 @onready var actionBar: ActionBar = %ActionBar
 @onready var gameMenu: GameMenu = %GameMenu
 @onready var universityMenu: UniversityMenu = %UniversityMenu
@@ -54,8 +54,10 @@ func _ready() -> void:
 	_popovers = {
 		PopoverGame: gameMenu, PopoverUniversity: universityMenu, PopoverStudents: studentsDropdown,
 		PopoverReputation: reputationDropdown, PopoverHousing: housingDropdown, PopoverMoney: moneyDropdown,
-		PopoverBuild: buildPanel,
+		PopoverBuild: buildPanel, PopoverNotifications: notificationsPanel,
 	}
+	notificationsButton.pressed.connect(toggle.bind(PopoverNotifications))
+	notificationsPanel.ProblemWanted.connect(_onProblemWanted)
 	topBar.GameMenuPressed.connect(toggle.bind(PopoverGame))
 	topBar.UniversityMenuPressed.connect(toggle.bind(PopoverUniversity))
 	topBar.StudentsPressed.connect(toggle.bind(PopoverStudents))
@@ -88,8 +90,7 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	housingDropdown.setUniversity(state.university)
 	moneyDropdown.setState(state)
 	sidePanel.setUniversity(state.university)
-	alerts.setup(state)
-	alerts.PlaceWanted.connect(_openPlace)
+	notificationsPanel.university = state.university
 	controller.SelectionChanged.connect(sidePanel.showBuilding)
 	sidePanel.CloseRequested.connect(func() -> void: controller.select(null))
 	sidePanel.PopoverWanted.connect(openPopover)
@@ -108,12 +109,9 @@ func setup(gameState: GameState, gameCamera: GameCamera, buildController: BuildC
 	controller.ToolChanged.connect(_onToolChanged)
 
 
-# Keeps the alerts to the left of the side panel while it's open; the anchors
-# are both pinned to the right edge, so left and right shift together.
 func _process(_dt: float) -> void:
-	var shift: float = -(AlertsMargin + (sidePanel.size.x if (sidePanel.visible) else 0.0))
-	alerts.offset_right = shift
-	alerts.offset_left = shift
+	if (state != null):
+		notificationsButton.setCount(state.university.problems().size())
 
 
 func popoverOpen() -> StringName:
@@ -145,6 +143,7 @@ func openPopover(which: StringName) -> void:
 	topBar.setOpen(which, true)
 	_open = which
 	actionBar.showBuildOpen(_open == PopoverBuild)
+	notificationsButton.set_pressed_no_signal(_open == PopoverNotifications)
 	camera.keysEnabled = not _overlayOpen()
 	controller.keysEnabled = not _overlayOpen()
 
@@ -157,6 +156,7 @@ func closePopover() -> bool:
 	topBar.setOpen(_open, false)
 	_open = None
 	actionBar.showBuildOpen(_open == PopoverBuild)
+	notificationsButton.set_pressed_no_signal(_open == PopoverNotifications)
 	camera.keysEnabled = not _overlayOpen()
 	controller.keysEnabled = not _overlayOpen()
 	return true
@@ -217,15 +217,9 @@ func openProblem(kind: Problem.Kind) -> void:
 			openPopover(PopoverMoney)
 
 
-func _openPlace(entry: AlertEntry) -> void:
-	match entry.source:
-		AlertEntry.Source.Problem:
-			openProblem(entry.problem.kind)
-		AlertEntry.Source.AutoBorrowed:
-			openPopover(PopoverMoney)
-		AlertEntry.Source.Opened:
-			if (state.university.campus.buildings.has(entry.building)):
-				showBuilding(entry.building)
+func _onProblemWanted(kind: Problem.Kind) -> void:
+	closePopover()
+	openProblem(kind)
 
 
 ## Shows a semester's report, pausing the game. Several in a row show the

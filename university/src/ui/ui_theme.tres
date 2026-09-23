@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=67 format=3]
+[gd_resource type="Theme" load_steps=63 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/Barlow-Regular.ttf" id="FontFile_barlowRegular"]
 [ext_resource type="FontFile" path="res://assets/fonts/BarlowSemiCondensed-Medium.ttf" id="FontFile_condMedium"]
@@ -603,38 +603,16 @@ content_margin_top = 10
 content_margin_right = 12
 content_margin_bottom = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alertBox"]
-bg_color = Color(0.078, 0.094, 0.118, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 0.16)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 16
-content_margin_left = 0
-content_margin_top = 0
-content_margin_right = 0
-content_margin_bottom = 0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_alertClose"]
-content_margin_left = 2
-content_margin_top = 2
-content_margin_right = 2
-content_margin_bottom = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alertAccentWarn"]
-bg_color = Color(0.886, 0.663, 0.227, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alertAccentBad"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_notificationBadge"]
 bg_color = Color(0.886, 0.353, 0.306, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_alertAccentInfo"]
-bg_color = Color(0.290, 0.565, 0.886, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 6
+content_margin_top = 0
+content_margin_right = 6
+content_margin_bottom = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tooltip"]
 bg_color = Color(0.125, 0.149, 0.184, 1)
@@ -1008,27 +986,8 @@ Card/styles/hover_pressed = SubResource("StyleBoxFlat_cardHover")
 Card/styles/disabled = SubResource("StyleBoxFlat_cardNormal")
 Card/styles/focus = SubResource("StyleBoxEmpty_focus")
 
-AlertBox/base_type = &"PanelContainer"
-AlertBox/styles/panel = SubResource("StyleBoxFlat_alertBox")
-
-AlertClose/base_type = &"Button"
-AlertClose/fonts/font = ExtResource("FontFile_condSemiBold")
-AlertClose/font_sizes/font_size = 24
-AlertClose/colors/font_color = Color(0.420, 0.459, 0.502, 1)
-AlertClose/colors/font_hover_color = Color(0.925, 0.906, 0.859, 1)
-AlertClose/styles/normal = SubResource("StyleBoxEmpty_alertClose")
-AlertClose/styles/hover = SubResource("StyleBoxEmpty_alertClose")
-AlertClose/styles/pressed = SubResource("StyleBoxEmpty_alertClose")
-AlertClose/styles/focus = SubResource("StyleBoxEmpty_alertClose")
-
-AlertAccentWarn/base_type = &"Panel"
-AlertAccentWarn/styles/panel = SubResource("StyleBoxFlat_alertAccentWarn")
-
-AlertAccentBad/base_type = &"Panel"
-AlertAccentBad/styles/panel = SubResource("StyleBoxFlat_alertAccentBad")
-
-AlertAccentInfo/base_type = &"Panel"
-AlertAccentInfo/styles/panel = SubResource("StyleBoxFlat_alertAccentInfo")
+NotificationBadge/base_type = &"PanelContainer"
+NotificationBadge/styles/panel = SubResource("StyleBoxFlat_notificationBadge")
 
 TooltipPanel/styles/panel = SubResource("StyleBoxFlat_tooltip")
 
