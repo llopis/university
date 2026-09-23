@@ -19,9 +19,6 @@ const BedsCellUnderConstruction: String = "— / %s"
 const UpkeepUnderConstruction: String = "—"
 const DinersKey: String = "Housed students eating"
 const DinersNoteFormat: String = "recommended %s · limit %s"
-const LoadCrowded: String = "%s · crowded"
-const LoadUnfed: String = "%s · can't eat"
-const LoadNormal: String = "%s"
 
 @onready var title: Label = %Title
 @onready var filledKpi: KpiView = %FilledKpi
@@ -31,8 +28,7 @@ const LoadNormal: String = "%s"
 @onready var dormsGrid: GridContainer = %Dorms
 @onready var dinersRow: InfoRow = %DinersRow
 @onready var loadLine: HBoxContainer = %LoadLine
-@onready var loadBar: MeterBar = %LoadBar
-@onready var loadValue: Label = %LoadValue
+@onready var diningLoadLine: DiningLoadLine = %DiningLoadLine
 @onready var noDiningNote: Label = %NoDiningNote
 @onready var moneyJump: Button = %MoneyJump
 
@@ -88,19 +84,7 @@ func _showDining() -> void:
 	loadLine.visible = true
 	dinersRow.display(DinersKey, NumberFormat.count(university.mealPlans()),
 		DinersNoteFormat % [NumberFormat.count(meals), NumberFormat.count(UniversityRules.diningLimit(meals))])
-	var diningLoad: float = university.diningLoad()
-	var tone: UiTone.Tone = UiTone.Tone.Normal
-	var valueFormat: String = LoadNormal
-	if (university.hasProblem(Problem.Kind.DiningUnfed)):
-		tone = UiTone.Tone.Bad
-		valueFormat = LoadUnfed
-	elif (university.hasProblem(Problem.Kind.DiningCrowded)):
-		tone = UiTone.Tone.Warn
-		valueFormat = LoadCrowded
-	var marks: Array[float] = [UniversityRules.RecommendedLoad / UniversityRules.DiningHardLimit]
-	loadBar.setValue(diningLoad / UniversityRules.DiningHardLimit, tone, marks, 1.0)
-	loadValue.text = valueFormat % NumberFormat.percent(diningLoad)
-	loadValue.theme_type_variation = UiTone.variation(InfoRow.ValueBase, tone)
+	diningLoadLine.display(university)
 
 
 func _rebuildDorms() -> void:

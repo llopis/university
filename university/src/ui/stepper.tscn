@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/stepper.gd" id="1_stepper"]
+
+[node name="Stepper" type="HBoxContainer"]
+theme_override_constants/separation = 8
+script = ExtResource("1_stepper")
+
+[node name="Caption" type="Label" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(92, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"StepCaption"
+uppercase = true
+
+[node name="Down" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"StepButton"
+text = "−"
+
+[node name="Box" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"StepBox"
+
+[node name="Value" type="Label" parent="Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StepValue"
+vertical_alignment = 1
+
+[node name="Up" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"StepButton"
+text = "+"

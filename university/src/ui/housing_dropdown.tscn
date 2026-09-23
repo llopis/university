@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://src/ui/housing_dropdown.gd" id="1_housing"]
 [ext_resource type="PackedScene" path="res://src/ui/kpi.tscn" id="2_kpi"]
 [ext_resource type="PackedScene" path="res://src/ui/info_row.tscn" id="3_row"]
-[ext_resource type="Script" path="res://src/ui/meter_bar.gd" id="4_meter"]
+[ext_resource type="PackedScene" path="res://src/ui/dining_load_line.tscn" id="4_dining"]
 
 [node name="HousingDropdown" type="PanelContainer"]
 visible = false
@@ -99,17 +99,9 @@ size_flags_horizontal = 3
 theme_type_variation = &"RowKey"
 text = "Load"
 
-[node name="LoadBar" type="Control" parent="Body/Dining/LoadLine"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 8)
-layout_mode = 2
-size_flags_vertical = 4
-script = ExtResource("4_meter")
-
-[node name="LoadValue" type="Label" parent="Body/Dining/LoadLine"]
+[node name="DiningLoadLine" parent="Body/Dining/LoadLine" instance=ExtResource("4_dining")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"RowValue"
 
 [node name="NoDiningNote" type="Label" parent="Body/Dining"]
 unique_name_in_owner = true
