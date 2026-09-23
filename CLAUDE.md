@@ -58,6 +58,8 @@ Every single time, no exceptions:
 
 6. **Never guess Godot APIs.** Do NOT assume a property or method exists on a Godot class. If you haven't seen it used in this codebase, search the project for existing usage first. Godot 4.x APIs change between minor versions — a property that exists in docs or training data may not exist in Godot 4.7. When in doubt, grep the codebase or check the engine source. Getting this wrong causes `Parse Error` (treated as fatal) and wastes the user's time.
 
+7. **After any UI change, run `python3 bin/apply_palette.py`.** Any colour it lists outside the palette is a failure. See **UI colours**.
+
 ## Architecture
 
 Strict state/view separation:
@@ -206,6 +208,38 @@ is what it holds of that role (seats, beds or meals; 0 for `Admissions` and
 `Other`). `BuildingInfoDB.categories()` lists the sheet's `category` values in
 the order the sheet first uses them, the build panel's tabs, and
 `inCategory(category)` answers one tab's types in sheet order.
+
+## UI colours
+
+**`university/src/ui/ui_palette.json` is the one place a UI colour is
+chosen**: named `#rrggbb` or `#rrggbbaa` entries (`chrome`, `accent`, `warn`,
+`shadow`, ...). Godot has no colour variables, so every StyleBox and theme
+colour holds its own `Color(...)` literal, and `python3 bin/apply_palette.py`
+keeps those literals in step with the palette by value. It covers every
+`.tres` and `.tscn` under `university/src/ui/` (the script's `UiDirs`). A
+changed entry is looked up under its recorded value, which lives in the
+theme's `Palette/colors/*` block, and every literal holding that value is
+rewritten. A tinted copy, the entry's RGB at an alpha of its own (the 18% pill
+backgrounds, the deeper shadows), takes the new RGB and keeps its alpha. The
+script writes the `Palette/colors/*` block itself: never edit it by hand, and
+never in Godot's theme editor. UI code reads a colour with
+`get_theme_color(name, &"Palette")`, never from a `Color(...)` literal.
+`--check` changes nothing and fails while the files are out of step.
+
+From now on:
+- **Every UI colour comes from the palette.** A new colour is a new entry in
+  `ui_palette.json`, followed by a run. Fully transparent and opaque white are
+  not colours: white is a `self_modulate` base.
+- **Run the script whenever the palette changes, and whenever a UI scene,
+  style or theme colour is added or changed.** It lists every colour outside
+  the palette and exits 1. Zero listed is the pass, like zero warnings at
+  launch.
+- **Keep the script's coverage current.** A UI scene or resource outside
+  `university/src/ui/` goes into `UiDirs`, or the script neither rewrites nor
+  checks it. A new kind of file that carries UI colours means updating the
+  script.
+- The 3D colours are not UI and stay out of the palette:
+  `campus_view.tscn`'s environment and `BuildingView`'s consts.
 
 ## LimboConsole
 
